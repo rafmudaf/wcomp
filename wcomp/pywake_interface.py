@@ -9,7 +9,7 @@ from py_wake.site.xrsite import XRSite
 from py_wake.wind_farm_models.engineering_models import EngineeringWindFarmModel
 from py_wake.wind_turbines import WindTurbine
 from py_wake.wind_turbines.power_ct_functions import PowerCtFunctions
-from utils.yml_utils import load_yaml
+from windIO.utils.yml_utils import load_yaml
 
 from .base_interface import WCompBase
 from .output_struct import WakePlane, WakeProfile

@@ -18,6 +18,7 @@ REQUIRED = [
     "foxes",
     "py-wake",
     "numpy>=1.20",
+    "windIO",
 ]
 
 ROOT = Path(__file__).parent

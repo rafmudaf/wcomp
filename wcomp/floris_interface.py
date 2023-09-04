@@ -4,7 +4,7 @@ from pathlib import Path
 
 import matplotlib.pyplot as plt
 from floris.tools import FlorisInterface
-from utils.yml_utils import load_yaml  # TODO: rename windIO package to "windIO" from floris.tools import FlorisInterface
+from windIO.utils.yml_utils import load_yaml
 
 from .base_interface import WCompBase
 from .output_struct import WakePlane, WakeProfile
