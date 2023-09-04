@@ -1,5 +1,6 @@
 
 import matplotlib.pyplot as plt
+
 from .output_struct import WakePlane, WakeProfile
 
 # Method to add plots to an axis

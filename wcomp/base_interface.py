@@ -1,6 +1,9 @@
-from pathlib import Path
+
 from abc import ABC
+from pathlib import Path
+
 from windIO.utils.yml_utils import load_yaml
+
 
 class WCompBase(ABC):
 
