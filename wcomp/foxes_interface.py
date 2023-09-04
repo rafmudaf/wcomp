@@ -385,7 +385,7 @@ class WCompFoxes(WCompBase):
 
     # 2D contour plots
 
-    def horizontal_contour(self, wind_direction: float, resolution: tuple):
+    def horizontal_contour(self, wind_direction: float, resolution: tuple) -> WakePlane:
 
         x1_bounds = (np.min(self.farm_results.X) - 2 * self.rotor_diameter, np.max(self.farm_results.X) + 10 * self.rotor_diameter)
         x2_bounds = (np.min(self.farm_results.Y) - 2 * self.rotor_diameter, np.max(self.farm_results.Y) + 2 * self.rotor_diameter)
@@ -423,6 +423,6 @@ class WCompFoxes(WCompBase):
         )
         return plane
     
-    def xsection_contour(self, wind_direction: float, resolution: tuple, x_coordinate: float):
+    def xsection_contour(self, wind_direction: float, resolution: tuple, x_coordinate: float) -> WakePlane:
         # TODO
         pass

@@ -135,13 +135,12 @@ class WCompPyWake(WCompBase):
         _x = wake_data.sel(h=self.hub_height).x
         _u = wake_data.sel(h=self.hub_height).WS_eff
 
-        vertical_profile = WakeProfile(
+        profile = WakeProfile(
             _x,
             _u[:,0,0,0]
         )
-
         plot_profile(
-            vertical_profile,
+            profile,
             ax=ax,
             # direction='x',
             # component='u',
@@ -172,18 +171,24 @@ class WCompPyWake(WCompBase):
         )
         # wake_data.plot_wake_map()
 
-        _x = wake_data.sel(h=self.hub_height).y
+        _y = wake_data.sel(h=self.hub_height).y
         _u = wake_data.sel(h=self.hub_height).WS_eff
-        ax.plot(
-            _x,
+        profile = WakeProfile(
+            _y,
             _u[:,0,0,0],
+        )
+        plot_profile(
+            profile,
+            ax=ax,
+            # direction='x',
+            # component='u',
             color=self.LPLOT_COLOR,
             label=self.LEGEND
         )
 
     # 2D contour plots
 
-    def horizontal_contour(self, wind_direction: float, resolution: tuple):
+    def horizontal_contour(self, wind_direction: float, resolution: tuple) -> WakePlane:
         """
         Args:
             wind_direction (float): The wind direction to use for the visualization
@@ -206,7 +211,7 @@ class WCompPyWake(WCompBase):
             flow_map.Y.flatten(),
             flow_map.WS_eff.to_numpy().flatten(),
             "z",
-            (resolution[0], resolution[1]),
+            resolution,
         )
         plot_plane(
             plane,
@@ -217,7 +222,7 @@ class WCompPyWake(WCompBase):
         )
         return plane
 
-    def xsection_contour(self, wind_direction: float, resolution: tuple, x_coordinate: float):
+    def xsection_contour(self, wind_direction: float, resolution: tuple, x_coordinate: float) -> WakePlane:
         x1_bounds = (np.min(self.sim_res.y) - 2 * self.rotor_diameter, np.max(self.sim_res.y) + 2 * self.rotor_diameter)
         x2_bounds = (0.001, 6 * self.hub_height)
 

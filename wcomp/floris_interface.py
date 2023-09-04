@@ -226,12 +226,12 @@ class WCompFloris(WCompBase):
             x_bounds=[xmin, xmax],
             z_bounds=[self.hub_height, self.hub_height],
         )
-        vertical_profile = WakeProfile(
+        profile = WakeProfile(
             cut_plane.df.x1,
             cut_plane.df.u,
         )
         plot_profile(
-            vertical_profile,
+            profile,
             ax=ax,
             # direction='x',
             # component='u',
@@ -256,12 +256,12 @@ class WCompFloris(WCompBase):
             x_bounds=[x_coordinate, x_coordinate],
             y_bounds=[ymin, ymax]
         )
-        vertical_profile = WakeProfile(
+        profile = WakeProfile(
             cut_plane.df.x2,
             cut_plane.df.u,
         )
         plot_profile(
-            vertical_profile,
+            profile,
             ax=ax,
             # direction='y',
             # component='u',
@@ -271,7 +271,7 @@ class WCompFloris(WCompBase):
 
     # 2D contour plots
 
-    def horizontal_contour(self, wind_direction: float, resolution: tuple):
+    def horizontal_contour(self, wind_direction: float, resolution: tuple) -> WakePlane:
         """
         Creates the plot figures via matplotlib, but it does not show them.
         This requires plt.show() to be called when appropriate.
@@ -311,7 +311,7 @@ class WCompFloris(WCompBase):
         # )
         return plane
 
-    def xsection_contour(self, wind_direction: float, resolution: tuple, x_coordinate: float):
+    def xsection_contour(self, wind_direction: float, resolution: tuple, x_coordinate: float) -> WakePlane:
         """
         Creates the plot figures via matplotlib, but it does not show them.
         This requires plt.show() to be called when appropriate.

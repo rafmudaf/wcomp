@@ -4,6 +4,8 @@ from pathlib import Path
 
 from windIO.utils.yml_utils import load_yaml
 
+from .output_struct import WakePlane
+
 
 class WCompBase(ABC):
 
@@ -36,8 +38,8 @@ class WCompBase(ABC):
 
     # 2D contour plots
 
-    def horizontal_contour(self, wind_direction: float, resolution: tuple):
+    def horizontal_contour(self, wind_direction: float, resolution: tuple) -> WakePlane:
         pass
 
-    def xsection_contour(self, wind_direction: float, resolution: tuple, x_coordinate: float):
+    def xsection_contour(self, wind_direction: float, resolution: tuple, x_coordinate: float) -> WakePlane:
         pass
