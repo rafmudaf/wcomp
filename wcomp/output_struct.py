@@ -31,12 +31,17 @@ class WakePlane:
             raise ValueError("Operands must have consistent normal vectors.")
         if self.resolution != other.resolution:
             raise ValueError("Operands must have consistent resolutions.")
+        if np.shape(self.x1) != np.shape(other.x1) \
+            or np.shape(self.x2) != np.shape(other.x2):
+            raise ValueError("Operands must have consistent grid shapes.")
 
-        _x1 = self.x1 - other.x1
-        _x2 = self.x2 - other.x2
-        _values = self.values - other.values
-
-        return WakePlane(_x1, _x2, _values, self.normal_vector, self.resolution)
+        return WakePlane(
+            self.x1,
+            self.x2,
+            self.values - other.values,
+            self.normal_vector,
+            self.resolution
+        )
 
 class WakeVolume:
     def __init__(self, df, x1_resolution, x2_resolution, normal_vector):
