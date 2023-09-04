@@ -257,7 +257,7 @@ class WCompFloris(WCompBase):
             y_bounds=[ymin, ymax]
         )
         vertical_profile = WakeProfile(
-            cut_plane.df.x1,
+            cut_plane.df.x2,
             cut_plane.df.u,
         )
         plot_profile(
