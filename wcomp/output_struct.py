@@ -23,7 +23,7 @@ class WakePlane:
         self.x2 = x2
         self.values = values
         self.normal_vector = normal_vector
-        self.resolution = resolution
+        self.resolution = resolution        # TODO: Not actively used, is this needed?
 
     def __sub__(self, other):
 

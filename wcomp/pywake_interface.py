@@ -18,7 +18,7 @@ from .plotting import plot_plane, plot_profile
 
 class WCompPyWake(WCompBase):
 
-    LPLOT_COLOR = "blue"
+    LINE_PLOT_COLOR = "blue"
     LEGEND = "PyWake"
 
     def __init__(self, input_file: str | Path, wind_farm_model: EngineeringWindFarmModel):
@@ -144,7 +144,7 @@ class WCompPyWake(WCompBase):
             ax=ax,
             # direction='x',
             # component='u',
-            color=self.LPLOT_COLOR,
+            color=self.LINE_PLOT_COLOR,
             label=self.LEGEND
         )
 
@@ -182,7 +182,7 @@ class WCompPyWake(WCompBase):
             ax=ax,
             # direction='x',
             # component='u',
-            color=self.LPLOT_COLOR,
+            color=self.LINE_PLOT_COLOR,
             label=self.LEGEND
         )
 

@@ -23,7 +23,7 @@ from .plotting import plot_plane, plot_profile
 
 class WCompFoxes(WCompBase):
 
-    LPLOT_COLOR = "red"
+    LINE_PLOT_COLOR = "red"
     LEGEND = "Foxes"
 
     def __init__(self, input_file: str | Path):
@@ -346,7 +346,7 @@ class WCompFoxes(WCompBase):
             ax=ax,
             # direction='x',
             # component='u',
-            color=self.LPLOT_COLOR,
+            color=self.LINE_PLOT_COLOR,
             label=self.LEGEND
         )
 
@@ -379,13 +379,24 @@ class WCompFoxes(WCompBase):
             ax=ax,
             # direction='y',
             # component='u',
-            color=self.LPLOT_COLOR,
+            color=self.LINE_PLOT_COLOR,
             label=self.LEGEND
         )
 
     # 2D contour plots
 
-    def horizontal_contour(self, wind_direction: float, resolution: tuple) -> WakePlane:
+    def horizontal_contour(
+        self,
+        wind_direction: float,
+        resolution: tuple
+    ) -> WakePlane:
+        """
+        This routine creates a 2D horizontal contour of all turbines in the farm.
+        NOTE: the `get_mean_fig_xy` routine requires a single resolution setting
+        and uses this for both directions in the plot. This is distinct from the
+        other interfaces where a resolution is supported for each direction
+        of the plot.
+        """
 
         x1_bounds = (np.min(self.farm_results.X) - 2 * self.rotor_diameter, np.max(self.farm_results.X) + 10 * self.rotor_diameter)
         x2_bounds = (np.min(self.farm_results.Y) - 2 * self.rotor_diameter, np.max(self.farm_results.Y) + 2 * self.rotor_diameter)
@@ -400,7 +411,7 @@ class WCompFoxes(WCompBase):
             xmax=x1_bounds[1],
             ymin=x2_bounds[0],
             ymax=x2_bounds[1],
-            resolution=(xres, yres),
+            resolution=xres, #, yres),
             figsize=(10, 5)
         )
         x = grid_points[:, :, 0]

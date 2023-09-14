@@ -70,7 +70,10 @@ basic_dict = {
 
 class WCompFloris(WCompBase):
 
-    LPLOT_COLOR = "green"
+    """
+    `WCompFloris` implements the wcomp interface to the FLORIS software.
+    """
+    LINE_PLOT_COLOR = "green"
     LEGEND = "Floris"
 
     def __init__(self, input_file: str | Path):
@@ -235,7 +238,7 @@ class WCompFloris(WCompBase):
             ax=ax,
             # direction='x',
             # component='u',
-            color=self.LPLOT_COLOR,
+            color=self.LINE_PLOT_COLOR,
             label=self.LEGEND
         )
 
@@ -265,13 +268,17 @@ class WCompFloris(WCompBase):
             ax=ax,
             # direction='y',
             # component='u',
-            color=self.LPLOT_COLOR,
+            color=self.LINE_PLOT_COLOR,
             label=self.LEGEND
         )
 
     # 2D contour plots
 
-    def horizontal_contour(self, wind_direction: float, resolution: tuple) -> WakePlane:
+    def horizontal_contour(
+        self,
+        wind_direction: float,
+        resolution: tuple,
+    ) -> WakePlane:
         """
         Creates the plot figures via matplotlib, but it does not show them.
         This requires plt.show() to be called when appropriate.
@@ -285,7 +292,7 @@ class WCompFloris(WCompBase):
         """
         # fig, axarr = plt.subplots(1, 1)
         cut_plane = self.fi.calculate_horizontal_plane(
-            height=self.fi.floris.farm.hub_heights[0,0,0],
+            height=self.hub_height,
             wd=[wind_direction],
             x_resolution=resolution[0],
             y_resolution=resolution[1],
@@ -304,14 +311,14 @@ class WCompFloris(WCompBase):
             # color_bar=True,
             clevels=100
         )
-        # wakeviz.add_turbine_id_labels(
-        #     self.fi,
-        #     ax=axarr,
-        #     color="k",
-        # )
         return plane
 
-    def xsection_contour(self, wind_direction: float, resolution: tuple, x_coordinate: float) -> WakePlane:
+    def xsection_contour(
+        self,
+        wind_direction: float,
+        resolution: tuple,
+        x_coordinate: float
+    ) -> WakePlane:
         """
         Creates the plot figures via matplotlib, but it does not show them.
         This requires plt.show() to be called when appropriate.
@@ -338,7 +345,8 @@ class WCompFloris(WCompBase):
         )
         plot_plane(
             plane,
-            ax=plt.gca(), #axarr,
+            ax=plt.gca(),
             color_bar=True,
             clevels=100
         )
+        return plane
