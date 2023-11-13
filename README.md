@@ -14,8 +14,9 @@ and customizations of a common set of mathematical wake models.
 
 This framework and simple use cases were presented at the
 2023 Wind Energy Sciences Conference in Glasgow, Scotland, by Rafael Mudafort.
-The slides from this talk are available HERE, and a corresponding executable
-notebook is here.
+The slides from this talk are available at
+[here](https://github.com/rafmudaf/wcomp/blob/main/2.2%20Mudafort%20Validation%20Framework%20for%20Python-based%20steady-state%20wake%20models.pptx),
+and a corresponding executable notebook is [here](https://github.com/rafmudaf/wcomp/blob/main/examples/wesc2023_demo.ipynb).
 
 ## Architecture and Design
 

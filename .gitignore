@@ -1,7 +1,6 @@
 # python compiled files
 __pycache__/
 .cache
-*.ipynb
 *.ipynb_checkpoints
 *.pyc
 *.egg-info
