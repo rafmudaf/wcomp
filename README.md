@@ -18,6 +18,8 @@ The slides from this talk are available at
 [here](https://github.com/rafmudaf/wcomp/blob/main/2.2%20Mudafort%20Validation%20Framework%20for%20Python-based%20steady-state%20wake%20models.pptx),
 and a corresponding executable notebook is [here](https://github.com/rafmudaf/wcomp/blob/main/examples/wesc2023_demo.ipynb).
 
+DOI: 10.11578/dc.20231113.4
+
 ## Architecture and Design
 
 The `wcomp` framework is meant to be simple and flexible. At it's core, it is three
@@ -31,7 +33,6 @@ Any methods related to wind farm simulations or the calculation of related value
 or statistics should exist in the wake modeling software packages themselves.
 This framework should remain the point of the connection across this class of
 software.
-
 
 The architecture of this framework is outlined below. The integrated software
 are dependencies of `wcomp`, but the source code is external. The `windIO` package
