@@ -10,6 +10,24 @@ from .base_interface import WCompBase
 from .output_struct import WakePlane, WakeProfile
 from .plotting import plot_plane, plot_profile
 
+# This dictionary maps generic model names in the windIO input file
+# to the tool's specific name. It also maps parameter names from the
+# referenced papers to the parameters in the implementation.
+# "windIO_model_name": {
+#   "model_ref": the current software's reference for this wake model,
+#   "parameters": {
+#       "windIO_parameter": current software's analogous parameter
+#   }
+# }
+# WAKE_MODEL_MAPPING = {
+#     "jensen": {
+#         "model_ref": "jensen",
+#         "parameters": {
+#             "alpha": "we",
+#         }
+#     },    
+# }
+
 basic_dict = {
     'name': 'Jensen-Jimenez',
     'description': 'Three turbines using Jensen / Jimenez models',
@@ -76,8 +94,21 @@ class WCompFloris(WCompBase):
     LINE_PLOT_COLOR = "green"
     LEGEND = "Floris"
 
-    def __init__(self, input_file: str | Path):
+    def __init__(
+            self,
+            input_file: str | Path,
+            velocity_deficit: str,
+            velocity_deficit_p: dict,
+            deflection: str = "none",
+            deflection_p: dict = {},
+        ):
         input_dictionary = load_yaml(input_file)
+
+        self.velocity_deficit_model_string = velocity_deficit
+        self.velocity_deficit_parameters = velocity_deficit_p
+        self.deflection_model_string = deflection
+        self.deflection_parameters = deflection_p
+
         self.floris_dict = self._create_floris_dict(input_dictionary)
         self.fi = FlorisInterface(self.floris_dict)
         self.fi.calculate_wake()
@@ -153,7 +184,7 @@ class WCompFloris(WCompBase):
                 'combination_model': 'sosfs',
                 'deflection_model': 'gauss',
                 'turbulence_model': 'crespo_hernandez',
-                'velocity_model': 'gauss'
+                'velocity_model': self.velocity_deficit_model_string
             },
             'enable_secondary_steering': True,
             'enable_yaw_added_recovery': True,
@@ -175,15 +206,18 @@ class WCompFloris(WCompBase):
                 }
             },
             'wake_velocity_parameters': {
-                'jensen': {
-                    'we': 0.05
-                },
-                'gauss': {
-                    'alpha': 0.58,
-                    'beta': 0.077,
-                    'ka': 0.38,
-                    'kb': 0.004,
-                },
+                self.velocity_deficit_model_string: {
+                    **self.velocity_deficit_parameters
+                }
+                # 'jensen': {
+                #     'we': wes["attributes"]["analyses"]["wake_model"]["parameters"]["alpha"]
+                # },
+                # 'gauss': {
+                #     'alpha': 0.58,
+                #     'beta': 0.077,
+                #     'ka': 0.38,
+                #     'kb': 0.004,
+                # },
             },
             'wake_turbulence_parameters': {
                 'crespo_hernandez': {

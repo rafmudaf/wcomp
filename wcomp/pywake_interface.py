@@ -9,22 +9,71 @@ from py_wake.site.xrsite import XRSite
 from py_wake.wind_farm_models.engineering_models import EngineeringWindFarmModel
 from py_wake.wind_turbines import WindTurbine
 from py_wake.wind_turbines.power_ct_functions import PowerCtFunctions
+
+from py_wake.wind_farm_models.engineering_models import PropagateDownwind
+# from py_wake.literature.noj import Jensen_1983
+# from py_wake.literature.gaussian_models import Niayifar_PorteAgel_2016
+# from py_wake.deficit_models.gaussian import BastankhahGaussianDeficit
+
 from windIO.utils.yml_utils import load_yaml
 
 from .base_interface import WCompBase
 from .output_struct import WakePlane, WakeProfile
 from .plotting import plot_plane, plot_profile
 
+# This dictionary maps generic model names in the windIO input file
+# to the tool's specific name. It also maps parameter names from the
+# referenced papers to the parameters in the implementation.
+# WAKE_MODEL_MAPPING = {
+#     "jensen": {
+#         "model_ref": Jensen_1983,
+#         "parameters": {
+#             "alpha": "k",
+#         }
+#     },
+#     "niayifar-porteagel": {
+#         "model_ref": Niayifar_PorteAgel_2016,
+#         "parameters": {
+#             "a1": "a0",
+#             "a2": "a1",
+#         }
+#     },
+#     # "bastankhah2016": {
+        
+#     #     "model_ref": BastankhahGaussianDeficit,
+#     #     "parameters": {
+#     #         "k": "a0",
+#     #         "a2": "a1",
+#     #     }
+#     #     (self, ct2a=ct2a_madsen, k=0.0324555, ceps=.2,
+# }
 
 class WCompPyWake(WCompBase):
 
     LINE_PLOT_COLOR = "blue"
     LEGEND = "PyWake"
 
-    def __init__(self, input_file: str | Path, wind_farm_model: EngineeringWindFarmModel):
+    def __init__(
+            self,
+            input_file: str | Path,
+            velocity_deficit: PropagateDownwind,
+            velocity_deficit_p: dict,
+            # deflection: str = "none",
+            # deflection_p: dict = {},
+        ):
         input_dictionary = load_yaml(input_file)
         self.site, self.wt, (self.x, self.y) = self._create_pywake_data(input_dictionary)
-        self.wfm = wind_farm_model(site=self.site, windTurbines=self.wt)
+
+        # model_map = WAKE_MODEL_MAPPING[input_dictionary["attributes"]["analyses"]["wake_model"]["name"]]
+        # wind_farm_model = model_map["model_ref"]
+
+        # # Extract parameters from windIO input and convert to this model's conventions
+        # parameters = {}
+        # for p in input_dictionary["attributes"]["analyses"]["wake_model"]["parameters"]:
+        #     parameters[model_map["parameters"]] = input_dictionary["attributes"]["analyses"]["wake_model"]["parameters"][p]
+
+
+        self.wfm = velocity_deficit(site=self.site, windTurbines=self.wt, **velocity_deficit_p)
         self.sim_res = self.wfm(self.x, self.y, wd=self.site.ds.wd.data)
 
     @property

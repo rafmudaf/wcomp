@@ -8,26 +8,43 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 from foxes.algorithms.downwind import Downwind
-from foxes.core import WindFarm
+from foxes.core import WindFarm, WakeModel
 from foxes.input.farm_layout import add_from_df
 from foxes.input.states import StatesTable
 from foxes.models.turbine_types import CpCtFromTwo
 from foxes.output import FlowPlots2D
 from foxes.models.model_book import ModelBook
-from windIO.utils.yml_utils import load_yaml
+# from foxes.models.wake_models.wind import JensenWake
 
+from windIO.utils.yml_utils import load_yaml
 from .base_interface import WCompBase
 from .output_struct import WakePlane, WakeProfile
 from .plotting import plot_plane, plot_profile
 
+# This dictionary maps generic model names in the windIO input file
+# to the tool's specific name. It also maps parameter names from the
+# referenced papers to the parameters in the implementation.
+# WAKE_MODEL_MAPPING = {
+#     "jensen": JensenWake,
+#     "alpha": "k"
+# }
 
 class WCompFoxes(WCompBase):
 
     LINE_PLOT_COLOR = "red"
     LEGEND = "Foxes"
 
-    def __init__(self, input_file: str | Path):
+    def __init__(
+            self,
+            input_file: str | Path,
+            velocity_deficit: WakeModel,
+            velocity_deficit_p: dict,
+        ):
         input_dictionary = load_yaml(input_file)
+
+        self.velocity_deficit_model = velocity_deficit
+        self.velocity_deficit_parameters = velocity_deficit_p
+
         self.mbook, self.farm, self.states, self.algo = self.read_case(input_dictionary)
         self.farm_results = self.algo.calc_farm()
 
@@ -222,7 +239,7 @@ class WCompFoxes(WCompBase):
 
         return mbook, farm
 
-    def read_anlyses(self, analyses, mbook, farm, states, keymap={}, **algo_pars):
+    def read_analyses(self, analyses, mbook, farm, states, keymap={}, **algo_pars):
         """
         Reads a WindIO wind farm
 
@@ -250,16 +267,28 @@ class WCompFoxes(WCompBase):
             The algorithm
 
         """
-        wmodel = analyses["wake_model"]["name"]
-        wmodels = [keymap.get(wmodel, wmodel)]
+        # windIO_model_name = analyses["wake_model"]["name"]
+        # wmodel_class = WAKE_MODEL_MAPPING[windIO_model_name]
+        wmodel_class = self.velocity_deficit_model
+        # Extract parameters from windIO input and convert to this model's conventions
+        # parameters = {}
+        # for p in analyses["wake_model"]["parameters"]:
+        #     parameters[WAKE_MODEL_MAPPING[p]] = analyses["wake_model"]["parameters"][p]
+        parameters = self.velocity_deficit_parameters
 
+        temp_model_name = "this_model"
+        mbook.wake_models[temp_model_name] = wmodel_class(
+            **parameters,
+            superposition="quadratic"
+        )
+        # mbook.print_toc(subset="wake_models")
         return Downwind(
             mbook,
             farm,
             states,
             verbosity=0,
             rotor_model="grid16",
-            wake_models=wmodels,
+            wake_models=[temp_model_name],
             **algo_pars
         )
 
@@ -298,7 +327,7 @@ class WCompFoxes(WCompBase):
 
         attr_dict = case["attributes"]
 
-        algo = self.read_anlyses(
+        algo = self.read_analyses(
             attr_dict["analyses"],
             mbook,
             farm,
@@ -411,7 +440,7 @@ class WCompFoxes(WCompBase):
             xmax=x1_bounds[1],
             ymin=x2_bounds[0],
             ymax=x2_bounds[1],
-            resolution=xres, #, yres),
+            resolution=(xres, yres),
             figsize=(10, 5)
         )
         x = grid_points[:, :, 0]
@@ -421,7 +450,7 @@ class WCompFoxes(WCompBase):
         plane = WakePlane(
             x[0],
             y[0],
-            u,
+            u[0],
             "z",
             resolution,
         )
