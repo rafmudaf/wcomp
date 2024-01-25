@@ -51,6 +51,8 @@ from .plotting import plot_plane, plot_profile
 class WCompPyWake(WCompBase):
 
     LINE_PLOT_COLOR = "blue"
+    LINE_PLOT_MARKER = ""
+    LINE_PLOT_LINESTYLE = "--"
     LEGEND = "PyWake"
 
     def __init__(
@@ -156,6 +158,49 @@ class WCompPyWake(WCompBase):
     def vertical_profile_plot(
         self,
         wind_direction: float,
+        x_coordinate: float,
+        y_coordinate: float,
+        zmax: float
+    ):
+        """
+        Args:
+            wind_direction (float): The wind direction to use for the visualization
+            resolution (tuple): The (x, y) resolution of the horizontal plane
+        """
+        ax = plt.gca()
+
+        n_points = 20
+
+        wake_data = self.sim_res.flow_map(
+            XZGrid(
+                y=y_coordinate,
+                x=x_coordinate,
+                z=np.arange(0, zmax + 1, zmax / n_points),
+
+            ),
+            wd=wind_direction,
+            ws=None
+        )
+        # wake_data.plot_wake_map()
+
+        _z = wake_data.h
+        _u = wake_data.sel(h=_z).WS_eff
+        profile = WakeProfile(
+            _z,
+            _u[:,0,0,0]
+        )
+        plot_profile(
+            profile,
+            ax=ax,
+            color=self.LINE_PLOT_COLOR,
+            marker=self.LINE_PLOT_MARKER,
+            linestyle=self.LINE_PLOT_LINESTYLE,
+            label=self.LEGEND
+        )
+
+    def streamwise_profile_plot(
+        self,
+        wind_direction: float,
         y_coordinate: float,
         xmin: float,
         xmax: float
@@ -167,10 +212,13 @@ class WCompPyWake(WCompBase):
         """
         ax = plt.gca()
 
+        n_points_x = 50
+        # n_points_y = 50
+
         wake_data = self.sim_res.flow_map(
             XZGrid(
                 y=y_coordinate,
-                x=np.arange(xmin, xmax, 2),
+                x=np.arange(xmin, xmax + 1, (xmax - xmin)/n_points_x),
                 z=np.arange(self.hub_height, self.hub_height+2, 1),
                 # resolution=100,  # Points in the x direction; z points are derived from this: z = np.arange(0, (1 + self.extend) * (h_i.max() + d_i.max() / 2), np.diff(x[:2])[0])
                 # resolution is not used in this case because I'm specifying x and z grids and the y location
@@ -194,6 +242,8 @@ class WCompPyWake(WCompBase):
             # direction='x',
             # component='u',
             color=self.LINE_PLOT_COLOR,
+            marker=self.LINE_PLOT_MARKER,
+            linestyle=self.LINE_PLOT_LINESTYLE,
             label=self.LEGEND
         )
 
@@ -208,7 +258,7 @@ class WCompPyWake(WCompBase):
 
         min_bound = ymin
         max_bound = ymax
-        n_points = 200
+        n_points = 20
         wake_data = self.sim_res.flow_map(
             YZGrid(
                 x=x_coordinate,
@@ -232,6 +282,8 @@ class WCompPyWake(WCompBase):
             # direction='x',
             # component='u',
             color=self.LINE_PLOT_COLOR,
+            marker=self.LINE_PLOT_MARKER,
+            linestyle=self.LINE_PLOT_LINESTYLE,
             label=self.LEGEND
         )
 

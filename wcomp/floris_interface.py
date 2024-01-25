@@ -92,6 +92,8 @@ class WCompFloris(WCompBase):
     `WCompFloris` implements the wcomp interface to the FLORIS software.
     """
     LINE_PLOT_COLOR = "green"
+    LINE_PLOT_MARKER = ""
+    LINE_PLOT_LINESTYLE = "--"
     LEGEND = "Floris"
 
     def __init__(
@@ -241,6 +243,46 @@ class WCompFloris(WCompBase):
     def vertical_profile_plot(
         self,
         wind_direction: float,
+        x_coordinate: float,
+        y_coordinate: float,
+        zmax: float
+    ):
+        """
+        Creates the plot figures via matplotlib, but it does not show them.
+        This requires plt.show() to be called when appropriate.
+
+        Args:
+            wind_direction (float): The wind direction to use for the visualization
+            resolution (tuple): The (x, y) resolution of the horizontal plane
+        """
+        ax = plt.gca()
+
+        cut_plane = self.fi.calculate_y_plane(
+            crossstream_dist=y_coordinate,
+            wd=[wind_direction],
+            x_resolution=20,
+            z_resolution=20,
+            x_bounds=[x_coordinate, x_coordinate],
+            z_bounds=[0, zmax],
+        )
+        profile = WakeProfile(
+            cut_plane.df.x2,
+            cut_plane.df.u,
+        )
+        plot_profile(
+            profile,
+            ax=ax,
+            # direction='x',
+            # component='u',
+            color=self.LINE_PLOT_COLOR,
+            marker=self.LINE_PLOT_MARKER,
+            linestyle=self.LINE_PLOT_LINESTYLE,
+            label=self.LEGEND
+        )
+
+    def streamwise_profile_plot(
+        self,
+        wind_direction: float,
         y_coordinate: float,
         xmin: float,
         xmax: float
@@ -258,8 +300,8 @@ class WCompFloris(WCompBase):
         cut_plane = self.fi.calculate_y_plane(
             crossstream_dist=y_coordinate,
             wd=[wind_direction],
-            x_resolution=1000,
-            z_resolution=100,
+            x_resolution=50,
+            z_resolution=50,
             x_bounds=[xmin, xmax],
             z_bounds=[self.hub_height, self.hub_height],
         )
@@ -273,6 +315,8 @@ class WCompFloris(WCompBase):
             # direction='x',
             # component='u',
             color=self.LINE_PLOT_COLOR,
+            marker=self.LINE_PLOT_MARKER,
+            linestyle=self.LINE_PLOT_LINESTYLE,
             label=self.LEGEND
         )
 
@@ -289,7 +333,7 @@ class WCompFloris(WCompBase):
             height=self.hub_height,
             wd=[wind_direction],
             # x_resolution=resolution[0],
-            y_resolution=200,
+            y_resolution=20,
             x_bounds=[x_coordinate, x_coordinate],
             y_bounds=[ymin, ymax]
         )
@@ -303,6 +347,8 @@ class WCompFloris(WCompBase):
             # direction='y',
             # component='u',
             color=self.LINE_PLOT_COLOR,
+            marker=self.LINE_PLOT_MARKER,
+            linestyle=self.LINE_PLOT_LINESTYLE,
             label=self.LEGEND
         )
 

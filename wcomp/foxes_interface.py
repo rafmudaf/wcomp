@@ -32,6 +32,8 @@ from .plotting import plot_plane, plot_profile
 class WCompFoxes(WCompBase):
 
     LINE_PLOT_COLOR = "red"
+    LINE_PLOT_MARKER = ""
+    LINE_PLOT_LINESTYLE = "--"
     LEGEND = "Foxes"
 
     def __init__(
@@ -347,6 +349,39 @@ class WCompFoxes(WCompBase):
     def vertical_profile_plot(
         self,
         wind_direction: float,
+        x_coordinate: float,
+        y_coordinate: float,
+        zmax: float
+    ):
+        ax = plt.gca()
+
+        # create points of interest, shape (n_states, n_points, 3):
+        n_points = 20
+        points = np.zeros((1, n_points, 3))
+        points[:, :, 0] = x_coordinate
+        points[:, :, 1] = y_coordinate
+        points[:, :, 2] = np.linspace(0, zmax, n_points)[None, :]
+        point_results = self.algo.calc_points(self.farm_results, points)
+
+        profile = WakeProfile(
+            points[0, :, 2],
+            point_results[FV.WS][0, :],
+        )
+        plot_profile(
+            profile,
+            ax=ax,
+            # direction='x',
+            # component='u',
+            color=self.LINE_PLOT_COLOR,
+            marker=self.LINE_PLOT_MARKER,
+            linestyle=self.LINE_PLOT_LINESTYLE,
+            label=self.LEGEND
+        )
+
+
+    def streamwise_profile_plot(
+        self,
+        wind_direction: float,
         y_coordinate: float,
         xmin: float,
         xmax: float
@@ -359,9 +394,10 @@ class WCompFoxes(WCompBase):
         ax = plt.gca()
 
         # create points of interest, shape (n_states, n_points, 3):
-        n_points = 8000
+        n_points = 50
         points = np.zeros((1, n_points, 3))
         points[:, :, 0] = np.linspace(xmin, xmax, n_points)[None, :]
+        points[:, :, 1] = y_coordinate
         points[:, :, 2] = self.hub_height
 
         point_results = self.algo.calc_points(self.farm_results, points)
@@ -376,6 +412,8 @@ class WCompFoxes(WCompBase):
             # direction='x',
             # component='u',
             color=self.LINE_PLOT_COLOR,
+            marker=self.LINE_PLOT_MARKER,
+            linestyle=self.LINE_PLOT_LINESTYLE,
             label=self.LEGEND
         )
 
@@ -389,7 +427,7 @@ class WCompFoxes(WCompBase):
         ax = plt.gca()
 
         # create points of interest, shape (n_states, n_points, 3):
-        n_points = 8000
+        n_points = 20
         points = np.zeros((1, n_points, 3))
         points[:, :, 0] = x_coordinate * np.ones((1, n_points))[None, :]
         points[:, :, 1] = np.linspace(ymin, ymax, n_points)[None, :]
@@ -409,6 +447,8 @@ class WCompFoxes(WCompBase):
             # direction='y',
             # component='u',
             color=self.LINE_PLOT_COLOR,
+            marker=self.LINE_PLOT_MARKER,
+            linestyle=self.LINE_PLOT_LINESTYLE,
             label=self.LEGEND
         )
 
