@@ -19,7 +19,23 @@ REQUIRED = [
     "py-wake",
     "numpy>=1.20",
     "windIO",
+    "matplotlib",
 ]
+EXTRAS = {
+    "docs": {
+        "jupyter-book",
+        # "jupyter-book==0.14",
+        # "sphinx-book-theme==0.4.0rc1",
+        # "sphinx-autodoc-typehints",
+        "sphinxcontrib-autoyaml",
+        "sphinxcontrib.mermaid",
+    },
+    "develop": {
+        "pytest",
+        "ruff",
+        "isort",
+    },
+}
 
 ROOT = Path(__file__).parent
 with open(ROOT / "wcomp" / "version.py") as version_file:
@@ -37,6 +53,7 @@ setup(
     url=URL,
     packages=find_packages(exclude=["tests", "*.tests", "*.tests.*", "tests.*"]),
     install_requires=REQUIRED,
+    extras_require=EXTRAS,
     license="GPL-3.0 license",
     classifiers=[
         # Trove classifiers
