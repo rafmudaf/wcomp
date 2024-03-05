@@ -33,7 +33,7 @@ sphinx:
   - 'sphinx.ext.viewcode'
   # - 'sphinx_autodoc_typehints'
   # - 'sphinxcontrib.autoyaml'
-  - 'sphinx.ext.napoleon'               # Formats google and numpy docstring styles
+  # - 'sphinx.ext.napoleon'               # Formats google and numpy docstring styles
   - 'sphinxcontrib.mermaid'
 
   config:
