@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Wind turbine wake models compared &#8212; wcomp</title>
+    <title>Wakes Compared (wcomp) &#8212; wcomp</title>
   
   
   
@@ -169,7 +169,7 @@
         <ul class="nav bd-sidenav bd-sidenav__home-link">
             <li class="toctree-l1 current active">
                 <a class="reference internal" href="#">
-                    Wind turbine wake models compared
+                    Wakes Compared (wcomp)
                 </a>
             </li>
         </ul>
@@ -368,7 +368,7 @@ document.write(`
               
 
 <div id="jb-print-docs-body" class="onlyprint">
-    <h1>Wind turbine wake models compared</h1>
+    <h1>Wakes Compared (wcomp)</h1>
     <!-- Table of contents -->
     <div id="print-main-content">
         <div id="jb-print-toc">
@@ -397,28 +397,63 @@ document.write(`
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <section class="tex2jax_ignore mathjax_ignore" id="wind-turbine-wake-models-compared">
-<h1>Wind turbine wake models compared<a class="headerlink" href="#wind-turbine-wake-models-compared" title="Link to this heading">#</a></h1>
-<p>There is a set of wind turbine wake modeling software that share common characteristics:</p>
+  <section class="tex2jax_ignore mathjax_ignore" id="wakes-compared-wcomp">
+<h1>Wakes Compared (wcomp)<a class="headerlink" href="#wakes-compared-wcomp" title="Link to this heading">#</a></h1>
+<p>Wind farm flow control presents an opportunity to improve the cost of energy and energy yield
+of wind farms in specific environments.
+A class of software tools that model the effects of wake losses and opportunities for wake
+loss mitigation via wind farm flow control has emerged in the past decade.
+Many of these tools share key characteristics:</p>
 <ul class="simple">
-<li><p>Steady state, low order mathematical models</p></li>
-<li><p>Python-based</p></li>
-<li><p>Research-oriented</p></li>
+<li><p>Written in the Python programming language</p></li>
+<li><p>Implement multiple steady-state, analytical wake models</p></li>
+<li><p>Target workstation use</p></li>
+<li><p>Integrate with optimization software ecosystems</p></li>
 </ul>
-<div class="toctree-wrapper compound">
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="api_docs.html">API Documentation</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="_autosummary/wcomp.base_interface.html">wcomp.base_interface</a></li>
-<li class="toctree-l2"><a class="reference internal" href="_autosummary/wcomp.floris_interface.html">wcomp.floris_interface</a></li>
-<li class="toctree-l2"><a class="reference internal" href="_autosummary/wcomp.foxes_interface.html">wcomp.foxes_interface</a></li>
-<li class="toctree-l2"><a class="reference internal" href="_autosummary/wcomp.pywake_interface.html">wcomp.pywake_interface</a></li>
-<li class="toctree-l2"><a class="reference internal" href="_autosummary/wcomp.output_struct.html">wcomp.output_struct</a></li>
-<li class="toctree-l2"><a class="reference internal" href="_autosummary/wcomp.plotting.html">wcomp.plotting</a></li>
-</ul>
-</li>
-</ul>
-</div>
-<section id="class">
+<p>However, software design decisions and implementation details can lead to discrepancies
+and errors across tools that reference corresponding models.
+<code class="docutils literal notranslate"><span class="pre">wcomp</span></code> is a Python package that provides an interface to data structures and plotting functions
+that enable the comparison of wake model implementations across different software tools.
+At its core, <code class="docutils literal notranslate"><span class="pre">wcomp</span></code> provides a set of data structures to contain the results of a
+wind farm wake model simulation and a set of plotting functions to inspect these data structures.
+Any wind farm wake modeling software that implements the <code class="docutils literal notranslate"><span class="pre">wcomp</span></code> interface can be included
+in the comparison directly.</p>
+<p>The package diagram below shows the modules within <code class="docutils literal notranslate"><span class="pre">wcomp</span></code> and how each relates to the
+others as dependencies (in other words, which modules <em>import</em> which other modules).</p>
+<!-- Command: pyreverse --colorized -o mmd . --verbose -->
+  <!-- class wcomp {
+  }
+  class base_interface {
+  }
+  class floris_interface {
+  }
+  class foxes_interface {
+  }
+  class output_struct {
+  }
+  class plotting {
+  }
+  class pywake_interface {
+  }
+  The mermaid on github doesnt support this syntax for some reason.
+  I gives a "syntax error in text" message -->
+<div class="mermaid">
+            classDiagram
+  wcomp --&gt; floris_interface
+  wcomp --&gt; foxes_interface
+  wcomp --&gt; pywake_interface
+  base_interface --&gt; output_struct
+  floris_interface --&gt; base_interface
+  floris_interface --&gt; output_struct
+  floris_interface --&gt; plotting
+  foxes_interface --&gt; base_interface
+  foxes_interface --&gt; output_struct
+  foxes_interface --&gt; plotting
+  plotting --&gt; output_struct
+  pywake_interface --&gt; base_interface
+  pywake_interface --&gt; output_struct
+  pywake_interface --&gt; plotting
+        </div><section id="class">
 <h2>Class<a class="headerlink" href="#class" title="Link to this heading">#</a></h2>
 <div class="mermaid">
             classDiagram
@@ -561,20 +596,6 @@ class WCompPyWake {
         </div></section>
 <section id="package">
 <h2>Package<a class="headerlink" href="#package" title="Link to this heading">#</a></h2>
-<p>class wcomp {
-}
-class base_interface {
-}
-class floris_interface {
-}
-class foxes_interface {
-}
-class output_struct {
-}
-class plotting {
-}
-class pywake_interface {
-}</p>
 <div class="mermaid">
             classDiagram
   wcomp --&gt; floris_interface
@@ -706,6 +727,8 @@ deactivate A
 
 AA -&gt;&gt; AA: Post processes to calculate AEP or power
         </div></section>
+<div class="toctree-wrapper compound">
+</div>
 </section>
 
     <script type="text/x-thebe-config">

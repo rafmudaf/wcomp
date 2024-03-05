@@ -166,7 +166,7 @@
         <ul class="nav bd-sidenav bd-sidenav__home-link">
             <li class="toctree-l1">
                 <a class="reference internal" href="../index.html">
-                    Wind turbine wake models compared
+                    Wakes Compared (wcomp)
                 </a>
             </li>
         </ul>
@@ -436,12 +436,8 @@ described here should be implemented in the subclass.</p>
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">rotor_diameter</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><a class="headerlink" href="#wcomp.base_interface.WCompBase.rotor_diameter" title="Link to this definition">#</a></dt>
 <dd><p>Stores a characteristic rotor diameter for use throughout the
 post processing and plotting functions.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Characteristic rotor diameter</p>
-</dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>float</p>
+<dl class="simple">
+<dt>Returns:</dt><dd><p>float: Characteristic rotor diameter</p>
 </dd>
 </dl>
 </dd></dl>
@@ -451,12 +447,8 @@ post processing and plotting functions.</p>
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">hub_height</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><a class="headerlink" href="#wcomp.base_interface.WCompBase.hub_height" title="Link to this definition">#</a></dt>
 <dd><p>Stores a characteristic hub height for use throughout the
 post processing and plotting functions.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Characteristic hub height</p>
-</dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>float</p>
+<dl class="simple">
+<dt>Returns:</dt><dd><p>float: Characteristic hub height</p>
 </dd>
 </dl>
 </dd></dl>
@@ -467,16 +459,16 @@ post processing and plotting functions.</p>
 <dd><p>Computes the annual energy production (AEP) for the current case.
 This is typically implemented in the corresponding software, so
 it should not be computed here.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p><dl class="simple">
-<dt>Annual energy production (AEP) for the current case</dt><dd><p>in megawatts-hours (MWh).</p>
+<dl class="simple">
+<dt>Returns:</dt><dd><dl class="simple">
+<dt>float: Annual energy production (AEP) for the current case</dt><dd><p>in megawatts-hours (MWh).</p>
 </dd>
 </dl>
-</p>
 </dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>float</p>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
 </dd>
 </dl>
 </dd></dl>
@@ -486,13 +478,20 @@ it should not be computed here.</p>
 <span class="sig-name descname"><span class="pre">vertical_profile_plot</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">wind_direction</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x_coordinate</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_coordinate</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">zmax</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/wcomp/base_interface.html#WCompBase.vertical_profile_plot"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#wcomp.base_interface.WCompBase.vertical_profile_plot" title="Link to this definition">#</a></dt>
 <dd><p>This function produces a 1D plot of the velocity profile in the z-x plane
 where z is normal to the ground and x is streamwise.</p>
+<dl>
+<dt>Args:</dt><dd><dl class="simple">
+<dt>wind_direction (float): Wind direction to align the plot in the visualization in</dt><dd><p>degrees with West being 270 degrees and North being 0 degrees</p>
+</dd>
+</dl>
+<p>y_coordinate (float): The lateral location to extract the plotted values</p>
+</dd>
+</dl>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>wind_direction</strong> (<em>float</em>) -- Wind direction to align the plot in the visualization in
-degrees with West being 270 degrees and North being 0 degrees</p></li>
-<li><p><strong>y_coordinate</strong> (<em>float</em>) -- The lateral location to extract the plotted values</p></li>
+<li><p><strong>wind_direction</strong> (<em>float</em>) -- </p></li>
 <li><p><strong>x_coordinate</strong> (<em>float</em>) -- </p></li>
+<li><p><strong>y_coordinate</strong> (<em>float</em>) -- </p></li>
 <li><p><strong>zmax</strong> (<em>float</em>) -- </p></li>
 </ul>
 </dd>
@@ -504,14 +503,23 @@ degrees with West being 270 degrees and North being 0 degrees</p></li>
 <span class="sig-name descname"><span class="pre">streamwise_profile_plot</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">wind_direction</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_coordinate</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">xmin</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">xmax</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/wcomp/base_interface.html#WCompBase.streamwise_profile_plot"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#wcomp.base_interface.WCompBase.streamwise_profile_plot" title="Link to this definition">#</a></dt>
 <dd><p>This function produces a 1D plot of the velocity profile in the z-x plane
 where z is normal to the ground and x is streamwise.</p>
+<dl>
+<dt>Args:</dt><dd><dl class="simple">
+<dt>wind_direction (float): Wind direction to align the plot in the visualization in</dt><dd><p>degrees with West being 270 degrees and North being 0 degrees</p>
+</dd>
+</dl>
+<p>y_coordinate (float): The lateral location to extract the plotted values
+xmin (float): The lower bound of the plot in the streamwise direction
+xmax (float): The upper bound of the plot in the streamwise direction</p>
+</dd>
+</dl>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>wind_direction</strong> (<em>float</em>) -- Wind direction to align the plot in the visualization in
-degrees with West being 270 degrees and North being 0 degrees</p></li>
-<li><p><strong>y_coordinate</strong> (<em>float</em>) -- The lateral location to extract the plotted values</p></li>
-<li><p><strong>xmin</strong> (<em>float</em>) -- The lower bound of the plot in the streamwise direction</p></li>
-<li><p><strong>xmax</strong> (<em>float</em>) -- The upper bound of the plot in the streamwise direction</p></li>
+<li><p><strong>wind_direction</strong> (<em>float</em>) -- </p></li>
+<li><p><strong>y_coordinate</strong> (<em>float</em>) -- </p></li>
+<li><p><strong>xmin</strong> (<em>float</em>) -- </p></li>
+<li><p><strong>xmax</strong> (<em>float</em>) -- </p></li>
 </ul>
 </dd>
 </dl>
@@ -522,14 +530,23 @@ degrees with West being 270 degrees and North being 0 degrees</p></li>
 <span class="sig-name descname"><span class="pre">xsection_profile_plot</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">wind_direction</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x_coordinate</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ymin</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ymax</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/wcomp/base_interface.html#WCompBase.xsection_profile_plot"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#wcomp.base_interface.WCompBase.xsection_profile_plot" title="Link to this definition">#</a></dt>
 <dd><p>This function produces a 1D plot of the velocity profile in the y-z plane
 where z is normal to the ground and y is normal to z and the streamwise direction.</p>
+<dl>
+<dt>Args:</dt><dd><dl class="simple">
+<dt>wind_direction (float): Wind direction to align the plot in the visualization in</dt><dd><p>degrees with West being 270 degrees and North being 0 degrees</p>
+</dd>
+</dl>
+<p>x_coordinate (float): The streamwise location to extract the plotted values
+ymin (float): The lower bound of the plot in the lateral direction
+ymax (float): The upper bound of the plot in the lateral direction</p>
+</dd>
+</dl>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>wind_direction</strong> (<em>float</em>) -- Wind direction to align the plot in the visualization in
-degrees with West being 270 degrees and North being 0 degrees</p></li>
-<li><p><strong>x_coordinate</strong> (<em>float</em>) -- The streamwise location to extract the plotted values</p></li>
-<li><p><strong>ymin</strong> (<em>float</em>) -- The lower bound of the plot in the lateral direction</p></li>
-<li><p><strong>ymax</strong> (<em>float</em>) -- The upper bound of the plot in the lateral direction</p></li>
+<li><p><strong>wind_direction</strong> (<em>float</em>) -- </p></li>
+<li><p><strong>x_coordinate</strong> (<em>float</em>) -- </p></li>
+<li><p><strong>ymin</strong> (<em>float</em>) -- </p></li>
+<li><p><strong>ymax</strong> (<em>float</em>) -- </p></li>
 </ul>
 </dd>
 </dl>
@@ -541,20 +558,26 @@ degrees with West being 270 degrees and North being 0 degrees</p></li>
 <dd><p>This function produces a contour plot of the velocity in the x-y plane
 parallel to the ground. The contour is located at the hub height obtained
 by the interface's <cite>hub_height</cite> property (<cite>self.hub_height</cite>).</p>
+<dl class="simple">
+<dt>Args:</dt><dd><dl class="simple">
+<dt>wind_direction (float): Wind direction to align the plot in the visualization in</dt><dd><p>degrees with West being 270 degrees and North being 0 degrees</p>
+</dd>
+<dt>resolution (tuple): Grid resolution for the contour plot;</dt><dd><p>element 0 is the resolution in x and element 1 is the resolution in y</p>
+</dd>
+</dl>
+</dd>
+<dt>Returns:</dt><dd><p>WakePlane</p>
+</dd>
+</dl>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>wind_direction</strong> (<em>float</em>) -- Wind direction to align the plot in the visualization in
-degrees with West being 270 degrees and North being 0 degrees</p></li>
-<li><p><strong>resolution</strong> (<em>tuple</em>) -- Grid resolution for the contour plot;
-element 0 is the resolution in x and element 1 is the resolution in y</p></li>
+<li><p><strong>wind_direction</strong> (<em>float</em>) -- </p></li>
+<li><p><strong>resolution</strong> (<em>tuple</em>) -- </p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>WakePlane</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference internal" href="wcomp.output_struct.html#wcomp.output_struct.WakePlane" title="wcomp.output_struct.WakePlane"><em>WakePlane</em></a></p>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="wcomp.output_struct.html#wcomp.output_struct.WakePlane" title="wcomp.output_struct.WakePlane"><em>WakePlane</em></a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -564,21 +587,28 @@ element 0 is the resolution in x and element 1 is the resolution in y</p></li>
 <span class="sig-name descname"><span class="pre">xsection_contour</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">wind_direction</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">resolution</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">tuple</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x_coordinate</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="wcomp.output_struct.html#wcomp.output_struct.WakePlane" title="wcomp.output_struct.WakePlane"><span class="pre">WakePlane</span></a></span></span><a class="reference internal" href="../_modules/wcomp/base_interface.html#WCompBase.xsection_contour"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#wcomp.base_interface.WCompBase.xsection_contour" title="Link to this definition">#</a></dt>
 <dd><p>This function produces a contour plot of the velocity in the y-z plane
 perpendicular to the wind direction.</p>
+<dl>
+<dt>Args:</dt><dd><dl class="simple">
+<dt>wind_direction (float): Wind direction to align the plot in the visualization in</dt><dd><p>degrees with West being 270 degrees and North being 0 degrees</p>
+</dd>
+<dt>resolution (tuple): Grid resolution for the contour plot;</dt><dd><p>element 0 is the resolution in y and element 1 is the resolution in z</p>
+</dd>
+</dl>
+<p>x_coordinate (float): The streamwise location for the extracted plane</p>
+</dd>
+<dt>Returns:</dt><dd><p>WakePlane</p>
+</dd>
+</dl>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>wind_direction</strong> (<em>float</em>) -- Wind direction to align the plot in the visualization in
-degrees with West being 270 degrees and North being 0 degrees</p></li>
-<li><p><strong>resolution</strong> (<em>tuple</em>) -- Grid resolution for the contour plot;
-element 0 is the resolution in y and element 1 is the resolution in z</p></li>
-<li><p><strong>x_coordinate</strong> (<em>float</em>) -- The streamwise location for the extracted plane</p></li>
+<li><p><strong>wind_direction</strong> (<em>float</em>) -- </p></li>
+<li><p><strong>resolution</strong> (<em>tuple</em>) -- </p></li>
+<li><p><strong>x_coordinate</strong> (<em>float</em>) -- </p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>WakePlane</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference internal" href="wcomp.output_struct.html#wcomp.output_struct.WakePlane" title="wcomp.output_struct.WakePlane"><em>WakePlane</em></a></p>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="wcomp.output_struct.html#wcomp.output_struct.WakePlane" title="wcomp.output_struct.WakePlane"><em>WakePlane</em></a></p>
 </dd>
 </dl>
 </dd></dl>
