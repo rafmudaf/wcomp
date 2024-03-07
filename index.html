@@ -383,9 +383,6 @@ document.write(`
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#inheritance">Inheritance</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#aggregation-and-composition">Aggregation and Composition</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#package">Package</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#specification">Specification</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#implementation">Implementation</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#sequence">Sequence</a></li>
 </ul>
             </nav>
         </div>
@@ -419,7 +416,7 @@ wind farm wake model simulation and a set of plotting functions to inspect these
 Any wind farm wake modeling software that implements the <code class="docutils literal notranslate"><span class="pre">wcomp</span></code> interface can be included
 in the comparison directly.</p>
 <p>The package diagram below shows the modules within <code class="docutils literal notranslate"><span class="pre">wcomp</span></code> and how each relates to the
-others as dependencies (in other words, which modules <em>import</em> which other modules).</p>
+others as dependencies (in other words, which modules import which other modules).</p>
 <!-- Command: pyreverse --colorized -o mmd . --verbose -->
   <!-- class wcomp {
   }
@@ -613,120 +610,6 @@ class WCompPyWake {
   pywake_interface --&gt; output_struct
   pywake_interface --&gt; plotting
         </div></section>
-<section id="specification">
-<h2>Specification<a class="headerlink" href="#specification" title="Link to this heading">#</a></h2>
-<div class="mermaid">
-            classDiagram
-
-  class WakeModelManager {
-    combination_function
-    deflection_function
-    turbulence_function
-    velocity_function
-    validate_model_strings(instance: attrs.Attribute, value: dict) None
-  }
-  &lt;&lt;interface&gt;&gt; WakeModelManager
-  class GaussVelocityDeficit {
-    prepare_function(grid: Grid, flow_field: FlowField) Dict[str, Any]
-    function(x_i: np.ndarray,\ny_i: np.ndarray,\nz_i: np.ndarray,\naxial_induction_i: np.ndarray,\ndeflection_field_i: np.ndarray,\nyaw_angle_i: np.ndarray,\nturbulence_intensity_i: np.ndarray,\nct_i: np.ndarray,\nhub_height_i: float,\nrotor_diameter_i: np.ndarray) None
-  }
-  class GaussVelocityDeflection {
-    prepare_function(grid: Grid, flow_field: FlowField) dict[str, Any]
-    function(x_i: np.ndarray,\ny_i: np.ndarray,\nyaw_i: np.ndarray,\nturbulence_intensity_i: np.ndarray,\nct_i: np.ndarray,\nrotor_diameter_i: float)
-  }
-  WakeModelManager -- GaussVelocityDeficit
-  WakeModelManager -- GaussVelocityDeflection
-        </div></section>
-<section id="implementation">
-<h2>Implementation<a class="headerlink" href="#implementation" title="Link to this heading">#</a></h2>
-<div class="mermaid">
-            classDiagram
-  class BaseClass {
-    logger
-  }
-  class Grid {
-    cubature_weights
-    grid_resolution : int | Iterable
-    n_turbines : int
-    n_wind_directions : int
-    n_wind_speeds : int
-    time_series : bool
-    turbine_coordinates
-    turbine_diameters
-    wind_directions
-    wind_speeds
-    x_sorted
-    x_sorted_inertial_frame
-    y_sorted
-    y_sorted_inertial_frame
-    z_sorted
-    z_sorted_inertial_frame
-    check_coordinates(instance: attrs.Attribute, value: np.ndarray) None
-    grid_resolution_validator(instance: attrs.Attribute, value: int | Iterable) None
-    set_grid()* None
-    wind_directions_validator(instance: attrs.Attribute, value: NDArrayFloat) None
-    wind_speeds_validator(instance: attrs.Attribute, value: NDArrayFloat) None
-  }
-  &lt;&lt;abstract&gt;&gt; Grid
-  class TurbineGrid {
-    average_method : str
-    sorted_coord_indices
-    sorted_indices
-    unsorted_indices
-    x_center_of_rotation
-    y_center_of_rotation
-    set_grid() None
-  }
-  class FromDictMixin {
-    as_dict() dict
-    from_dict(data: dict)
-  }
-
-  FromDictMixin &lt;|-- BaseClass
-  BaseClass &lt;|-- Grid
-  Grid &lt;|-- TurbineGrid
-        </div></section>
-<section id="sequence">
-<h2>Sequence<a class="headerlink" href="#sequence" title="Link to this heading">#</a></h2>
-<div class="mermaid">
-            sequenceDiagram
-  participant AA as Floris
-  participant A as Solver
-  participant B as DeficitModel
-  participant C as DeflectionModel
-  participant D as CombinationModel
-  activate AA
-  AA -&gt;&gt; A: &lt;&lt;create&gt;&gt;
-  AA -&gt;&gt; B: &lt;&lt;create&gt;&gt;
-  AA -&gt;&gt; C: &lt;&lt;create&gt;&gt;
-  deactivate AA
-
-  activate A
-  A -&gt;&gt; B: prepare_function()
-  A -&gt;&gt; C: prepare_function()
-
-loop Every turbine
-    A -&gt;&gt; C: function()
-    deactivate A
-    activate C
-    C -&gt;&gt; A: deflection_field
-    deactivate C
-    A -&gt;&gt; B: function()
-    activate B
-    B -&gt;&gt; A: velocity_deficit
-    deactivate B
-    A -&gt;&gt; D: function()
-    activate D
-    D -&gt;&gt; A: full wake field with current turbine's wake
-    deactivate D
-    activate A
-end
-
-A -&gt;&gt; A: Save solver data to Floris objects (velocity components)
-deactivate A
-
-AA -&gt;&gt; AA: Post processes to calculate AEP or power
-        </div></section>
 <div class="toctree-wrapper compound">
 </div>
 </section>
@@ -791,9 +674,6 @@ AA -&gt;&gt; AA: Post processes to calculate AEP or power
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#inheritance">Inheritance</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#aggregation-and-composition">Aggregation and Composition</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#package">Package</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#specification">Specification</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#implementation">Implementation</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#sequence">Sequence</a></li>
 </ul>
   </nav></div>
 

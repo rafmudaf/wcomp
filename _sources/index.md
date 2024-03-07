@@ -21,7 +21,7 @@ Any wind farm wake modeling software that implements the `wcomp` interface can b
 in the comparison directly.
 
 The package diagram below shows the modules within `wcomp` and how each relates to the
-others as dependencies (in other words, which modules *import* which other modules).
+others as dependencies (in other words, which modules import which other modules).
 
 <!-- Command: pyreverse --colorized -o mmd . --verbose -->
   <!-- class wcomp {
@@ -230,119 +230,4 @@ classDiagram
 ```
 
 
-## Specification
 
-```{mermaid}
-classDiagram
-
-  class WakeModelManager {
-    combination_function
-    deflection_function
-    turbulence_function
-    velocity_function
-    validate_model_strings(instance: attrs.Attribute, value: dict) None
-  }
-  <<interface>> WakeModelManager
-  class GaussVelocityDeficit {
-    prepare_function(grid: Grid, flow_field: FlowField) Dict[str, Any]
-    function(x_i: np.ndarray,\ny_i: np.ndarray,\nz_i: np.ndarray,\naxial_induction_i: np.ndarray,\ndeflection_field_i: np.ndarray,\nyaw_angle_i: np.ndarray,\nturbulence_intensity_i: np.ndarray,\nct_i: np.ndarray,\nhub_height_i: float,\nrotor_diameter_i: np.ndarray) None
-  }
-  class GaussVelocityDeflection {
-    prepare_function(grid: Grid, flow_field: FlowField) dict[str, Any]
-    function(x_i: np.ndarray,\ny_i: np.ndarray,\nyaw_i: np.ndarray,\nturbulence_intensity_i: np.ndarray,\nct_i: np.ndarray,\nrotor_diameter_i: float)
-  }
-  WakeModelManager -- GaussVelocityDeficit
-  WakeModelManager -- GaussVelocityDeflection
-```
-
-## Implementation
-
-```{mermaid}
-classDiagram
-  class BaseClass {
-    logger
-  }
-  class Grid {
-    cubature_weights
-    grid_resolution : int | Iterable
-    n_turbines : int
-    n_wind_directions : int
-    n_wind_speeds : int
-    time_series : bool
-    turbine_coordinates
-    turbine_diameters
-    wind_directions
-    wind_speeds
-    x_sorted
-    x_sorted_inertial_frame
-    y_sorted
-    y_sorted_inertial_frame
-    z_sorted
-    z_sorted_inertial_frame
-    check_coordinates(instance: attrs.Attribute, value: np.ndarray) None
-    grid_resolution_validator(instance: attrs.Attribute, value: int | Iterable) None
-    set_grid()* None
-    wind_directions_validator(instance: attrs.Attribute, value: NDArrayFloat) None
-    wind_speeds_validator(instance: attrs.Attribute, value: NDArrayFloat) None
-  }
-  <<abstract>> Grid
-  class TurbineGrid {
-    average_method : str
-    sorted_coord_indices
-    sorted_indices
-    unsorted_indices
-    x_center_of_rotation
-    y_center_of_rotation
-    set_grid() None
-  }
-  class FromDictMixin {
-    as_dict() dict
-    from_dict(data: dict)
-  }
-
-  FromDictMixin <|-- BaseClass
-  BaseClass <|-- Grid
-  Grid <|-- TurbineGrid
-```
-
-## Sequence
-
-```{mermaid}
-sequenceDiagram
-  participant AA as Floris
-  participant A as Solver
-  participant B as DeficitModel
-  participant C as DeflectionModel
-  participant D as CombinationModel
-  activate AA
-  AA ->> A: <<create>>
-  AA ->> B: <<create>>
-  AA ->> C: <<create>>
-  deactivate AA
-
-  activate A
-  A ->> B: prepare_function()
-  A ->> C: prepare_function()
-
-loop Every turbine
-    A ->> C: function()
-    deactivate A
-    activate C
-    C ->> A: deflection_field
-    deactivate C
-    A ->> B: function()
-    activate B
-    B ->> A: velocity_deficit
-    deactivate B
-    A ->> D: function()
-    activate D
-    D ->> A: full wake field with current turbine's wake
-    deactivate D
-    activate A
-end
-
-A ->> A: Save solver data to Floris objects (velocity components)
-deactivate A
-
-AA ->> AA: Post processes to calculate AEP or power
-```
