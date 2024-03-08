@@ -344,9 +344,10 @@ document.write(`
 <span class="k">class</span> <span class="nc">WCompBase</span><span class="p">(</span><span class="n">ABC</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    WCompBase is an abstract base class that defines the interfaces required</span>
-<span class="sd">    to conform to the wcomp framework. This class cannot be used directly. Instead,</span>
+<span class="sd">    to conform to the `wcomp` framework. This class cannot be used directly. Instead,</span>
 <span class="sd">    it should be used to create a subclass, and all attributes and functions</span>
-<span class="sd">    described here should be implemented in the subclass.</span>
+<span class="sd">    described here should be implemented in the subclass. See function docstrings</span>
+<span class="sd">    for implementation details.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">LINE_PLOT_COLOR</span> <span class="o">=</span> <span class="s2">&quot;OVERWRITE&quot;</span>   <span class="c1"># Color to use for all line plots; use matplotlib color codes</span>
@@ -363,15 +364,22 @@ document.write(`
 <span class="sd">        3. Complete all calculations defined by the windIO case definition</span>
 
 <span class="sd">        Args:</span>
-<span class="sd">            input_file (str | Path): Path to windIO case input file</span>
+<span class="sd">            input_file (str | Path): Path to a windIO case input file</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            NotImplementedError: This function must be implemented in a subclass</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;WCompBase.__init__&quot;</span><span class="p">)</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">rotor_diameter</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Stores a characteristic rotor diameter for use throughout the</span>
-<span class="sd">        post processing and plotting functions.</span>
+<span class="sd">        Virtual property to get the characteristic rotor diameter for use throughout the</span>
+<span class="sd">        post processing and plotting functions. While every turbine may not have the same</span>
+<span class="sd">        rotor diameter, one should be chosen as a reference value to set relative distances.</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            NotImplementedError: This function must be implemented in a subclass</span>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            float: Characteristic rotor diameter</span>
@@ -381,8 +389,12 @@ document.write(`
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">hub_height</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Stores a characteristic hub height for use throughout the</span>
-<span class="sd">        post processing and plotting functions.</span>
+<span class="sd">        Virtual property to get the characteristic hub height for use throughout the</span>
+<span class="sd">        post processing and plotting functions. While every turbine may not have the same</span>
+<span class="sd">        hub height, one should be chosen as a reference value to set relative distances.</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            NotImplementedError: This function must be implemented in a subclass</span>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            float: Characteristic hub height</span>
@@ -397,11 +409,13 @@ document.write(`
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Computes the annual energy production (AEP) for the current case.</span>
 <span class="sd">        This is typically implemented in the corresponding software, so</span>
-<span class="sd">        it should not be computed here. </span>
+<span class="sd">        it should not be computed here.</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            NotImplementedError: This function must be implemented in a subclass</span>
 
 <span class="sd">        Returns:</span>
-<span class="sd">            float: Annual energy production (AEP) for the current case</span>
-<span class="sd">                in megawatts-hours (MWh).</span>
+<span class="sd">            float: Annual energy production (AEP) for the current case in megawatts-hours (MWh).</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;WCompBase.AEP&quot;</span><span class="p">)</span></div>
 
@@ -442,7 +456,7 @@ document.write(`
 <span class="sd">            .. code-block:: python</span>
 
 <span class="sd">                # Call the wake model to produce the velocities at the sample line</span>
-<span class="sd">                u, v, w = wake_model()              # Note v and w are not used</span>
+<span class="sd">                u, v, w = wake_model(...)           # Note v and w are not used</span>
 <span class="sd">                x, y, z = wake_model.get_points()   # Get the coordinates of the sample points</span>
 
 <span class="sd">                # Create a WakeProfile object to store the data</span>
@@ -470,17 +484,46 @@ document.write(`
         <span class="n">y_coordinate</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
         <span class="n">xmin</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
         <span class="n">xmax</span><span class="p">:</span> <span class="nb">float</span>
-    <span class="p">):</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        This function produces a 1D plot of the velocity profile in the z-x plane</span>
-<span class="sd">        where z is normal to the ground and x is streamwise.</span>
+<span class="sd">        where z is normal to the ground and x is streamwise. A sample line is produced</span>
+<span class="sd">        from `xmin` to `xmax` at the hub height and `y_coordinate` to sample the velocities.</span>
+
+<span class="sd">        To implement this function, the subclass should produce a line of the u-component of</span>
+<span class="sd">        velocities at the specified location and height. The {py:class}`wcomp.plotting.WakeProfile`</span>
+<span class="sd">        class should be used to store the data. Then, the {py:meth}`wcomp.plotting.plot_profile`</span>
+<span class="sd">        function should be used to produce the plot. A sample implementation is shown below.</span>
 
 <span class="sd">        Args:</span>
-<span class="sd">            wind_direction (float): Wind direction to align the plot in the visualization in</span>
-<span class="sd">                degrees with West being 270 degrees and North being 0 degrees</span>
-<span class="sd">            y_coordinate (float): The lateral location to extract the plotted values</span>
-<span class="sd">            xmin (float): The lower bound of the plot in the streamwise direction</span>
-<span class="sd">            xmax (float): The upper bound of the plot in the streamwise direction</span>
+<span class="sd">            wind_direction (float): Incoming wind direction in degrees with West at 270 degrees.</span>
+<span class="sd">            y_coordinate (float): Y-coordinate of the line to sample.</span>
+<span class="sd">            xmin (float): Starting point of the sample line in the streamwise direction.</span>
+<span class="sd">            xmax (float): End point of the sample line in the streamwise direction.</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            NotImplementedError: This function must be implemented in a subclass</span>
+
+<span class="sd">        Example:</span>
+<span class="sd">            .. code-block:: python</span>
+
+<span class="sd">                # Call the wake model to produce the velocities at the sample line</span>
+<span class="sd">                u, v, w = wake_model(...)           # Note v and w are not used</span>
+<span class="sd">                x, y, z = wake_model.get_points()   # Get the coordinates of the sample points</span>
+
+<span class="sd">                # Create a WakeProfile object to store the data</span>
+<span class="sd">                profile = WakeProfile(x, u)</span>
+
+<span class="sd">                # Plot the profile</span>
+<span class="sd">                ax = plt.gca()      # Get the current pyplot axis to place the plot</span>
+<span class="sd">                plot_profile(</span>
+<span class="sd">                    profile,</span>
+<span class="sd">                    ax=ax,</span>
+<span class="sd">                    color=self.LINE_PLOT_COLOR,</span>
+<span class="sd">                    marker=self.LINE_PLOT_MARKER,</span>
+<span class="sd">                    linestyle=self.LINE_PLOT_LINESTYLE,</span>
+<span class="sd">                    label=self.LEGEND</span>
+<span class="sd">                )</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;WCompBase.streamwise_profile_plot&quot;</span><span class="p">)</span></div>
 
@@ -497,13 +540,43 @@ document.write(`
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        This function produces a 1D plot of the velocity profile in the y-z plane</span>
 <span class="sd">        where z is normal to the ground and y is normal to z and the streamwise direction.</span>
+<span class="sd">        A sample line is produced from `ymin` to `ymax` at the hub height and `x_coordinate`</span>
+<span class="sd">        to sample the velocities.</span>
+
+<span class="sd">        To implement this function, the subclass should produce a line of the u-component of</span>
+<span class="sd">        velocities at the specified location and height. The {py:class}`wcomp.plotting.WakeProfile`</span>
+<span class="sd">        class should be used to store the data. Then, the {py:meth}`wcomp.plotting.plot_profile`</span>
+<span class="sd">        function should be used to produce the plot. A sample implementation is shown below.</span>
 
 <span class="sd">        Args:</span>
-<span class="sd">            wind_direction (float): Wind direction to align the plot in the visualization in</span>
-<span class="sd">                degrees with West being 270 degrees and North being 0 degrees</span>
-<span class="sd">            x_coordinate (float): The streamwise location to extract the plotted values</span>
-<span class="sd">            ymin (float): The lower bound of the plot in the lateral direction</span>
-<span class="sd">            ymax (float): The upper bound of the plot in the lateral direction</span>
+<span class="sd">            wind_direction (float): Incoming wind direction in degrees with West at 270 degrees.</span>
+<span class="sd">            x_coordinate (float): X-coordinate of the line to sample.</span>
+<span class="sd">            ymin (float): Starting point of the sample line in the lateral direction.</span>
+<span class="sd">            ymax (float): End point of the sample line in the lateral direction.</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            NotImplementedError: This function must be implemented in a subclass</span>
+
+<span class="sd">        Example:</span>
+<span class="sd">            .. code-block:: python</span>
+
+<span class="sd">                # Call the wake model to produce the velocities at the sample line</span>
+<span class="sd">                u, v, w = wake_model(...)           # Note v and w are not used</span>
+<span class="sd">                x, y, z = wake_model.get_points()   # Get the coordinates of the sample points</span>
+
+<span class="sd">                # Create a WakeProfile object to store the data</span>
+<span class="sd">                profile = WakeProfile(y, u)</span>
+
+<span class="sd">                # Plot the profile</span>
+<span class="sd">                ax = plt.gca()      # Get the current pyplot axis to place the plot</span>
+<span class="sd">                plot_profile(</span>
+<span class="sd">                    profile,</span>
+<span class="sd">                    ax=ax,</span>
+<span class="sd">                    color=self.LINE_PLOT_COLOR,</span>
+<span class="sd">                    marker=self.LINE_PLOT_MARKER,</span>
+<span class="sd">                    linestyle=self.LINE_PLOT_LINESTYLE,</span>
+<span class="sd">                    label=self.LEGEND</span>
+<span class="sd">                )</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;WCompBase.xsection_profile_plot&quot;</span><span class="p">)</span></div>
 

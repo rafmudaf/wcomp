@@ -434,15 +434,14 @@ document.write(`
 This is typically implemented in the corresponding software, so
 it should not be computed here.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p><dl class="simple">
-<dt>Annual energy production (AEP) for the current case</dt><dd><p>in megawatts-hours (MWh).</p>
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>NotImplementedError</strong> -- This function must be implemented in a subclass</p>
 </dd>
-</dl>
-</p>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Annual energy production (AEP) for the current case in megawatts-hours (MWh).</p>
 </dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>float</p>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
 </dd>
 </dl>
 </dd></dl>
@@ -491,14 +490,18 @@ If there are different hub heights, handle this appropriately.</p>
 <dl class="py property">
 <dt class="sig sig-object py" id="wcomp.floris_interface.WCompFloris.hub_height">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">hub_height</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><a class="headerlink" href="#wcomp.floris_interface.WCompFloris.hub_height" title="Link to this definition">#</a></dt>
-<dd><p>Stores a characteristic hub height for use throughout the
-post processing and plotting functions.</p>
+<dd><p>Virtual property to get the characteristic hub height for use throughout the
+post processing and plotting functions. While every turbine may not have the same
+hub height, one should be chosen as a reference value to set relative distances.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Characteristic hub height</p>
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>NotImplementedError</strong> -- This function must be implemented in a subclass</p>
 </dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>float</p>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Characteristic hub height</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
 </dd>
 </dl>
 </dd></dl>
@@ -506,14 +509,18 @@ post processing and plotting functions.</p>
 <dl class="py property">
 <dt class="sig sig-object py" id="wcomp.floris_interface.WCompFloris.rotor_diameter">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">rotor_diameter</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><a class="headerlink" href="#wcomp.floris_interface.WCompFloris.rotor_diameter" title="Link to this definition">#</a></dt>
-<dd><p>Stores a characteristic rotor diameter for use throughout the
-post processing and plotting functions.</p>
+<dd><p>Virtual property to get the characteristic rotor diameter for use throughout the
+post processing and plotting functions. While every turbine may not have the same
+rotor diameter, one should be chosen as a reference value to set relative distances.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Characteristic rotor diameter</p>
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>NotImplementedError</strong> -- This function must be implemented in a subclass</p>
 </dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>float</p>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Characteristic rotor diameter</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
 </dd>
 </dl>
 </dd></dl>
@@ -580,18 +587,46 @@ If there are different hub heights, handle this appropriately.</p>
 <dt class="sig sig-object py" id="wcomp.floris_interface.WCompFloris.xsection_profile_plot">
 <span class="sig-name descname"><span class="pre">xsection_profile_plot</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">wind_direction</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x_coordinate</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ymin</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ymax</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#wcomp.floris_interface.WCompFloris.xsection_profile_plot" title="Link to this definition">#</a></dt>
 <dd><p>This function produces a 1D plot of the velocity profile in the y-z plane
-where z is normal to the ground and y is normal to z and the streamwise direction.</p>
+where z is normal to the ground and y is normal to z and the streamwise direction.
+A sample line is produced from <cite>ymin</cite> to <cite>ymax</cite> at the hub height and <cite>x_coordinate</cite>
+to sample the velocities.</p>
+<p>To implement this function, the subclass should produce a line of the u-component of
+velocities at the specified location and height. The {py:class}`wcomp.plotting.WakeProfile`
+class should be used to store the data. Then, the {py:meth}`wcomp.plotting.plot_profile`
+function should be used to produce the plot. A sample implementation is shown below.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>wind_direction</strong> (<em>float</em>) -- Wind direction to align the plot in the visualization in
-degrees with West being 270 degrees and North being 0 degrees</p></li>
-<li><p><strong>x_coordinate</strong> (<em>float</em>) -- The streamwise location to extract the plotted values</p></li>
-<li><p><strong>ymin</strong> (<em>float</em>) -- The lower bound of the plot in the lateral direction</p></li>
-<li><p><strong>ymax</strong> (<em>float</em>) -- The upper bound of the plot in the lateral direction</p></li>
+<li><p><strong>wind_direction</strong> (<em>float</em>) -- Incoming wind direction in degrees with West at 270 degrees.</p></li>
+<li><p><strong>x_coordinate</strong> (<em>float</em>) -- X-coordinate of the line to sample.</p></li>
+<li><p><strong>ymin</strong> (<em>float</em>) -- Starting point of the sample line in the lateral direction.</p></li>
+<li><p><strong>ymax</strong> (<em>float</em>) -- End point of the sample line in the lateral direction.</p></li>
 </ul>
 </dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>NotImplementedError</strong> -- This function must be implemented in a subclass</p>
+</dd>
 </dl>
+<p class="rubric">Example</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Call the wake model to produce the velocities at the sample line</span>
+<span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">w</span> <span class="o">=</span> <span class="n">wake_model</span><span class="p">(</span><span class="o">...</span><span class="p">)</span>           <span class="c1"># Note v and w are not used</span>
+<span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span> <span class="o">=</span> <span class="n">wake_model</span><span class="o">.</span><span class="n">get_points</span><span class="p">()</span>   <span class="c1"># Get the coordinates of the sample points</span>
+
+<span class="c1"># Create a WakeProfile object to store the data</span>
+<span class="n">profile</span> <span class="o">=</span> <span class="n">WakeProfile</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">u</span><span class="p">)</span>
+
+<span class="c1"># Plot the profile</span>
+<span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">()</span>      <span class="c1"># Get the current pyplot axis to place the plot</span>
+<span class="n">plot_profile</span><span class="p">(</span>
+    <span class="n">profile</span><span class="p">,</span>
+    <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span>
+    <span class="n">color</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">LINE_PLOT_COLOR</span><span class="p">,</span>
+    <span class="n">marker</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">LINE_PLOT_MARKER</span><span class="p">,</span>
+    <span class="n">linestyle</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">LINE_PLOT_LINESTYLE</span><span class="p">,</span>
+    <span class="n">label</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">LEGEND</span>
+<span class="p">)</span>
+</pre></div>
+</div>
 </dd></dl>
 
 </dd></dl>

@@ -406,7 +406,7 @@ document.write(`
 <table class="autosummary longtable table autosummary">
 <tbody>
 <tr class="row-odd"><td><p><a class="reference internal" href="#wcomp.base_interface.WCompBase" title="wcomp.base_interface.WCompBase"><code class="xref py py-obj docutils literal notranslate"><span class="pre">WCompBase</span></code></a>(input_file)</p></td>
-<td><p>WCompBase is an abstract base class that defines the interfaces required to conform to the wcomp framework.</p></td>
+<td><p>WCompBase is an abstract base class that defines the interfaces required to conform to the <cite>wcomp</cite> framework.</p></td>
 </tr>
 </tbody>
 </table>
@@ -414,9 +414,10 @@ document.write(`
 <dt class="sig sig-object py" id="wcomp.base_interface.WCompBase">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">wcomp.base_interface.</span></span><span class="sig-name descname"><span class="pre">WCompBase</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_file</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Path</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/wcomp/base_interface.html#WCompBase"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#wcomp.base_interface.WCompBase" title="Link to this definition">#</a></dt>
 <dd><p>WCompBase is an abstract base class that defines the interfaces required
-to conform to the wcomp framework. This class cannot be used directly. Instead,
+to conform to the <cite>wcomp</cite> framework. This class cannot be used directly. Instead,
 it should be used to create a subclass, and all attributes and functions
-described here should be implemented in the subclass.</p>
+described here should be implemented in the subclass. See function docstrings
+for implementation details.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>input_file</strong> (<em>str</em><em> | </em><em>Path</em>) -- </p>
@@ -435,14 +436,18 @@ described here should be implemented in the subclass.</p>
 <dl class="py property">
 <dt class="sig sig-object py" id="wcomp.base_interface.WCompBase.rotor_diameter">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">rotor_diameter</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><a class="headerlink" href="#wcomp.base_interface.WCompBase.rotor_diameter" title="Link to this definition">#</a></dt>
-<dd><p>Stores a characteristic rotor diameter for use throughout the
-post processing and plotting functions.</p>
+<dd><p>Virtual property to get the characteristic rotor diameter for use throughout the
+post processing and plotting functions. While every turbine may not have the same
+rotor diameter, one should be chosen as a reference value to set relative distances.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Characteristic rotor diameter</p>
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>NotImplementedError</strong> -- This function must be implemented in a subclass</p>
 </dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>float</p>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Characteristic rotor diameter</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
 </dd>
 </dl>
 </dd></dl>
@@ -450,14 +455,18 @@ post processing and plotting functions.</p>
 <dl class="py property">
 <dt class="sig sig-object py" id="wcomp.base_interface.WCompBase.hub_height">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">hub_height</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><a class="headerlink" href="#wcomp.base_interface.WCompBase.hub_height" title="Link to this definition">#</a></dt>
-<dd><p>Stores a characteristic hub height for use throughout the
-post processing and plotting functions.</p>
+<dd><p>Virtual property to get the characteristic hub height for use throughout the
+post processing and plotting functions. While every turbine may not have the same
+hub height, one should be chosen as a reference value to set relative distances.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Characteristic hub height</p>
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>NotImplementedError</strong> -- This function must be implemented in a subclass</p>
 </dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>float</p>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Characteristic hub height</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
 </dd>
 </dl>
 </dd></dl>
@@ -469,15 +478,14 @@ post processing and plotting functions.</p>
 This is typically implemented in the corresponding software, so
 it should not be computed here.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p><dl class="simple">
-<dt>Annual energy production (AEP) for the current case</dt><dd><p>in megawatts-hours (MWh).</p>
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>NotImplementedError</strong> -- This function must be implemented in a subclass</p>
 </dd>
-</dl>
-</p>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Annual energy production (AEP) for the current case in megawatts-hours (MWh).</p>
 </dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>float</p>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
 </dd>
 </dl>
 </dd></dl>
@@ -512,7 +520,7 @@ The line starts at the ground.</p></li>
 </dl>
 <p class="rubric">Example</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Call the wake model to produce the velocities at the sample line</span>
-<span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">w</span> <span class="o">=</span> <span class="n">wake_model</span><span class="p">()</span>              <span class="c1"># Note v and w are not used</span>
+<span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">w</span> <span class="o">=</span> <span class="n">wake_model</span><span class="p">(</span><span class="o">...</span><span class="p">)</span>           <span class="c1"># Note v and w are not used</span>
 <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span> <span class="o">=</span> <span class="n">wake_model</span><span class="o">.</span><span class="n">get_points</span><span class="p">()</span>   <span class="c1"># Get the coordinates of the sample points</span>
 
 <span class="c1"># Create a WakeProfile object to store the data</span>
@@ -534,38 +542,96 @@ The line starts at the ground.</p></li>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="wcomp.base_interface.WCompBase.streamwise_profile_plot">
-<span class="sig-name descname"><span class="pre">streamwise_profile_plot</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">wind_direction</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_coordinate</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">xmin</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">xmax</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/wcomp/base_interface.html#WCompBase.streamwise_profile_plot"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#wcomp.base_interface.WCompBase.streamwise_profile_plot" title="Link to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">streamwise_profile_plot</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">wind_direction</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_coordinate</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">xmin</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">xmax</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/wcomp/base_interface.html#WCompBase.streamwise_profile_plot"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#wcomp.base_interface.WCompBase.streamwise_profile_plot" title="Link to this definition">#</a></dt>
 <dd><p>This function produces a 1D plot of the velocity profile in the z-x plane
-where z is normal to the ground and x is streamwise.</p>
+where z is normal to the ground and x is streamwise. A sample line is produced
+from <cite>xmin</cite> to <cite>xmax</cite> at the hub height and <cite>y_coordinate</cite> to sample the velocities.</p>
+<p>To implement this function, the subclass should produce a line of the u-component of
+velocities at the specified location and height. The {py:class}`wcomp.plotting.WakeProfile`
+class should be used to store the data. Then, the {py:meth}`wcomp.plotting.plot_profile`
+function should be used to produce the plot. A sample implementation is shown below.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>wind_direction</strong> (<em>float</em>) -- Wind direction to align the plot in the visualization in
-degrees with West being 270 degrees and North being 0 degrees</p></li>
-<li><p><strong>y_coordinate</strong> (<em>float</em>) -- The lateral location to extract the plotted values</p></li>
-<li><p><strong>xmin</strong> (<em>float</em>) -- The lower bound of the plot in the streamwise direction</p></li>
-<li><p><strong>xmax</strong> (<em>float</em>) -- The upper bound of the plot in the streamwise direction</p></li>
+<li><p><strong>wind_direction</strong> (<em>float</em>) -- Incoming wind direction in degrees with West at 270 degrees.</p></li>
+<li><p><strong>y_coordinate</strong> (<em>float</em>) -- Y-coordinate of the line to sample.</p></li>
+<li><p><strong>xmin</strong> (<em>float</em>) -- Starting point of the sample line in the streamwise direction.</p></li>
+<li><p><strong>xmax</strong> (<em>float</em>) -- End point of the sample line in the streamwise direction.</p></li>
 </ul>
 </dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>NotImplementedError</strong> -- This function must be implemented in a subclass</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
 </dl>
+<p class="rubric">Example</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Call the wake model to produce the velocities at the sample line</span>
+<span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">w</span> <span class="o">=</span> <span class="n">wake_model</span><span class="p">(</span><span class="o">...</span><span class="p">)</span>           <span class="c1"># Note v and w are not used</span>
+<span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span> <span class="o">=</span> <span class="n">wake_model</span><span class="o">.</span><span class="n">get_points</span><span class="p">()</span>   <span class="c1"># Get the coordinates of the sample points</span>
+
+<span class="c1"># Create a WakeProfile object to store the data</span>
+<span class="n">profile</span> <span class="o">=</span> <span class="n">WakeProfile</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">u</span><span class="p">)</span>
+
+<span class="c1"># Plot the profile</span>
+<span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">()</span>      <span class="c1"># Get the current pyplot axis to place the plot</span>
+<span class="n">plot_profile</span><span class="p">(</span>
+    <span class="n">profile</span><span class="p">,</span>
+    <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span>
+    <span class="n">color</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">LINE_PLOT_COLOR</span><span class="p">,</span>
+    <span class="n">marker</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">LINE_PLOT_MARKER</span><span class="p">,</span>
+    <span class="n">linestyle</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">LINE_PLOT_LINESTYLE</span><span class="p">,</span>
+    <span class="n">label</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">LEGEND</span>
+<span class="p">)</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="wcomp.base_interface.WCompBase.xsection_profile_plot">
 <span class="sig-name descname"><span class="pre">xsection_profile_plot</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">wind_direction</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x_coordinate</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ymin</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ymax</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/wcomp/base_interface.html#WCompBase.xsection_profile_plot"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#wcomp.base_interface.WCompBase.xsection_profile_plot" title="Link to this definition">#</a></dt>
 <dd><p>This function produces a 1D plot of the velocity profile in the y-z plane
-where z is normal to the ground and y is normal to z and the streamwise direction.</p>
+where z is normal to the ground and y is normal to z and the streamwise direction.
+A sample line is produced from <cite>ymin</cite> to <cite>ymax</cite> at the hub height and <cite>x_coordinate</cite>
+to sample the velocities.</p>
+<p>To implement this function, the subclass should produce a line of the u-component of
+velocities at the specified location and height. The {py:class}`wcomp.plotting.WakeProfile`
+class should be used to store the data. Then, the {py:meth}`wcomp.plotting.plot_profile`
+function should be used to produce the plot. A sample implementation is shown below.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>wind_direction</strong> (<em>float</em>) -- Wind direction to align the plot in the visualization in
-degrees with West being 270 degrees and North being 0 degrees</p></li>
-<li><p><strong>x_coordinate</strong> (<em>float</em>) -- The streamwise location to extract the plotted values</p></li>
-<li><p><strong>ymin</strong> (<em>float</em>) -- The lower bound of the plot in the lateral direction</p></li>
-<li><p><strong>ymax</strong> (<em>float</em>) -- The upper bound of the plot in the lateral direction</p></li>
+<li><p><strong>wind_direction</strong> (<em>float</em>) -- Incoming wind direction in degrees with West at 270 degrees.</p></li>
+<li><p><strong>x_coordinate</strong> (<em>float</em>) -- X-coordinate of the line to sample.</p></li>
+<li><p><strong>ymin</strong> (<em>float</em>) -- Starting point of the sample line in the lateral direction.</p></li>
+<li><p><strong>ymax</strong> (<em>float</em>) -- End point of the sample line in the lateral direction.</p></li>
 </ul>
 </dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>NotImplementedError</strong> -- This function must be implemented in a subclass</p>
+</dd>
 </dl>
+<p class="rubric">Example</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Call the wake model to produce the velocities at the sample line</span>
+<span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">w</span> <span class="o">=</span> <span class="n">wake_model</span><span class="p">(</span><span class="o">...</span><span class="p">)</span>           <span class="c1"># Note v and w are not used</span>
+<span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span> <span class="o">=</span> <span class="n">wake_model</span><span class="o">.</span><span class="n">get_points</span><span class="p">()</span>   <span class="c1"># Get the coordinates of the sample points</span>
+
+<span class="c1"># Create a WakeProfile object to store the data</span>
+<span class="n">profile</span> <span class="o">=</span> <span class="n">WakeProfile</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">u</span><span class="p">)</span>
+
+<span class="c1"># Plot the profile</span>
+<span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">()</span>      <span class="c1"># Get the current pyplot axis to place the plot</span>
+<span class="n">plot_profile</span><span class="p">(</span>
+    <span class="n">profile</span><span class="p">,</span>
+    <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span>
+    <span class="n">color</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">LINE_PLOT_COLOR</span><span class="p">,</span>
+    <span class="n">marker</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">LINE_PLOT_MARKER</span><span class="p">,</span>
+    <span class="n">linestyle</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">LINE_PLOT_LINESTYLE</span><span class="p">,</span>
+    <span class="n">label</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">LEGEND</span>
+<span class="p">)</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="py method">
