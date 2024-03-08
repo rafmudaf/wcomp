@@ -64,4 +64,5 @@ sphinx:
       # class-doc-from
       # no-value
     autodoc_typehints: both
-    mermaid_version: "10.8"
+    # mermaid_output_format: png
+    mermaid_version: 10.9.0
