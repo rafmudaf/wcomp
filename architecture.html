@@ -6,8 +6,9 @@
 
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Python Module Index &#8212; wcomp</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Architecture and Design &#8212; wcomp</title>
   
   
   
@@ -58,14 +59,13 @@
     <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
     <script src="https://unpkg.com/mermaid@10.9.0/dist/mermaid.min.js"></script>
     <script>mermaid.initialize({startOnLoad:true});</script>
-    <script>DOCUMENTATION_OPTIONS.pagename = 'py-modindex';</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'architecture';</script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-
+    <link rel="next" title="API Documentation" href="api_docs.html" />
+    <link rel="prev" title="Wakes Compared (wcomp)" href="index.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="python"/>
-
-
   </head>
   
   
@@ -125,8 +125,6 @@
       
       
       
-        
-      
       <div class="bd-sidebar-primary bd-sidebar">
         
 
@@ -174,8 +172,8 @@
                 </a>
             </li>
         </ul>
-        <ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="architecture.html">Architecture and Design</a></li>
+        <ul class="current nav bd-sidenav">
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Architecture and Design</a></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="api_docs.html">API Documentation</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-1"><i class="fa-solid fa-chevron-down"></i></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="_autosummary/wcomp.base_interface.html">wcomp.base_interface</a></li>
 <li class="toctree-l2"><a class="reference internal" href="_autosummary/wcomp.floris_interface.html">wcomp.floris_interface</a></li>
@@ -256,7 +254,7 @@
       
       
       
-      <li><a href="https://github.com/rafmudaf/wcomp/issues/new?title=Issue%20on%20page%20%2Fpy-modindex.html&body=Your%20issue%20content%20here." target="_blank"
+      <li><a href="https://github.com/rafmudaf/wcomp/issues/new?title=Issue%20on%20page%20%2Farchitecture.html&body=Your%20issue%20content%20here." target="_blank"
    class="btn btn-sm btn-source-issues-button dropdown-item"
    title="Open an issue"
    data-bs-placement="left" data-bs-toggle="tooltip"
@@ -268,6 +266,54 @@
   </span>
 <span class="btn__text-container">Open issue</span>
 </a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="_sources/architecture.md" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.md</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
 </li>
       
   </ul>
@@ -320,7 +366,7 @@ document.write(`
               
 
 <div id="jb-print-docs-body" class="onlyprint">
-    <h1></h1>
+    <h1>Architecture and Design</h1>
     <!-- Table of contents -->
     <div id="print-main-content">
         <div id="jb-print-toc">
@@ -334,55 +380,86 @@ document.write(`
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
+  <section class="tex2jax_ignore mathjax_ignore" id="architecture-and-design">
+<h1>Architecture and Design<a class="headerlink" href="#architecture-and-design" title="Link to this heading">#</a></h1>
+<p><code class="docutils literal notranslate"><span class="pre">wcomp</span></code> entirely consists of an interface definition to wake modeling software, a module of data
+structures to hold wind farm wake simulation results, and plotting functions.
+The ultimate objective is to provide infrastructure to obtain consistence results from
+similar wake modeling software with common inputs.
+Each wake modeling software that implements the interface can be automatically included in
+the dataset of solutions to characteristic problems.</p>
+<p>The package diagram below shows the modules within <code class="docutils literal notranslate"><span class="pre">wcomp</span></code> and how each relates to the
+others as dependencies (which modules import which other modules).</p>
+<div class="mermaid">
+            classDiagram
+  wcomp --&gt; floris_interface
+  wcomp --&gt; foxes_interface
+  wcomp --&gt; pywake_interface
+  base_interface --&gt; output_struct
+  floris_interface --&gt; base_interface
+  floris_interface --&gt; output_struct
+  floris_interface --&gt; plotting
+  foxes_interface --&gt; base_interface
+  foxes_interface --&gt; output_struct
+  foxes_interface --&gt; plotting
+  plotting --&gt; output_struct
+  pywake_interface --&gt; base_interface
+  pywake_interface --&gt; output_struct
+  pywake_interface --&gt; plotting
+        </div><p>The interface to implement by participating wake modeling software is defined in an abstract
+base class, <code class="docutils literal notranslate"><span class="pre">wcomp.base_interface</span></code>, and the class diagram is given below.</p>
+<div class="sd-card sd-sphinx-override sd-w-75 sd-m-auto sd-shadow-sm docutils">
+<div class="sd-card-body docutils">
+<div class="sd-card-title sd-font-weight-bold docutils">
+WCompBase Class Diagram</div>
+</div>
+</div>
+<p>The following table maps the wake modeling software currently integrated to <code class="docutils literal notranslate"><span class="pre">wcomp</span></code> to their
+interface files, for reference.</p>
+<table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Wake Model</p></th>
+<th class="head"><p>Interface File</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><a class="reference external" href="https://github.com/NREL/floris">Floris</a></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">wcomp.floris_interface</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference external" href="https://github.com/FraunhoferIWES/foxes">FOXES</a></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">wcomp.foxes_interface</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference external" href="https://gitlab.windenergy.dtu.dk/TOPFARM/PyWake">PyWake</a></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">wcomp.pywake_interface</span></code></p></td>
+</tr>
+</tbody>
+</table>
+<!-- ```{autoclasstree} wcomp.base_interface
+``` -->
+<!-- ```{mermaid} ../wcomp/classes.mmd
+:zoom:
+``` -->
+</section>
 
-   <h1>Python Module Index</h1>
-
-   <div class="modindex-jumpbox">
-   <a href="#cap-w"><strong>w</strong></a>
-   </div>
-
-   <table class="indextable modindextable">
-     <tr class="pcap"><td></td><td>&#160;</td><td></td></tr>
-     <tr class="cap" id="cap-w"><td></td><td>
-       <strong>w</strong></td><td></td></tr>
-     <tr>
-       <td><img src="_static/minus.png" class="toggler"
-              id="toggle-1" style="display: none" alt="-" /></td>
-       <td>
-       <code class="xref">wcomp</code></td><td>
-       <em></em></td></tr>
-     <tr class="cg-1">
-       <td></td>
-       <td>&#160;&#160;&#160;
-       <a href="_autosummary/wcomp.base_interface.html#module-wcomp.base_interface"><code class="xref">wcomp.base_interface</code></a></td><td>
-       <em></em></td></tr>
-     <tr class="cg-1">
-       <td></td>
-       <td>&#160;&#160;&#160;
-       <a href="_autosummary/wcomp.floris_interface.html#module-wcomp.floris_interface"><code class="xref">wcomp.floris_interface</code></a></td><td>
-       <em></em></td></tr>
-     <tr class="cg-1">
-       <td></td>
-       <td>&#160;&#160;&#160;
-       <a href="_autosummary/wcomp.foxes_interface.html#module-wcomp.foxes_interface"><code class="xref">wcomp.foxes_interface</code></a></td><td>
-       <em></em></td></tr>
-     <tr class="cg-1">
-       <td></td>
-       <td>&#160;&#160;&#160;
-       <a href="_autosummary/wcomp.output_struct.html#module-wcomp.output_struct"><code class="xref">wcomp.output_struct</code></a></td><td>
-       <em></em></td></tr>
-     <tr class="cg-1">
-       <td></td>
-       <td>&#160;&#160;&#160;
-       <a href="_autosummary/wcomp.plotting.html#module-wcomp.plotting"><code class="xref">wcomp.plotting</code></a></td><td>
-       <em></em></td></tr>
-     <tr class="cg-1">
-       <td></td>
-       <td>&#160;&#160;&#160;
-       <a href="_autosummary/wcomp.pywake_interface.html#module-wcomp.pywake_interface"><code class="xref">wcomp.pywake_interface</code></a></td><td>
-       <em></em></td></tr>
-   </table>
-
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./."
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
 
                 </article>
               
@@ -394,6 +471,24 @@ document.write(`
                 <footer class="prev-next-footer">
                   
 <div class="prev-next-area">
+    <a class="left-prev"
+       href="index.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Wakes Compared (wcomp)</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="api_docs.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">API Documentation</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
 </div>
                 </footer>
               
