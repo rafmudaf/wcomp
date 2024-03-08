@@ -29,6 +29,7 @@ EXTRAS = {
         # "sphinx-autodoc-typehints",
         "sphinxcontrib-autoyaml",
         "sphinxcontrib.mermaid",
+        "pylint",  # Used for pyreverse to generate diagrams
     },
     "develop": {
         "pytest",

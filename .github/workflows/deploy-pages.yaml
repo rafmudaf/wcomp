@@ -24,6 +24,12 @@ jobs:
       run: |
         pip install -e ".[docs]"
 
+    # Generate any required diagrams
+    - name: Make diagrams
+      working-directory: ${{runner.workspace}}/wcomp/wcomp
+      run: |
+        pyreverse base_interface.py -c WCompBase -o mmd
+
     # Build the book
     - name: Build the book
       working-directory: ${{runner.workspace}}/wcomp/docs/
