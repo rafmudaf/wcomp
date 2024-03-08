@@ -433,11 +433,16 @@ document.write(`
 <dd><p>Computes the annual energy production (AEP) for the current case.
 This is typically implemented in the corresponding software, so
 it should not be computed here.</p>
-<dl class="simple">
-<dt>Returns:</dt><dd><dl class="simple">
-<dt>float: Annual energy production (AEP) for the current case</dt><dd><p>in megawatts-hours (MWh).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><dl class="simple">
+<dt>Annual energy production (AEP) for the current case</dt><dd><p>in megawatts-hours (MWh).</p>
 </dd>
 </dl>
+</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>float</p>
 </dd>
 </dl>
 </dd></dl>
@@ -470,16 +475,11 @@ This requires plt.show() to be called when appropriate.
 NOTE:
 - The height of the plane is the hub height of the first wind turbine.
 If there are different hub heights, handle this appropriately.</p>
-<dl class="simple">
-<dt>Args:</dt><dd><p>wind_direction (float): The wind direction to use for the visualization
-resolution (tuple): The (x, y) resolution of the horizontal plane</p>
-</dd>
-</dl>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>wind_direction</strong> (<em>float</em>) -- </p></li>
-<li><p><strong>resolution</strong> (<em>tuple</em>) -- </p></li>
+<li><p><strong>wind_direction</strong> (<em>float</em>) -- The wind direction to use for the visualization</p></li>
+<li><p><strong>resolution</strong> (<em>tuple</em>) -- The (x, y) resolution of the horizontal plane</p></li>
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
@@ -493,8 +493,12 @@ resolution (tuple): The (x, y) resolution of the horizontal plane</p>
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">hub_height</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><a class="headerlink" href="#wcomp.floris_interface.WCompFloris.hub_height" title="Link to this definition">#</a></dt>
 <dd><p>Stores a characteristic hub height for use throughout the
 post processing and plotting functions.</p>
-<dl class="simple">
-<dt>Returns:</dt><dd><p>float: Characteristic hub height</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Characteristic hub height</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>float</p>
 </dd>
 </dl>
 </dd></dl>
@@ -504,8 +508,12 @@ post processing and plotting functions.</p>
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">rotor_diameter</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><a class="headerlink" href="#wcomp.floris_interface.WCompFloris.rotor_diameter" title="Link to this definition">#</a></dt>
 <dd><p>Stores a characteristic rotor diameter for use throughout the
 post processing and plotting functions.</p>
-<dl class="simple">
-<dt>Returns:</dt><dd><p>float: Characteristic rotor diameter</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Characteristic rotor diameter</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>float</p>
 </dd>
 </dl>
 </dd></dl>
@@ -515,15 +523,11 @@ post processing and plotting functions.</p>
 <span class="sig-name descname"><span class="pre">streamwise_profile_plot</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">wind_direction</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_coordinate</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">xmin</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">xmax</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#wcomp.floris_interface.WCompFloris.streamwise_profile_plot" title="Link to this definition">#</a></dt>
 <dd><p>Creates the plot figures via matplotlib, but it does not show them.
 This requires plt.show() to be called when appropriate.</p>
-<dl class="simple">
-<dt>Args:</dt><dd><p>wind_direction (float): The wind direction to use for the visualization
-resolution (tuple): The (x, y) resolution of the horizontal plane</p>
-</dd>
-</dl>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>wind_direction</strong> (<em>float</em>) -- </p></li>
+<li><p><strong>wind_direction</strong> (<em>float</em>) -- The wind direction to use for the visualization</p></li>
+<li><p><strong>resolution</strong> (<em>tuple</em>) -- The (x, y) resolution of the horizontal plane</p></li>
 <li><p><strong>y_coordinate</strong> (<em>float</em>) -- </p></li>
 <li><p><strong>xmin</strong> (<em>float</em>) -- </p></li>
 <li><p><strong>xmax</strong> (<em>float</em>) -- </p></li>
@@ -537,15 +541,11 @@ resolution (tuple): The (x, y) resolution of the horizontal plane</p>
 <span class="sig-name descname"><span class="pre">vertical_profile_plot</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">wind_direction</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x_coordinate</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_coordinate</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">zmax</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#wcomp.floris_interface.WCompFloris.vertical_profile_plot" title="Link to this definition">#</a></dt>
 <dd><p>Creates the plot figures via matplotlib, but it does not show them.
 This requires plt.show() to be called when appropriate.</p>
-<dl class="simple">
-<dt>Args:</dt><dd><p>wind_direction (float): The wind direction to use for the visualization
-resolution (tuple): The (x, y) resolution of the horizontal plane</p>
-</dd>
-</dl>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>wind_direction</strong> (<em>float</em>) -- </p></li>
+<li><p><strong>wind_direction</strong> (<em>float</em>) -- The wind direction to use for the visualization</p></li>
+<li><p><strong>resolution</strong> (<em>tuple</em>) -- The (x, y) resolution of the horizontal plane</p></li>
 <li><p><strong>x_coordinate</strong> (<em>float</em>) -- </p></li>
 <li><p><strong>y_coordinate</strong> (<em>float</em>) -- </p></li>
 <li><p><strong>zmax</strong> (<em>float</em>) -- </p></li>
@@ -562,16 +562,11 @@ This requires plt.show() to be called when appropriate.
 NOTE:
 - The height of the plane is the hub height of the first wind turbine.
 If there are different hub heights, handle this appropriately.</p>
-<dl class="simple">
-<dt>Args:</dt><dd><p>wind_direction (float): The wind direction to use for the visualization
-resolution (tuple): The (x, y) resolution of the horizontal plane</p>
-</dd>
-</dl>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>wind_direction</strong> (<em>float</em>) -- </p></li>
-<li><p><strong>resolution</strong> (<em>tuple</em>) -- </p></li>
+<li><p><strong>wind_direction</strong> (<em>float</em>) -- The wind direction to use for the visualization</p></li>
+<li><p><strong>resolution</strong> (<em>tuple</em>) -- The (x, y) resolution of the horizontal plane</p></li>
 <li><p><strong>x_coordinate</strong> (<em>float</em>) -- </p></li>
 </ul>
 </dd>
@@ -586,23 +581,14 @@ resolution (tuple): The (x, y) resolution of the horizontal plane</p>
 <span class="sig-name descname"><span class="pre">xsection_profile_plot</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">wind_direction</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x_coordinate</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ymin</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ymax</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#wcomp.floris_interface.WCompFloris.xsection_profile_plot" title="Link to this definition">#</a></dt>
 <dd><p>This function produces a 1D plot of the velocity profile in the y-z plane
 where z is normal to the ground and y is normal to z and the streamwise direction.</p>
-<dl>
-<dt>Args:</dt><dd><dl class="simple">
-<dt>wind_direction (float): Wind direction to align the plot in the visualization in</dt><dd><p>degrees with West being 270 degrees and North being 0 degrees</p>
-</dd>
-</dl>
-<p>x_coordinate (float): The streamwise location to extract the plotted values
-ymin (float): The lower bound of the plot in the lateral direction
-ymax (float): The upper bound of the plot in the lateral direction</p>
-</dd>
-</dl>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>wind_direction</strong> (<em>float</em>) -- </p></li>
-<li><p><strong>x_coordinate</strong> (<em>float</em>) -- </p></li>
-<li><p><strong>ymin</strong> (<em>float</em>) -- </p></li>
-<li><p><strong>ymax</strong> (<em>float</em>) -- </p></li>
+<li><p><strong>wind_direction</strong> (<em>float</em>) -- Wind direction to align the plot in the visualization in
+degrees with West being 270 degrees and North being 0 degrees</p></li>
+<li><p><strong>x_coordinate</strong> (<em>float</em>) -- The streamwise location to extract the plotted values</p></li>
+<li><p><strong>ymin</strong> (<em>float</em>) -- The lower bound of the plot in the lateral direction</p></li>
+<li><p><strong>ymax</strong> (<em>float</em>) -- The upper bound of the plot in the lateral direction</p></li>
 </ul>
 </dd>
 </dl>

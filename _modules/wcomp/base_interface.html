@@ -416,15 +416,48 @@ document.write(`
         <span class="n">x_coordinate</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
         <span class="n">y_coordinate</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
         <span class="n">zmax</span><span class="p">:</span> <span class="nb">float</span>
-    <span class="p">):</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        This function produces a 1D plot of the velocity profile in the z-x plane</span>
-<span class="sd">        where z is normal to the ground and x is streamwise.</span>
+<span class="sd">        where z is normal to the ground and x is streamwise. A sample line is produced</span>
+<span class="sd">        from the ground to the height `zmax` at the location (`x_coordinate`, `y_coordinate`)</span>
+<span class="sd">        to sample the velocities.</span>
+
+<span class="sd">        To implement this function, the subclass should produce a line of the u-component of</span>
+<span class="sd">        velocities at the specified location and height. The {py:class}`wcomp.plotting.WakeProfile`</span>
+<span class="sd">        class should be used to store the data. Then, the {py:meth}`wcomp.plotting.plot_profile`</span>
+<span class="sd">        function should be used to produce the plot. A sample implementation is shown below.</span>
 
 <span class="sd">        Args:</span>
-<span class="sd">            wind_direction (float): Wind direction to align the plot in the visualization in</span>
-<span class="sd">                degrees with West being 270 degrees and North being 0 degrees</span>
-<span class="sd">            y_coordinate (float): The lateral location to extract the plotted values</span>
+<span class="sd">            wind_direction (float): Incoming wind direction in degrees with West at 270 degrees.</span>
+<span class="sd">            x_coordinate (float): X-coordinate of the line to sample.</span>
+<span class="sd">            y_coordinate (float): Y-coordinate of the line to sample.</span>
+<span class="sd">            zmax (float): The end-point of the sample line in the vertical direction.</span>
+<span class="sd">                The line starts at the ground.</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            NotImplementedError: This function must be implemented in a subclass</span>
+
+<span class="sd">        Example:</span>
+<span class="sd">            .. code-block:: python</span>
+
+<span class="sd">                # Call the wake model to produce the velocities at the sample line</span>
+<span class="sd">                u, v, w = wake_model()              # Note v and w are not used</span>
+<span class="sd">                x, y, z = wake_model.get_points()   # Get the coordinates of the sample points</span>
+
+<span class="sd">                # Create a WakeProfile object to store the data</span>
+<span class="sd">                profile = WakeProfile(y, u)</span>
+
+<span class="sd">                # Plot the profile</span>
+<span class="sd">                ax = plt.gca()      # Get the current pyplot axis to place the plot</span>
+<span class="sd">                plot_profile(</span>
+<span class="sd">                    profile,</span>
+<span class="sd">                    ax=ax,</span>
+<span class="sd">                    color=self.LINE_PLOT_COLOR,</span>
+<span class="sd">                    marker=self.LINE_PLOT_MARKER,</span>
+<span class="sd">                    linestyle=self.LINE_PLOT_LINESTYLE,</span>
+<span class="sd">                    label=self.LEGEND</span>
+<span class="sd">                )</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;WCompBase.vertical_profile_plot&quot;</span><span class="p">)</span></div>
 
