@@ -2,15 +2,16 @@
 from abc import ABC
 from pathlib import Path
 
-from .output_struct import WakePlane
+from .output_struct import WakeProfile, WakePlane
 
 
 class WCompBase(ABC):
     """
     WCompBase is an abstract base class that defines the interfaces required
-    to conform to the wcomp framework. This class cannot be used directly. Instead,
+    to conform to the `wcomp` framework. This class cannot be used directly. Instead,
     it should be used to create a subclass, and all attributes and functions
-    described here should be implemented in the subclass.
+    described here should be implemented in the subclass. See function docstrings
+    for implementation details.
     """
 
     LINE_PLOT_COLOR = "OVERWRITE"   # Color to use for all line plots; use matplotlib color codes
@@ -27,15 +28,22 @@ class WCompBase(ABC):
         3. Complete all calculations defined by the windIO case definition
 
         Args:
-            input_file (str | Path): Path to windIO case input file
+            input_file (str | Path): Path to a windIO case input file
+
+        Raises:
+            NotImplementedError: This function must be implemented in a subclass
         """
         raise NotImplementedError("WCompBase.__init__")
 
     @property
     def rotor_diameter(self) -> float:
         """
-        Stores a characteristic rotor diameter for use throughout the
-        post processing and plotting functions.
+        Virtual property to get the characteristic rotor diameter for use throughout the
+        post processing and plotting functions. While every turbine may not have the same
+        rotor diameter, one should be chosen as a reference value to set relative distances.
+
+        Raises:
+            NotImplementedError: This function must be implemented in a subclass
 
         Returns:
             float: Characteristic rotor diameter
@@ -45,8 +53,12 @@ class WCompBase(ABC):
     @property
     def hub_height(self) -> float:
         """
-        Stores a characteristic hub height for use throughout the
-        post processing and plotting functions.
+        Virtual property to get the characteristic hub height for use throughout the
+        post processing and plotting functions. While every turbine may not have the same
+        hub height, one should be chosen as a reference value to set relative distances.
+
+        Raises:
+            NotImplementedError: This function must be implemented in a subclass
 
         Returns:
             float: Characteristic hub height
@@ -59,11 +71,13 @@ class WCompBase(ABC):
         """
         Computes the annual energy production (AEP) for the current case.
         This is typically implemented in the corresponding software, so
-        it should not be computed here. 
+        it should not be computed here.
+
+        Raises:
+            NotImplementedError: This function must be implemented in a subclass
 
         Returns:
-            float: Annual energy production (AEP) for the current case
-                in megawatts-hours (MWh).
+            float: Annual energy production (AEP) for the current case in megawatts-hours (MWh).
         """
         raise NotImplementedError("WCompBase.AEP")
 
@@ -75,15 +89,51 @@ class WCompBase(ABC):
         x_coordinate: float,
         y_coordinate: float,
         zmax: float
-    ):
+    ) -> None:
         """
         This function produces a 1D plot of the velocity profile in the z-x plane
-        where z is normal to the ground and x is streamwise.
+        where z is normal to the ground and x is streamwise. A sample line is produced
+        from the ground to the height `zmax` at the location (`x_coordinate`, `y_coordinate`)
+        to sample the velocities.
+
+        To implement this function, the subclass should produce a line of the u-component of
+        velocities at the specified location and height. The {py:class}`wcomp.plotting.WakeProfile`
+        class should be used to store the data. Then, the {py:meth}`wcomp.plotting.plot_profile`
+        function should be used to produce the plot. A sample implementation is shown below.
 
         Args:
-            wind_direction (float): Wind direction to align the plot in the visualization in
-                degrees with West being 270 degrees and North being 0 degrees
-            y_coordinate (float): The lateral location to extract the plotted values
+            wind_direction (float): Incoming wind direction in degrees with West at 270 degrees.
+            x_coordinate (float): X-coordinate of the line to sample.
+            y_coordinate (float): Y-coordinate of the line to sample.
+            zmax (float): The end-point of the sample line in the vertical direction.
+                The line starts at the ground.
+
+        Raises:
+            NotImplementedError: This function must be implemented in a subclass
+
+        Returns:
+            WakeProfile: The profile of wake data
+
+        Example:
+            .. code-block:: python
+
+                # Call the wake model to produce the velocities at the sample line
+                u, v, w = wake_model(...)           # Note v and w are not used
+                x, y, z = wake_model.get_points()   # Get the coordinates of the sample points
+
+                # Create a WakeProfile object to store the data
+                profile = WakeProfile(z, u)
+
+                # Plot the profile
+                ax = plt.gca()      # Get the current pyplot axis to place the plot
+                plot_profile(
+                    profile,
+                    ax=ax,
+                    color=self.LINE_PLOT_COLOR,
+                    marker=self.LINE_PLOT_MARKER,
+                    linestyle=self.LINE_PLOT_LINESTYLE,
+                    label=self.LEGEND
+                )
         """
         raise NotImplementedError("WCompBase.vertical_profile_plot")
 
@@ -93,17 +143,49 @@ class WCompBase(ABC):
         y_coordinate: float,
         xmin: float,
         xmax: float
-    ):
+    ) -> None:
         """
         This function produces a 1D plot of the velocity profile in the z-x plane
-        where z is normal to the ground and x is streamwise.
+        where z is normal to the ground and x is streamwise. A sample line is produced
+        from `xmin` to `xmax` at the hub height and `y_coordinate` to sample the velocities.
+
+        To implement this function, the subclass should produce a line of the u-component of
+        velocities at the specified location and height. The {py:class}`wcomp.plotting.WakeProfile`
+        class should be used to store the data. Then, the {py:meth}`wcomp.plotting.plot_profile`
+        function should be used to produce the plot. A sample implementation is shown below.
 
         Args:
-            wind_direction (float): Wind direction to align the plot in the visualization in
-                degrees with West being 270 degrees and North being 0 degrees
-            y_coordinate (float): The lateral location to extract the plotted values
-            xmin (float): The lower bound of the plot in the streamwise direction
-            xmax (float): The upper bound of the plot in the streamwise direction
+            wind_direction (float): Incoming wind direction in degrees with West at 270 degrees.
+            y_coordinate (float): Y-coordinate of the line to sample.
+            xmin (float): Starting point of the sample line in the streamwise direction.
+            xmax (float): End point of the sample line in the streamwise direction.
+
+        Raises:
+            NotImplementedError: This function must be implemented in a subclass
+
+        Returns:
+            WakeProfile: The profile of wake data
+
+        Example:
+            .. code-block:: python
+
+                # Call the wake model to produce the velocities at the sample line
+                u, v, w = wake_model(...)           # Note v and w are not used
+                x, y, z = wake_model.get_points()   # Get the coordinates of the sample points
+
+                # Create a WakeProfile object to store the data
+                profile = WakeProfile(x, u)
+
+                # Plot the profile
+                ax = plt.gca()      # Get the current pyplot axis to place the plot
+                plot_profile(
+                    profile,
+                    ax=ax,
+                    color=self.LINE_PLOT_COLOR,
+                    marker=self.LINE_PLOT_MARKER,
+                    linestyle=self.LINE_PLOT_LINESTYLE,
+                    label=self.LEGEND
+                )
         """
         raise NotImplementedError("WCompBase.streamwise_profile_plot")
 
@@ -113,17 +195,50 @@ class WCompBase(ABC):
         x_coordinate: float,
         ymin: float,
         ymax: float
-    ):
+    ) -> WakeProfile:
         """
         This function produces a 1D plot of the velocity profile in the y-z plane
         where z is normal to the ground and y is normal to z and the streamwise direction.
+        A sample line is produced from `ymin` to `ymax` at the hub height and `x_coordinate`
+        to sample the velocities.
+
+        To implement this function, the subclass should produce a line of the u-component of
+        velocities at the specified location and height. The {py:class}`wcomp.plotting.WakeProfile`
+        class should be used to store the data. Then, the {py:meth}`wcomp.plotting.plot_profile`
+        function should be used to produce the plot. A sample implementation is shown below.
 
         Args:
-            wind_direction (float): Wind direction to align the plot in the visualization in
-                degrees with West being 270 degrees and North being 0 degrees
-            x_coordinate (float): The streamwise location to extract the plotted values
-            ymin (float): The lower bound of the plot in the lateral direction
-            ymax (float): The upper bound of the plot in the lateral direction
+            wind_direction (float): Incoming wind direction in degrees with West at 270 degrees.
+            x_coordinate (float): X-coordinate of the line to sample.
+            ymin (float): Starting point of the sample line in the lateral direction.
+            ymax (float): End point of the sample line in the lateral direction.
+
+        Raises:
+            NotImplementedError: This function must be implemented in a subclass
+
+        Returns:
+            WakeProfile: The profile of wake data
+
+        Example:
+            .. code-block:: python
+
+                # Call the wake model to produce the velocities at the sample line
+                u, v, w = wake_model(...)           # Note v and w are not used
+                x, y, z = wake_model.get_points()   # Get the coordinates of the sample points
+
+                # Create a WakeProfile object to store the data
+                profile = WakeProfile(y, u)
+
+                # Plot the profile
+                ax = plt.gca()      # Get the current pyplot axis to place the plot
+                plot_profile(
+                    profile,
+                    ax=ax,
+                    color=self.LINE_PLOT_COLOR,
+                    marker=self.LINE_PLOT_MARKER,
+                    linestyle=self.LINE_PLOT_LINESTYLE,
+                    label=self.LEGEND
+                )
         """
         raise NotImplementedError("WCompBase.xsection_profile_plot")
 
@@ -135,18 +250,57 @@ class WCompBase(ABC):
         resolution: tuple
     ) -> WakePlane:
         """
-        This function produces a contour plot of the velocity in the x-y plane
-        parallel to the ground. The contour is located at the hub height obtained
-        by the interface's `hub_height` property (`self.hub_height`).
+        This function produces a contour plot of the velocity in the x-y plane where
+        x is streamwise and y is lateral. The contour is located at the hub height.
+        The extent of the sample plane should be:
+
+        - x min: 2 rotor diameters upstream of the most upstream turbine
+        - x max: 10 rotor diameters downstream of the most downstream turbine
+        - y min,max: 2 rotor diameters outside the most lateral turbines
+
+        To implement this function, the subclass should produce a plane of the u-component of
+        velocities with the required bounds. The {py:class}`wcomp.plotting.WakePlane`
+        class should be used to store the data. Then, the {py:meth}`wcomp.plotting.plot_plane`
+        function should be used to produce the plot. A sample implementation is shown below.
 
         Args:
-            wind_direction (float): Wind direction to align the plot in the visualization in
-                degrees with West being 270 degrees and North being 0 degrees
-            resolution (tuple): Grid resolution for the contour plot;
-                element 0 is the resolution in x and element 1 is the resolution in y
+            wind_direction (float): Incoming wind direction in degrees with West at 270 degrees.
+            resolution (tuple): Number of points in the (x, y) directions for the contour plot grid
+
+        Raises:
+            NotImplementedError: This function must be implemented in a subclass
 
         Returns:
-            WakePlane
+            WakePlane: The plane of wake data
+
+        Example:
+            .. code-block:: python
+
+                # Call the wake model to produce the velocities at the sample line
+                u, v, w = wake_model(...)           # Note v and w are not used
+                x, y, z = wake_model.get_points()   # Get the coordinates of the sample points
+
+                # Create a WakePlane object to store the data
+                plane = WakePlane(
+                    x,      # If 2d array, use x.flatten()
+                    y,      # ^ ^ ^
+                    u,
+                    "z",
+                    resolution,
+                )
+
+                # Plot the plane
+                ax = plt.gca()      # Get the current pyplot axis to place the plot
+                plot_plane(
+                    plane,
+                    ax=ax,
+                    color=self.LINE_PLOT_COLOR,
+                    marker=self.LINE_PLOT_MARKER,
+                    linestyle=self.LINE_PLOT_LINESTYLE,
+                    label=self.LEGEND
+                )
+
+                return plane
         """
         raise NotImplementedError("WCompBase.horizontal_contour")
 
@@ -157,8 +311,18 @@ class WCompBase(ABC):
         x_coordinate: float
     ) -> WakePlane:
         """
-        This function produces a contour plot of the velocity in the y-z plane
-        perpendicular to the wind direction.
+        This function produces a contour plot of the velocity in the y-z plane where
+        y is lateral and z is vertical. The contour is located in the streamwise direction at the
+        given `x_coordinate`. The extent of the sample plane should be:
+
+        - y min,max: 2 rotor diameters outside the most lateral turbines
+        - z min: z=0.0
+        - z max: 6 * hub height
+
+        To implement this function, the subclass should produce a plane of the u-component of
+        velocities with the required bounds. The {py:class}`wcomp.plotting.WakePlane`
+        class should be used to store the data. Then, the {py:meth}`wcomp.plotting.plot_plane`
+        function should be used to produce the plot. A sample implementation is shown below.
 
         Args:
             wind_direction (float): Wind direction to align the plot in the visualization in
@@ -167,7 +331,39 @@ class WCompBase(ABC):
                 element 0 is the resolution in y and element 1 is the resolution in z
             x_coordinate (float): The streamwise location for the extracted plane
 
+        Raises:
+            NotImplementedError: This function must be implemented in a subclass
+
         Returns:
-            WakePlane
+            WakePlane: The plane of wake data
+
+        Example:
+            .. code-block:: python
+
+                # Call the wake model to produce the velocities at the sample line
+                u, v, w = wake_model(...)           # Note v and w are not used
+                x, y, z = wake_model.get_points()   # Get the coordinates of the sample points
+
+                # Create a WakePlane object to store the data
+                plane = WakePlane(
+                    y,      # If 2d array, use x.flatten()
+                    z,      # ^ ^ ^
+                    u,
+                    "x",
+                    resolution,
+                )
+
+                # Plot the plane
+                ax = plt.gca()      # Get the current pyplot axis to place the plot
+                plot_plane(
+                    plane,
+                    ax=ax,
+                    color=self.LINE_PLOT_COLOR,
+                    marker=self.LINE_PLOT_MARKER,
+                    linestyle=self.LINE_PLOT_LINESTYLE,
+                    label=self.LEGEND
+                )
+
+                return plane
         """
         raise NotImplementedError("WCompBase.xsection_contour")

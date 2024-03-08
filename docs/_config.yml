@@ -33,8 +33,8 @@ sphinx:
   - 'sphinx.ext.viewcode'
   # - 'sphinx_autodoc_typehints'
   # - 'sphinxcontrib.autoyaml'
-  # - 'sphinx.ext.napoleon'               # Formats google and numpy docstring styles
-  - 'sphinxcontrib.mermaid'
+  - 'sphinx.ext.napoleon'           # Formats docstring for Google and NumPy style, https://www.sphinx-doc.org/en/master/usage/extensions/napoleon.html
+  - 'sphinxcontrib.mermaid'         # https://sphinxcontrib-mermaid-demo.readthedocs.io/en/latest/
 
   config:
     # html_theme: sphinx_book_theme
@@ -56,6 +56,8 @@ sphinx:
       undoc-members: true
       private-members: false
       # special-members: true
+      special-members': __init__
+
       # inherited-members
       # show-inheritance
       # ignore-module-all
@@ -66,3 +68,4 @@ sphinx:
     autodoc_typehints: both
     # mermaid_output_format: png
     mermaid_version: 10.9.0
+    # napoleon_use_admonition_for_examples: true
