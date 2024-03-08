@@ -28,27 +28,6 @@ The wake modeling software currently integrated to `wcomp` are:
 The package diagram below shows the modules within `wcomp` and how each relates to the
 others as dependencies (in other words, which modules import which other modules).
 
-```{tableofcontents}
-```
-
-<!-- Command: pyreverse --colorized -o mmd . --verbose -->
-  <!-- class wcomp {
-  }
-  class base_interface {
-  }
-  class floris_interface {
-  }
-  class foxes_interface {
-  }
-  class output_struct {
-  }
-  class plotting {
-  }
-  class pywake_interface {
-  }
-  The mermaid on github doesnt support this syntax for some reason.
-  I gives a "syntax error in text" message -->
-
 ```{mermaid}
 classDiagram
   wcomp --> floris_interface
