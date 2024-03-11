@@ -604,8 +604,18 @@ function should be used to produce the plot. A sample implementation is shown be
 <dl class="py method">
 <dt class="sig sig-object py" id="wcomp.pywake_interface.WCompPyWake.xsection_contour">
 <span class="sig-name descname"><span class="pre">xsection_contour</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">wind_direction</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">resolution</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">tuple</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x_coordinate</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="wcomp.output_struct.html#wcomp.output_struct.WakePlane" title="wcomp.output_struct.WakePlane"><span class="pre">WakePlane</span></a></span></span><a class="reference internal" href="../_modules/wcomp/pywake_interface.html#WCompPyWake.xsection_contour"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#wcomp.pywake_interface.WCompPyWake.xsection_contour" title="Link to this definition">#</a></dt>
-<dd><p>This function produces a contour plot of the velocity in the y-z plane
-perpendicular to the wind direction.</p>
+<dd><p>This function produces a contour plot of the velocity in the y-z plane where
+y is lateral and z is vertical. The contour is located in the streamwise direction at the
+given <cite>x_coordinate</cite>. The extent of the sample plane should be:</p>
+<ul class="simple">
+<li><p>y min,max: 2 rotor diameters outside the most lateral turbines</p></li>
+<li><p>z min: z=0.0</p></li>
+<li><p>z max: 6 * hub height</p></li>
+</ul>
+<p>To implement this function, the subclass should produce a plane of the u-component of
+velocities with the required bounds. The {py:class}`wcomp.plotting.WakePlane`
+class should be used to store the data. Then, the {py:meth}`wcomp.plotting.plot_plane`
+function should be used to produce the plot. A sample implementation is shown below.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -616,13 +626,44 @@ element 0 is the resolution in y and element 1 is the resolution in z</p></li>
 <li><p><strong>x_coordinate</strong> (<em>float</em>) -- The streamwise location for the extracted plane</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>WakePlane</p>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>NotImplementedError</strong> -- This function must be implemented in a subclass</p>
 </dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference internal" href="wcomp.output_struct.html#wcomp.output_struct.WakePlane" title="wcomp.output_struct.WakePlane"><em>WakePlane</em></a></p>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The plane of wake data</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="wcomp.output_struct.html#wcomp.output_struct.WakePlane" title="wcomp.output_struct.WakePlane">WakePlane</a></p>
 </dd>
 </dl>
+<p class="rubric">Example</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Call the wake model to produce the velocities at the sample line</span>
+<span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">w</span> <span class="o">=</span> <span class="n">wake_model</span><span class="p">(</span><span class="o">...</span><span class="p">)</span>           <span class="c1"># Note v and w are not used</span>
+<span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span> <span class="o">=</span> <span class="n">wake_model</span><span class="o">.</span><span class="n">get_points</span><span class="p">()</span>   <span class="c1"># Get the coordinates of the sample points</span>
+
+<span class="c1"># Create a WakePlane object to store the data</span>
+<span class="n">plane</span> <span class="o">=</span> <span class="n">WakePlane</span><span class="p">(</span>
+    <span class="n">y</span><span class="p">,</span>      <span class="c1"># If 2d array, use x.flatten()</span>
+    <span class="n">z</span><span class="p">,</span>      <span class="c1"># ^ ^ ^</span>
+    <span class="n">u</span><span class="p">,</span>
+    <span class="s2">&quot;x&quot;</span><span class="p">,</span>
+    <span class="n">resolution</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="c1"># Plot the plane</span>
+<span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">()</span>      <span class="c1"># Get the current pyplot axis to place the plot</span>
+<span class="n">plot_plane</span><span class="p">(</span>
+    <span class="n">plane</span><span class="p">,</span>
+    <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span>
+    <span class="n">color</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">LINE_PLOT_COLOR</span><span class="p">,</span>
+    <span class="n">marker</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">LINE_PLOT_MARKER</span><span class="p">,</span>
+    <span class="n">linestyle</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">LINE_PLOT_LINESTYLE</span><span class="p">,</span>
+    <span class="n">label</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">LEGEND</span>
+<span class="p">)</span>
+
+<span class="k">return</span> <span class="n">plane</span>
+</pre></div>
+</div>
 </dd></dl>
 
 </dd></dl>
