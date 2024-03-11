@@ -17,8 +17,9 @@ This framework and simple use cases were presented at the
 The slides from this talk are available at
 [here](https://github.com/rafmudaf/wcomp/blob/main/2.2%20Mudafort%20Validation%20Framework%20for%20Python-based%20steady-state%20wake%20models.pptx),
 and a corresponding executable notebook is [here](https://github.com/rafmudaf/wcomp/blob/main/examples/wesc2023_demo.ipynb).
+Documentation for `wcomp` is available at https://rafmudaf.github.io/wcomp/.
 
-DOI: 10.11578/dc.20231113.4
+**DOI: 10.11578/dc.20231113.4**
 
 ## Architecture and Design
 
@@ -34,9 +35,9 @@ or statistics should exist in the wake modeling software packages themselves.
 This framework should remain the point of the connection across this class of
 software.
 
-The architecture of this framework is outlined below. The integrated software
-are dependencies of `wcomp`, but the source code is external. The `windIO` package
-is used both to define the comparison cases and to load the input files.
+The architecture of this framework is outlined below. The integrated wake modeling
+software are dependencies of `wcomp`, but their source code is external to this repository.
+The `windIO` package is used both to define the comparison cases and to load the input files.
 
 ```mermaid
 graph TD
@@ -58,7 +59,8 @@ graph TD
     C --> B
 ```
 
-TODO: See XX API documentation.
+See the [Architecture](https://rafmudaf.github.io/wcomp/architecture.html) and
+[API documentation](https://rafmudaf.github.io/wcomp/api_docs.html) for more information.
 
 
 # Limitations
