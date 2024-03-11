@@ -336,7 +336,7 @@ document.write(`
 <span class="kn">from</span> <span class="nn">abc</span> <span class="kn">import</span> <span class="n">ABC</span>
 <span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
 
-<span class="kn">from</span> <span class="nn">.output_struct</span> <span class="kn">import</span> <span class="n">WakePlane</span>
+<span class="kn">from</span> <span class="nn">.output_struct</span> <span class="kn">import</span> <span class="n">WakeProfile</span><span class="p">,</span> <span class="n">WakePlane</span>
 
 
 <div class="viewcode-block" id="WCompBase">
@@ -452,6 +452,9 @@ document.write(`
 <span class="sd">        Raises:</span>
 <span class="sd">            NotImplementedError: This function must be implemented in a subclass</span>
 
+<span class="sd">        Returns:</span>
+<span class="sd">            WakeProfile: The profile of wake data</span>
+
 <span class="sd">        Example:</span>
 <span class="sd">            .. code-block:: python</span>
 
@@ -504,6 +507,9 @@ document.write(`
 <span class="sd">        Raises:</span>
 <span class="sd">            NotImplementedError: This function must be implemented in a subclass</span>
 
+<span class="sd">        Returns:</span>
+<span class="sd">            WakeProfile: The profile of wake data</span>
+
 <span class="sd">        Example:</span>
 <span class="sd">            .. code-block:: python</span>
 
@@ -536,7 +542,7 @@ document.write(`
         <span class="n">x_coordinate</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
         <span class="n">ymin</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
         <span class="n">ymax</span><span class="p">:</span> <span class="nb">float</span>
-    <span class="p">):</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">WakeProfile</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        This function produces a 1D plot of the velocity profile in the y-z plane</span>
 <span class="sd">        where z is normal to the ground and y is normal to z and the streamwise direction.</span>
@@ -556,6 +562,9 @@ document.write(`
 
 <span class="sd">        Raises:</span>
 <span class="sd">            NotImplementedError: This function must be implemented in a subclass</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            WakeProfile: The profile of wake data</span>
 
 <span class="sd">        Example:</span>
 <span class="sd">            .. code-block:: python</span>
@@ -591,18 +600,56 @@ document.write(`
         <span class="n">resolution</span><span class="p">:</span> <span class="nb">tuple</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">WakePlane</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        This function produces a contour plot of the velocity in the x-y plane</span>
-<span class="sd">        parallel to the ground. The contour is located at the hub height obtained</span>
-<span class="sd">        by the interface&#39;s `hub_height` property (`self.hub_height`).</span>
+<span class="sd">        This function produces a contour plot of the velocity in the x-y plane where</span>
+<span class="sd">        x is streamwise and y is lateral. The contour is located at the hub height.</span>
+<span class="sd">        The extend of the sample plane should be:</span>
+<span class="sd">        - x min: 2 rotor diameters upstream of the most upstream turbine</span>
+<span class="sd">        - x max: 10 rotor diameters downstream of the most downstream turbine</span>
+<span class="sd">        - y min,max: 2 rotor diameters outside the most lateral turbines</span>
+
+<span class="sd">        To implement this function, the subclass should produce a plane of the u-component of</span>
+<span class="sd">        velocities with the required bounds. The {py:class}`wcomp.plotting.WakePlane`</span>
+<span class="sd">        class should be used to store the data. Then, the {py:meth}`wcomp.plotting.plot_plane`</span>
+<span class="sd">        function should be used to produce the plot. A sample implementation is shown below.</span>
 
 <span class="sd">        Args:</span>
-<span class="sd">            wind_direction (float): Wind direction to align the plot in the visualization in</span>
-<span class="sd">                degrees with West being 270 degrees and North being 0 degrees</span>
-<span class="sd">            resolution (tuple): Grid resolution for the contour plot;</span>
-<span class="sd">                element 0 is the resolution in x and element 1 is the resolution in y</span>
+<span class="sd">            wind_direction (float): Incoming wind direction in degrees with West at 270 degrees.</span>
+<span class="sd">            resolution (tuple): Number of points in the (x, y) directions for the contour plot grid</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            NotImplementedError: This function must be implemented in a subclass</span>
 
 <span class="sd">        Returns:</span>
-<span class="sd">            WakePlane</span>
+<span class="sd">            WakePlane: The plane of wake data</span>
+
+<span class="sd">        Example:</span>
+<span class="sd">            .. code-block:: python</span>
+
+<span class="sd">                # Call the wake model to produce the velocities at the sample line</span>
+<span class="sd">                u, v, w = wake_model(...)           # Note v and w are not used</span>
+<span class="sd">                x, y, z = wake_model.get_points()   # Get the coordinates of the sample points</span>
+
+<span class="sd">                # Create a WakePlane object to store the data</span>
+<span class="sd">                plane = WakePlane(</span>
+<span class="sd">                    x,      # If 2d array, use x.flatten()</span>
+<span class="sd">                    y,      # ^ ^ ^</span>
+<span class="sd">                    u,</span>
+<span class="sd">                    &quot;z&quot;,</span>
+<span class="sd">                    resolution,</span>
+<span class="sd">                )</span>
+
+<span class="sd">                # Plot the plane</span>
+<span class="sd">                ax = plt.gca()      # Get the current pyplot axis to place the plot</span>
+<span class="sd">                plot_plane(</span>
+<span class="sd">                    plane,</span>
+<span class="sd">                    ax=ax,</span>
+<span class="sd">                    color=self.LINE_PLOT_COLOR,</span>
+<span class="sd">                    marker=self.LINE_PLOT_MARKER,</span>
+<span class="sd">                    linestyle=self.LINE_PLOT_LINESTYLE,</span>
+<span class="sd">                    label=self.LEGEND</span>
+<span class="sd">                )</span>
+
+<span class="sd">                return plane</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;WCompBase.horizontal_contour&quot;</span><span class="p">)</span></div>
 
