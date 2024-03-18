@@ -17,7 +17,7 @@ from .plotting import plot_plane, plot_profile
 # "windIO_model_name": {
 #   "model_ref": the current software's reference for this wake model,
 #   "parameters": {
-#       "windIO_parameter": current software's analogous parameter
+#       "model parameter": windIO parameter
 #   }
 # }
 WAKE_MODEL_MAPPING = {
@@ -26,7 +26,7 @@ WAKE_MODEL_MAPPING = {
     "jensen": {
         "model_ref": "jensen",
         "parameters": {
-            "alpha": "we",
+            "we": "alpha",
         }
     },
 
@@ -192,14 +192,16 @@ class WCompFloris(WCompBase):
         _velocity_model_mapping = WAKE_MODEL_MAPPING[wes_analysis["wake_model"]["velocity"]["name"]]
         _velocity_model = _velocity_model_mapping["model_ref"]
         _velocity_model_parameters = {
-            _velocity_model_mapping["parameters"][k]: v for k, v in wes_analysis["wake_model"]["velocity"]["parameters"].items()
+            k: wes_analysis["wake_model"]["velocity"]["parameters"][v]
+            for k, v in _velocity_model_mapping["parameters"].items()
         }
 
         _deflection_model_mapping = WAKE_MODEL_MAPPING[wes_analysis["wake_model"]["deflection"]["name"]]
         _deflection_model = _deflection_model_mapping["model_ref"]
-        if _deflection_model is not "none":
+        if _deflection_model != "none":
             _deflection_model_parameters = {
-                _deflection_model_mapping["parameters"][k]: v for k, v in wes_analysis["wake_model"]["deflection"]["parameters"].items()
+                k: wes_analysis["wake_model"]["deflection"]["parameters"][v]
+                for k, v in _deflection_model_mapping["parameters"].items()
             }
         else:
             _deflection_model_parameters = {}

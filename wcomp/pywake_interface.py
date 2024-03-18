@@ -29,7 +29,7 @@ WAKE_MODEL_MAPPING = {
     "jensen": {
         "model_ref": Jensen_1983,
         "parameters": {
-            "alpha": "k",
+            "k": "alpha",
         }
     },
     "niayifar-porteagel": {
@@ -67,7 +67,8 @@ class WCompPyWake(WCompBase):
         _velocity_model_mapping = WAKE_MODEL_MAPPING[wes_analysis["wake_model"]["velocity"]["name"]]
         _velocity_model = _velocity_model_mapping["model_ref"]
         _velocity_model_parameters = {
-            _velocity_model_mapping["parameters"][k]: v for k, v in wes_analysis["wake_model"]["velocity"]["parameters"].items()
+            k: wes_analysis["wake_model"]["velocity"]["parameters"][v]
+            for k, v in _velocity_model_mapping["parameters"].items()
         }
 
         deflection_model = None

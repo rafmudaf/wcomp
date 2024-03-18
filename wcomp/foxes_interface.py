@@ -28,7 +28,7 @@ WAKE_MODEL_MAPPING = {
     "jensen": {
         "model_ref": JensenWake,
         "parameters": {
-            "alpha": "k",
+            "k": "alpha",
         }
     },
 }
@@ -269,7 +269,8 @@ class WCompFoxes(WCompBase):
         _velocity_model_mapping = WAKE_MODEL_MAPPING[wes_analysis["wake_model"]["velocity"]["name"]]
         _velocity_model = _velocity_model_mapping["model_ref"]
         _velocity_model_parameters = {
-            _velocity_model_mapping["parameters"][k]: v for k, v in wes_analysis["wake_model"]["velocity"]["parameters"].items()
+            k: wes_analysis["wake_model"]["velocity"]["parameters"][v]
+            for k, v in _velocity_model_mapping["parameters"].items()
         }
 
         temp_model_name = "this_model"
