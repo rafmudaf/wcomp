@@ -9,6 +9,15 @@ class WakeProfile:
         self.x1 = x1
         self.values = values
 
+    def __sub__(self, other):
+        if np.shape(self.x1) != np.shape(other.x1):
+            raise ValueError("Operands must have consistent grid shapes.")
+
+        return WakeProfile(
+            self.x1,
+            self.values - other.values
+        )
+
 class WakePlane:
 
     def __init__(
