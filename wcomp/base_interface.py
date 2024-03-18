@@ -18,16 +18,7 @@ class WCompBase(ABC):
     LINE_PLOT_COLOR = "OVERWRITE"   # Color to use for all line plots; use matplotlib color codes
     LEGEND = "OVERWRITE"            # Legend entry; typically should be the name of the corresponding software
 
-    def __init__(
-        self,
-        input_file: str | Path,
-        velocity_deficit: Any,
-        velocity_deficit_p: dict,
-        deflection: Any = None,
-        deflection_p: dict = None,
-        yaw_angles: list[float] = [0.0],
-    ):
-        
+    def __init__(self, input_file: str | Path):
         """
         The initialization for all subclasses must create the results from the
         corresponding software, so that they are ready for post processing in

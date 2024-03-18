@@ -11,8 +11,8 @@ from py_wake.wind_turbines import WindTurbine
 from py_wake.wind_turbines.power_ct_functions import PowerCtFunctions
 
 from py_wake.wind_farm_models.engineering_models import PropagateDownwind
-# from py_wake.literature.noj import Jensen_1983
-# from py_wake.literature.gaussian_models import Niayifar_PorteAgel_2016
+from py_wake.literature.noj import Jensen_1983
+from py_wake.literature.gaussian_models import Niayifar_PorteAgel_2016
 # from py_wake.deficit_models.gaussian import BastankhahGaussianDeficit
 from py_wake.deflection_models.deflection_model import DeflectionModel
 
@@ -25,29 +25,29 @@ from .plotting import plot_plane, plot_profile
 # This dictionary maps generic model names in the windIO input file
 # to the tool's specific name. It also maps parameter names from the
 # referenced papers to the parameters in the implementation.
-# WAKE_MODEL_MAPPING = {
-#     "jensen": {
-#         "model_ref": Jensen_1983,
-#         "parameters": {
-#             "alpha": "k",
-#         }
-#     },
-#     "niayifar-porteagel": {
-#         "model_ref": Niayifar_PorteAgel_2016,
-#         "parameters": {
-#             "a1": "a0",
-#             "a2": "a1",
-#         }
-#     },
-#     # "bastankhah2016": {
+WAKE_MODEL_MAPPING = {
+    "jensen": {
+        "model_ref": Jensen_1983,
+        "parameters": {
+            "alpha": "k",
+        }
+    },
+    "niayifar-porteagel": {
+        "model_ref": Niayifar_PorteAgel_2016,
+        "parameters": {
+            "a1": "a0",
+            "a2": "a1",
+        }
+    },
+    # "bastankhah2016": {
         
-#     #     "model_ref": BastankhahGaussianDeficit,
-#     #     "parameters": {
-#     #         "k": "a0",
-#     #         "a2": "a1",
-#     #     }
-#     #     (self, ct2a=ct2a_madsen, k=0.0324555, ceps=.2,
-# }
+    #     "model_ref": BastankhahGaussianDeficit,
+    #     "parameters": {
+    #         "k": "a0",
+    #         "a2": "a1",
+    #     }
+    #     (self, ct2a=ct2a_madsen, k=0.0324555, ceps=.2,
+}
 
 class WCompPyWake(WCompBase):
 
@@ -56,39 +56,29 @@ class WCompPyWake(WCompBase):
     LINE_PLOT_LINESTYLE = "--"
     LEGEND = "PyWake"
 
-    def __init__(
-        self,
-        input_file: str | Path,
-        velocity_deficit: PropagateDownwind,
-        velocity_deficit_p: dict,
-        deflection: DeflectionModel = None,
-        deflection_p: dict = None,
-        yaw_angles = [0.0],
-    ):
+    def __init__(self, input_file: str | Path):
         input_dictionary = load_yaml(input_file)
         self.site, self.wt, (self.x, self.y) = self._create_pywake_data(input_dictionary)
 
+        yaw_angles = input_dictionary["attributes"]["analyses"]["yaw_angles"]
         tilt_angles = [0.0]
 
-        # model_map = WAKE_MODEL_MAPPING[input_dictionary["attributes"]["analyses"]["wake_model"]["name"]]
-        # wind_farm_model = model_map["model_ref"]
-
-        # # Extract parameters from windIO input and convert to this model's conventions
-        # parameters = {}
-        # for p in input_dictionary["attributes"]["analyses"]["wake_model"]["parameters"]:
-        #     parameters[model_map["parameters"]] = input_dictionary["attributes"]["analyses"]["wake_model"]["parameters"][p]
+        wes_analysis = input_dictionary["attributes"]["analyses"]
+        _velocity_model_mapping = WAKE_MODEL_MAPPING[wes_analysis["wake_model"]["velocity"]["name"]]
+        _velocity_model = _velocity_model_mapping["model_ref"]
+        _velocity_model_parameters = {
+            _velocity_model_mapping["parameters"][k]: v for k, v in wes_analysis["wake_model"]["velocity"]["parameters"].items()
+        }
 
         deflection_model = None
-        if deflection is not None:
-            deflection_model = deflection(**deflection_p)
 
         # added_args_velocity_deficit = {}
         # if velocity_deficit 
 
-        self.wfm = velocity_deficit(
+        self.wfm = _velocity_model(
             site=self.site,
             windTurbines=self.wt,
-            **velocity_deficit_p,
+            **_velocity_model_parameters,
             deflectionModel=deflection_model,
         )
         self.sim_res = self.wfm(

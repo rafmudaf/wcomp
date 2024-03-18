@@ -14,7 +14,7 @@ from foxes.input.states import StatesTable
 from foxes.models.turbine_types import CpCtFromTwo
 from foxes.output import FlowPlots2D
 from foxes.models.model_book import ModelBook
-# from foxes.models.wake_models.wind import JensenWake
+from foxes.models.wake_models.wind import JensenWake
 
 from windIO.utils.yml_utils import load_yaml
 from .base_interface import WCompBase
@@ -24,10 +24,14 @@ from .plotting import plot_plane, plot_profile
 # This dictionary maps generic model names in the windIO input file
 # to the tool's specific name. It also maps parameter names from the
 # referenced papers to the parameters in the implementation.
-# WAKE_MODEL_MAPPING = {
-#     "jensen": JensenWake,
-#     "alpha": "k"
-# }
+WAKE_MODEL_MAPPING = {
+    "jensen": {
+        "model_ref": JensenWake,
+        "parameters": {
+            "alpha": "k",
+        }
+    },
+}
 
 class WCompFoxes(WCompBase):
 
@@ -36,21 +40,8 @@ class WCompFoxes(WCompBase):
     LINE_PLOT_LINESTYLE = "--"
     LEGEND = "Foxes"
 
-    def __init__(
-        self,
-        input_file: str | Path,
-        velocity_deficit: WakeModel,
-        velocity_deficit_p: dict,
-        deflection = None,
-        deflection_p: dict = None,
-        yaw_angles = [0.0],
-    ):
+    def __init__(self, input_file: str | Path):
         input_dictionary = load_yaml(input_file)
-
-        self.velocity_deficit_model = velocity_deficit
-        self.velocity_deficit_parameters = velocity_deficit_p
-        self.deflection_model = deflection
-        self.deflection_parameters = deflection_p
 
         self.mbook, self.farm, self.states, self.algo = self.read_case(input_dictionary)
         self.farm_results = self.algo.calc_farm()
@@ -274,18 +265,16 @@ class WCompFoxes(WCompBase):
             The algorithm
 
         """
-        # windIO_model_name = analyses["wake_model"]["name"]
-        # wmodel_class = WAKE_MODEL_MAPPING[windIO_model_name]
-        wmodel_class = self.velocity_deficit_model
-        # Extract parameters from windIO input and convert to this model's conventions
-        # parameters = {}
-        # for p in analyses["wake_model"]["parameters"]:
-        #     parameters[WAKE_MODEL_MAPPING[p]] = analyses["wake_model"]["parameters"][p]
-        parameters = self.velocity_deficit_parameters
+        wes_analysis = analyses
+        _velocity_model_mapping = WAKE_MODEL_MAPPING[wes_analysis["wake_model"]["velocity"]["name"]]
+        _velocity_model = _velocity_model_mapping["model_ref"]
+        _velocity_model_parameters = {
+            _velocity_model_mapping["parameters"][k]: v for k, v in wes_analysis["wake_model"]["velocity"]["parameters"].items()
+        }
 
         temp_model_name = "this_model"
-        mbook.wake_models[temp_model_name] = wmodel_class(
-            **parameters,
+        mbook.wake_models[temp_model_name] = _velocity_model(
+            **_velocity_model_parameters,
             superposition="quadratic"
         )
         # mbook.print_toc(subset="wake_models")

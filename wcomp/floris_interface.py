@@ -20,14 +20,37 @@ from .plotting import plot_plane, plot_profile
 #       "windIO_parameter": current software's analogous parameter
 #   }
 # }
-# WAKE_MODEL_MAPPING = {
-#     "jensen": {
-#         "model_ref": "jensen",
-#         "parameters": {
-#             "alpha": "we",
-#         }
-#     },    
-# }
+WAKE_MODEL_MAPPING = {
+
+    # Velocity models
+    "jensen": {
+        "model_ref": "jensen",
+        "parameters": {
+            "alpha": "we",
+        }
+    },
+
+    # Deflection model
+    None: {
+        "model_ref": "none",
+        "parameters": {}
+    },
+    "bastankhah2016": {
+        "model_ref": "gauss",
+        "parameters": {
+            "ka": "ka",
+            "kb": "kb",
+            # ad: float = field(converter=float, default=0.0)
+            # bd: float = field(converter=float, default=0.0)
+            # alpha: float = field(converter=float, default=0.58)
+            # beta: float = field(converter=float, default=0.077)
+            # ka: float = field(converter=float, default=0.38)
+            # kb: float = field(converter=float, default=0.004)
+            # dm: float = field(converter=float, default=1.0)
+        }
+    }
+
+}
 
 basic_dict = {
     'name': 'Jensen-Jimenez',
@@ -97,26 +120,18 @@ class WCompFloris(WCompBase):
     LINE_PLOT_LINESTYLE = "--"
     LEGEND = "Floris"
 
-    def __init__(
-        self,
-        input_file: str | Path,
-        velocity_deficit: str,
-        velocity_deficit_p: dict,
-        deflection: str = "none",
-        deflection_p: dict = None,
-        yaw_angles = [0.0],
-    ):
-        input_dictionary = load_yaml(input_file)
+    def __init__(self, input_file: str | Path):
 
-        self.velocity_deficit_model_string = velocity_deficit
-        self.velocity_deficit_parameters = velocity_deficit_p
-        self.deflection_model_string = deflection
-        self.deflection_parameters = deflection_p
+        input_dictionary = load_yaml(input_file)
 
         self.floris_dict = self._create_floris_dict(input_dictionary)
         self.fi = FlorisInterface(self.floris_dict)
 
-        self.yaw_angles = np.array([[yaw_angles]])
+        n_wind_directions = self.fi.floris.flow_field.n_wind_directions
+        n_wind_speeds = self.fi.floris.flow_field.n_wind_speeds
+        n_turbines = self.fi.floris.farm.n_turbines
+        self.yaw_angles = np.zeros((n_wind_directions, n_wind_speeds, n_turbines))
+        self.yaw_angles[:,:] = input_dictionary["attributes"]["analyses"]["yaw_angles"]
         self.fi.calculate_wake(yaw_angles=self.yaw_angles)
 
     @property
@@ -173,29 +188,33 @@ class WCompFloris(WCompBase):
             'turbine_type': [new_turbine]
         }
 
-        if self.deflection_parameters is not None:
-            _deflection_parameters = {**self.deflection_parameters}
-        else:
-            _deflection_parameters = {}
+        wes_analysis = wes["attributes"]["analyses"]
+        _velocity_model_mapping = WAKE_MODEL_MAPPING[wes_analysis["wake_model"]["velocity"]["name"]]
+        _velocity_model = _velocity_model_mapping["model_ref"]
+        _velocity_model_parameters = {
+            _velocity_model_mapping["parameters"][k]: v for k, v in wes_analysis["wake_model"]["velocity"]["parameters"].items()
+        }
 
+        _deflection_model_mapping = WAKE_MODEL_MAPPING[wes_analysis["wake_model"]["deflection"]["name"]]
+        _deflection_model = _deflection_model_mapping["model_ref"]
+        if _deflection_model is not "none":
+            _deflection_model_parameters = {
+                _deflection_model_mapping["parameters"][k]: v for k, v in wes_analysis["wake_model"]["deflection"]["parameters"].items()
+            }
+        else:
+            _deflection_model_parameters = {}
         new_dict['wake'] = {
             'model_strings': {
                 'combination_model': 'sosfs',
-                'deflection_model': self.deflection_model_string,
+                'deflection_model': _deflection_model,
                 'turbulence_model': 'crespo_hernandez',
-                'velocity_model': self.velocity_deficit_model_string
+                'velocity_model': _velocity_model
             },
             'enable_secondary_steering': False,
             'enable_yaw_added_recovery': False,
             'enable_transverse_velocities': False,
-            'wake_deflection_parameters': { 
-                self.deflection_model_string: _deflection_parameters
-            },
-            'wake_velocity_parameters': {
-                self.velocity_deficit_model_string: {
-                    **self.velocity_deficit_parameters
-                }
-            },
+            'wake_deflection_parameters': {_deflection_model: _deflection_model_parameters},
+            'wake_velocity_parameters': {_velocity_model: _velocity_model_parameters},
             'wake_turbulence_parameters': {
                 'crespo_hernandez': {
                     'initial': 0.1,
