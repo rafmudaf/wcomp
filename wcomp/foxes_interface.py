@@ -37,15 +37,20 @@ class WCompFoxes(WCompBase):
     LEGEND = "Foxes"
 
     def __init__(
-            self,
-            input_file: str | Path,
-            velocity_deficit: WakeModel,
-            velocity_deficit_p: dict,
-        ):
+        self,
+        input_file: str | Path,
+        velocity_deficit: WakeModel,
+        velocity_deficit_p: dict,
+        deflection = None,
+        deflection_p: dict = None,
+        yaw_angles = [0.0],
+    ):
         input_dictionary = load_yaml(input_file)
 
         self.velocity_deficit_model = velocity_deficit
         self.velocity_deficit_parameters = velocity_deficit_p
+        self.deflection_model = deflection
+        self.deflection_parameters = deflection_p
 
         self.mbook, self.farm, self.states, self.algo = self.read_case(input_dictionary)
         self.farm_results = self.algo.calc_farm()
@@ -469,7 +474,9 @@ class WCompFoxes(WCompBase):
 
         x1_bounds = (np.min(self.farm_results.X) - 2 * self.rotor_diameter, np.max(self.farm_results.X) + 10 * self.rotor_diameter)
         x2_bounds = (np.min(self.farm_results.Y) - 2 * self.rotor_diameter, np.max(self.farm_results.Y) + 2 * self.rotor_diameter)
-
+        # print("foxes bounds")
+        # print(x1_bounds)
+        # print(x2_bounds)
         o = FlowPlots2D(self.algo, self.farm_results)
         # g = o.gen_states_fig_xy("WS", resolution=10, figsize=(10, 5), verbosity=0)
         xres = (x1_bounds[1] - x1_bounds[0]) / resolution[0]

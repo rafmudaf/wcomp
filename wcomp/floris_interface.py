@@ -3,6 +3,7 @@ import copy
 from pathlib import Path
 
 import matplotlib.pyplot as plt
+import numpy as np
 from floris.tools import FlorisInterface
 from windIO.utils.yml_utils import load_yaml
 
@@ -97,13 +98,14 @@ class WCompFloris(WCompBase):
     LEGEND = "Floris"
 
     def __init__(
-            self,
-            input_file: str | Path,
-            velocity_deficit: str,
-            velocity_deficit_p: dict,
-            deflection: str = "none",
-            deflection_p: dict = {},
-        ):
+        self,
+        input_file: str | Path,
+        velocity_deficit: str,
+        velocity_deficit_p: dict,
+        deflection: str = "none",
+        deflection_p: dict = None,
+        yaw_angles = [0.0],
+    ):
         input_dictionary = load_yaml(input_file)
 
         self.velocity_deficit_model_string = velocity_deficit
@@ -113,7 +115,9 @@ class WCompFloris(WCompBase):
 
         self.floris_dict = self._create_floris_dict(input_dictionary)
         self.fi = FlorisInterface(self.floris_dict)
-        self.fi.calculate_wake()
+
+        self.yaw_angles = np.array([[yaw_angles]])
+        self.fi.calculate_wake(yaw_angles=self.yaw_angles)
 
     @property
     def rotor_diameter(self) -> float:
@@ -132,18 +136,6 @@ class WCompFloris(WCompBase):
         new_dict["name"] = wes["name"]
         new_dict["description"] = wes["name"]
         new_dict["floris_version"] = "v3.4.0"
-
-        # logging:
-        #     console:
-        #         enable: true
-        #         level: WARNING
-        #     file:
-        #         enable: false
-        #         level: WARNING
-
-        # solver:
-        #     type: turbine_grid
-        #     turbine_grid_points: 3
 
         wes_wind_resource = wes["site"]["energy_resource"]["wind_resource"]
         new_dict["flow_field"] = {
@@ -181,45 +173,28 @@ class WCompFloris(WCompBase):
             'turbine_type': [new_turbine]
         }
 
+        if self.deflection_parameters is not None:
+            _deflection_parameters = {**self.deflection_parameters}
+        else:
+            _deflection_parameters = {}
+
         new_dict['wake'] = {
             'model_strings': {
                 'combination_model': 'sosfs',
-                'deflection_model': 'gauss',
+                'deflection_model': self.deflection_model_string,
                 'turbulence_model': 'crespo_hernandez',
                 'velocity_model': self.velocity_deficit_model_string
             },
-            'enable_secondary_steering': True,
-            'enable_yaw_added_recovery': True,
-            'enable_transverse_velocities': True,
-            'wake_deflection_parameters': {
-                'jimenez': {
-                    'ad': 0.0,
-                    'bd': 0.0,
-                    'kd': 0.05
-                },
-                'gauss': {
-                    'ad': 0.0,
-                    'alpha': 0.58,
-                    'bd': 0.0,
-                    'beta': 0.077,
-                    'dm': 1.0,
-                    'ka': 0.38,
-                    'kb': 0.004,
-                }
+            'enable_secondary_steering': False,
+            'enable_yaw_added_recovery': False,
+            'enable_transverse_velocities': False,
+            'wake_deflection_parameters': { 
+                self.deflection_model_string: _deflection_parameters
             },
             'wake_velocity_parameters': {
                 self.velocity_deficit_model_string: {
                     **self.velocity_deficit_parameters
                 }
-                # 'jensen': {
-                #     'we': wes["attributes"]["analyses"]["wake_model"]["parameters"]["alpha"]
-                # },
-                # 'gauss': {
-                #     'alpha': 0.58,
-                #     'beta': 0.077,
-                #     'ka': 0.38,
-                #     'kb': 0.004,
-                # },
             },
             'wake_turbulence_parameters': {
                 'crespo_hernandez': {
@@ -264,6 +239,7 @@ class WCompFloris(WCompBase):
             z_resolution=20,
             x_bounds=[x_coordinate, x_coordinate],
             z_bounds=[0, zmax],
+            yaw_angles=self.yaw_angles,
         )
         profile = WakeProfile(
             cut_plane.df.x2,
@@ -304,6 +280,7 @@ class WCompFloris(WCompBase):
             z_resolution=50,
             x_bounds=[xmin, xmax],
             z_bounds=[self.hub_height, self.hub_height],
+            yaw_angles=self.yaw_angles,
         )
         profile = WakeProfile(
             cut_plane.df.x1,
@@ -335,7 +312,8 @@ class WCompFloris(WCompBase):
             # x_resolution=resolution[0],
             y_resolution=20,
             x_bounds=[x_coordinate, x_coordinate],
-            y_bounds=[ymin, ymax]
+            y_bounds=[ymin, ymax],
+            yaw_angles=self.yaw_angles,
         )
         profile = WakeProfile(
             cut_plane.df.x2,
@@ -376,7 +354,11 @@ class WCompFloris(WCompBase):
             wd=[wind_direction],
             x_resolution=resolution[0],
             y_resolution=resolution[1],
+            yaw_angles=self.yaw_angles,
         )
+        # print("FLORIS bounds")
+        # print(min(cut_plane.df.x1), max(cut_plane.df.x1))
+        # print(min(cut_plane.df.x2), max(cut_plane.df.x2))
         plane = WakePlane(
             cut_plane.df.x1,
             cut_plane.df.x2,
@@ -415,6 +397,7 @@ class WCompFloris(WCompBase):
             wd=[wind_direction],
             y_resolution=resolution[0],
             z_resolution=resolution[1],
+            yaw_angles=self.yaw_angles,
         )
         plane = WakePlane(
             cut_plane.df.x1,

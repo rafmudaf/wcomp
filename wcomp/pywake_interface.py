@@ -14,6 +14,7 @@ from py_wake.wind_farm_models.engineering_models import PropagateDownwind
 # from py_wake.literature.noj import Jensen_1983
 # from py_wake.literature.gaussian_models import Niayifar_PorteAgel_2016
 # from py_wake.deficit_models.gaussian import BastankhahGaussianDeficit
+from py_wake.deflection_models.deflection_model import DeflectionModel
 
 from windIO.utils.yml_utils import load_yaml
 
@@ -56,15 +57,18 @@ class WCompPyWake(WCompBase):
     LEGEND = "PyWake"
 
     def __init__(
-            self,
-            input_file: str | Path,
-            velocity_deficit: PropagateDownwind,
-            velocity_deficit_p: dict,
-            # deflection: str = "none",
-            # deflection_p: dict = {},
-        ):
+        self,
+        input_file: str | Path,
+        velocity_deficit: PropagateDownwind,
+        velocity_deficit_p: dict,
+        deflection: DeflectionModel = None,
+        deflection_p: dict = None,
+        yaw_angles = [0.0],
+    ):
         input_dictionary = load_yaml(input_file)
         self.site, self.wt, (self.x, self.y) = self._create_pywake_data(input_dictionary)
+
+        tilt_angles = [0.0]
 
         # model_map = WAKE_MODEL_MAPPING[input_dictionary["attributes"]["analyses"]["wake_model"]["name"]]
         # wind_farm_model = model_map["model_ref"]
@@ -74,9 +78,26 @@ class WCompPyWake(WCompBase):
         # for p in input_dictionary["attributes"]["analyses"]["wake_model"]["parameters"]:
         #     parameters[model_map["parameters"]] = input_dictionary["attributes"]["analyses"]["wake_model"]["parameters"][p]
 
+        deflection_model = None
+        if deflection is not None:
+            deflection_model = deflection(**deflection_p)
 
-        self.wfm = velocity_deficit(site=self.site, windTurbines=self.wt, **velocity_deficit_p)
-        self.sim_res = self.wfm(self.x, self.y, wd=self.site.ds.wd.data)
+        # added_args_velocity_deficit = {}
+        # if velocity_deficit 
+
+        self.wfm = velocity_deficit(
+            site=self.site,
+            windTurbines=self.wt,
+            **velocity_deficit_p,
+            deflectionModel=deflection_model,
+        )
+        self.sim_res = self.wfm(
+            self.x,
+            self.y,
+            wd=self.site.ds.wd.data,
+            yaw=yaw_angles,
+            tilt=tilt_angles,
+        )
 
     @property
     def rotor_diameter(self) -> float:
@@ -176,7 +197,6 @@ class WCompPyWake(WCompBase):
                 y=y_coordinate,
                 x=x_coordinate,
                 z=np.arange(0, zmax + 1, zmax / n_points),
-
             ),
             wd=wind_direction,
             ws=None
