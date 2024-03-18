@@ -361,6 +361,7 @@ document.write(`
 <span class="c1"># from py_wake.literature.noj import Jensen_1983</span>
 <span class="c1"># from py_wake.literature.gaussian_models import Niayifar_PorteAgel_2016</span>
 <span class="c1"># from py_wake.deficit_models.gaussian import BastankhahGaussianDeficit</span>
+<span class="kn">from</span> <span class="nn">py_wake.deflection_models.deflection_model</span> <span class="kn">import</span> <span class="n">DeflectionModel</span>
 
 <span class="kn">from</span> <span class="nn">windIO.utils.yml_utils</span> <span class="kn">import</span> <span class="n">load_yaml</span>
 
@@ -405,15 +406,18 @@ document.write(`
     <span class="n">LEGEND</span> <span class="o">=</span> <span class="s2">&quot;PyWake&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
-            <span class="bp">self</span><span class="p">,</span>
-            <span class="n">input_file</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">Path</span><span class="p">,</span>
-            <span class="n">velocity_deficit</span><span class="p">:</span> <span class="n">PropagateDownwind</span><span class="p">,</span>
-            <span class="n">velocity_deficit_p</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span>
-            <span class="c1"># deflection: str = &quot;none&quot;,</span>
-            <span class="c1"># deflection_p: dict = {},</span>
-        <span class="p">):</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">input_file</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">Path</span><span class="p">,</span>
+        <span class="n">velocity_deficit</span><span class="p">:</span> <span class="n">PropagateDownwind</span><span class="p">,</span>
+        <span class="n">velocity_deficit_p</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span>
+        <span class="n">deflection</span><span class="p">:</span> <span class="n">DeflectionModel</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">deflection_p</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">yaw_angles</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">],</span>
+    <span class="p">):</span>
         <span class="n">input_dictionary</span> <span class="o">=</span> <span class="n">load_yaml</span><span class="p">(</span><span class="n">input_file</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">site</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">wt</span><span class="p">,</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">y</span><span class="p">)</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_create_pywake_data</span><span class="p">(</span><span class="n">input_dictionary</span><span class="p">)</span>
+
+        <span class="n">tilt_angles</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">]</span>
 
         <span class="c1"># model_map = WAKE_MODEL_MAPPING[input_dictionary[&quot;attributes&quot;][&quot;analyses&quot;][&quot;wake_model&quot;][&quot;name&quot;]]</span>
         <span class="c1"># wind_farm_model = model_map[&quot;model_ref&quot;]</span>
@@ -423,9 +427,26 @@ document.write(`
         <span class="c1"># for p in input_dictionary[&quot;attributes&quot;][&quot;analyses&quot;][&quot;wake_model&quot;][&quot;parameters&quot;]:</span>
         <span class="c1">#     parameters[model_map[&quot;parameters&quot;]] = input_dictionary[&quot;attributes&quot;][&quot;analyses&quot;][&quot;wake_model&quot;][&quot;parameters&quot;][p]</span>
 
+        <span class="n">deflection_model</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">if</span> <span class="n">deflection</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">deflection_model</span> <span class="o">=</span> <span class="n">deflection</span><span class="p">(</span><span class="o">**</span><span class="n">deflection_p</span><span class="p">)</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">wfm</span> <span class="o">=</span> <span class="n">velocity_deficit</span><span class="p">(</span><span class="n">site</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">site</span><span class="p">,</span> <span class="n">windTurbines</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">wt</span><span class="p">,</span> <span class="o">**</span><span class="n">velocity_deficit_p</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">sim_res</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">wfm</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">y</span><span class="p">,</span> <span class="n">wd</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">site</span><span class="o">.</span><span class="n">ds</span><span class="o">.</span><span class="n">wd</span><span class="o">.</span><span class="n">data</span><span class="p">)</span>
+        <span class="c1"># added_args_velocity_deficit = {}</span>
+        <span class="c1"># if velocity_deficit </span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">wfm</span> <span class="o">=</span> <span class="n">velocity_deficit</span><span class="p">(</span>
+            <span class="n">site</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">site</span><span class="p">,</span>
+            <span class="n">windTurbines</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">wt</span><span class="p">,</span>
+            <span class="o">**</span><span class="n">velocity_deficit_p</span><span class="p">,</span>
+            <span class="n">deflectionModel</span><span class="o">=</span><span class="n">deflection_model</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">sim_res</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">wfm</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">x</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">y</span><span class="p">,</span>
+            <span class="n">wd</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">site</span><span class="o">.</span><span class="n">ds</span><span class="o">.</span><span class="n">wd</span><span class="o">.</span><span class="n">data</span><span class="p">,</span>
+            <span class="n">yaw</span><span class="o">=</span><span class="n">yaw_angles</span><span class="p">,</span>
+            <span class="n">tilt</span><span class="o">=</span><span class="n">tilt_angles</span><span class="p">,</span>
+        <span class="p">)</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">rotor_diameter</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
@@ -530,7 +551,6 @@ document.write(`
                 <span class="n">y</span><span class="o">=</span><span class="n">y_coordinate</span><span class="p">,</span>
                 <span class="n">x</span><span class="o">=</span><span class="n">x_coordinate</span><span class="p">,</span>
                 <span class="n">z</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">zmax</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">zmax</span> <span class="o">/</span> <span class="n">n_points</span><span class="p">),</span>
-
             <span class="p">),</span>
             <span class="n">wd</span><span class="o">=</span><span class="n">wind_direction</span><span class="p">,</span>
             <span class="n">ws</span><span class="o">=</span><span class="kc">None</span>

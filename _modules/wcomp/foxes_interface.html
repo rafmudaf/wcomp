@@ -386,15 +386,20 @@ document.write(`
     <span class="n">LEGEND</span> <span class="o">=</span> <span class="s2">&quot;Foxes&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
-            <span class="bp">self</span><span class="p">,</span>
-            <span class="n">input_file</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">Path</span><span class="p">,</span>
-            <span class="n">velocity_deficit</span><span class="p">:</span> <span class="n">WakeModel</span><span class="p">,</span>
-            <span class="n">velocity_deficit_p</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span>
-        <span class="p">):</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">input_file</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">Path</span><span class="p">,</span>
+        <span class="n">velocity_deficit</span><span class="p">:</span> <span class="n">WakeModel</span><span class="p">,</span>
+        <span class="n">velocity_deficit_p</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span>
+        <span class="n">deflection</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">deflection_p</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">yaw_angles</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">],</span>
+    <span class="p">):</span>
         <span class="n">input_dictionary</span> <span class="o">=</span> <span class="n">load_yaml</span><span class="p">(</span><span class="n">input_file</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">velocity_deficit_model</span> <span class="o">=</span> <span class="n">velocity_deficit</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">velocity_deficit_parameters</span> <span class="o">=</span> <span class="n">velocity_deficit_p</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">deflection_model</span> <span class="o">=</span> <span class="n">deflection</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">deflection_parameters</span> <span class="o">=</span> <span class="n">deflection_p</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">mbook</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">farm</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">states</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">algo</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">read_case</span><span class="p">(</span><span class="n">input_dictionary</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">farm_results</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">algo</span><span class="o">.</span><span class="n">calc_farm</span><span class="p">()</span>
@@ -847,7 +852,9 @@ document.write(`
 
         <span class="n">x1_bounds</span> <span class="o">=</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">farm_results</span><span class="o">.</span><span class="n">X</span><span class="p">)</span> <span class="o">-</span> <span class="mi">2</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">rotor_diameter</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">farm_results</span><span class="o">.</span><span class="n">X</span><span class="p">)</span> <span class="o">+</span> <span class="mi">10</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">rotor_diameter</span><span class="p">)</span>
         <span class="n">x2_bounds</span> <span class="o">=</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">farm_results</span><span class="o">.</span><span class="n">Y</span><span class="p">)</span> <span class="o">-</span> <span class="mi">2</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">rotor_diameter</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">farm_results</span><span class="o">.</span><span class="n">Y</span><span class="p">)</span> <span class="o">+</span> <span class="mi">2</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">rotor_diameter</span><span class="p">)</span>
-
+        <span class="c1"># print(&quot;foxes bounds&quot;)</span>
+        <span class="c1"># print(x1_bounds)</span>
+        <span class="c1"># print(x2_bounds)</span>
         <span class="n">o</span> <span class="o">=</span> <span class="n">FlowPlots2D</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">algo</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">farm_results</span><span class="p">)</span>
         <span class="c1"># g = o.gen_states_fig_xy(&quot;WS&quot;, resolution=10, figsize=(10, 5), verbosity=0)</span>
         <span class="n">xres</span> <span class="o">=</span> <span class="p">(</span><span class="n">x1_bounds</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">x1_bounds</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">/</span> <span class="n">resolution</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>

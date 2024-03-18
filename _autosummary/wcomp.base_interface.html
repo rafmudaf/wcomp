@@ -435,14 +435,14 @@ document.write(`
 <p class="rubric">Classes</p>
 <table class="autosummary longtable table autosummary">
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#wcomp.base_interface.WCompBase" title="wcomp.base_interface.WCompBase"><code class="xref py py-obj docutils literal notranslate"><span class="pre">WCompBase</span></code></a>(input_file)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#wcomp.base_interface.WCompBase" title="wcomp.base_interface.WCompBase"><code class="xref py py-obj docutils literal notranslate"><span class="pre">WCompBase</span></code></a>(input_file, velocity_deficit, ...)</p></td>
 <td><p>WCompBase is an abstract base class that defines the interfaces required to conform to the <cite>wcomp</cite> framework.</p></td>
 </tr>
 </tbody>
 </table>
 <dl class="py class">
 <dt class="sig sig-object py" id="wcomp.base_interface.WCompBase">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">wcomp.base_interface.</span></span><span class="sig-name descname"><span class="pre">WCompBase</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_file</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Path</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/wcomp/base_interface.html#WCompBase"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#wcomp.base_interface.WCompBase" title="Link to this definition">#</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">wcomp.base_interface.</span></span><span class="sig-name descname"><span class="pre">WCompBase</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_file</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">velocity_deficit</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">velocity_deficit_p</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">deflection</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">deflection_p</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">yaw_angles</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">[0.0]</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/wcomp/base_interface.html#WCompBase"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#wcomp.base_interface.WCompBase" title="Link to this definition">#</a></dt>
 <dd><p>WCompBase is an abstract base class that defines the interfaces required
 to conform to the <cite>wcomp</cite> framework. This class cannot be used directly. Instead,
 it should be used to create a subclass, and all attributes and functions
@@ -450,7 +450,14 @@ described here should be implemented in the subclass. See function docstrings
 for implementation details.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>input_file</strong> (<em>str</em><em> | </em><em>Path</em>) -- </p>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>input_file</strong> (<em>str</em><em> | </em><em>Path</em>) -- </p></li>
+<li><p><strong>velocity_deficit</strong> (<em>Any</em>) -- </p></li>
+<li><p><strong>velocity_deficit_p</strong> (<em>dict</em>) -- </p></li>
+<li><p><strong>deflection</strong> (<em>Any</em>) -- </p></li>
+<li><p><strong>deflection_p</strong> (<em>dict</em>) -- </p></li>
+<li><p><strong>yaw_angles</strong> (<em>list</em><em>[</em><em>float</em><em>]</em>) -- </p></li>
+</ul>
 </dd>
 </dl>
 <dl class="py attribute">
