@@ -71,6 +71,3 @@ git clone https://github.com/rafmudaf/PyWake && pip install -e PyWake/
 ```bash
 pip install wcomp
 ```
-
-# Getting started
-Here's how to get started
