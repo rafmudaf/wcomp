@@ -592,7 +592,7 @@ document.write(`
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.tri._tricontour.TriContourSet at 0x7fc3bc522270&gt;
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.tri._tricontour.TriContourSet at 0x7f90347b8080&gt;
 </pre></div>
 </div>
 <img alt="_images/2989543efebefb3ffe4ec8389b30218fd2b38cc108b4bafd1540a948cfd778cf.png" src="_images/2989543efebefb3ffe4ec8389b30218fd2b38cc108b4bafd1540a948cfd778cf.png" />
@@ -706,7 +706,7 @@ Turbine 15, T15: windio_turbine
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.tri._tricontour.TriContourSet at 0x7fc3b46e8830&gt;
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.tri._tricontour.TriContourSet at 0x7f90347a63c0&gt;
 </pre></div>
 </div>
 <img alt="_images/837b5ccaecb840092f2b009ff418bbfd3c2f8f4f3de6b0763e79d03fd9d03eb7.png" src="_images/837b5ccaecb840092f2b009ff418bbfd3c2f8f4f3de6b0763e79d03fd9d03eb7.png" />
@@ -789,133 +789,12 @@ Turbine 14, T14: windio_turbine
 Turbine 15, T15: windio_turbine
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Initializing algorithm &#39;Downwind&#39;
-Initializing model &#39;Downwind&#39;
-Initializing model &#39;StatesTable2&#39;
-Initializing model &#39;grid16&#39;
-Initializing model &#39;basic_ctrl_prer&#39;
-Initializing model &#39;windio_turbine&#39;
-Initializing model &#39;basic_ctrl_postr&#39;
-Initializing model &#39;basic_ctrl&#39;
-Initializing model &#39;rotor_wd&#39;
-Partial wakes &#39;auto&#39;: Applying PartialDistSlicedWake to [&#39;this_model&#39;]
-Initializing model &#39;quadratic&#39;
-Initializing model &#39;this_model&#39;
-Initializing model &#39;GridRotor92&#39;
-Initializing model &#39;PartialDistSlicedWake35&#39;
-Initializing model &#39;auto&#39;
-
---------------------------------------------------
-  Running Downwind: calc_points
---------------------------------------------------
-  n_states : 1
-  n_turbines: 16
-  n_points : 250000
---------------------------------------------------
-  states   : StatesTable2 (StatesTable)
-  rotor    : grid16 (GridRotor)(n=4)
-  controller: basic_ctrl (BasicFarmController)
-  partialwks: auto (Mapped)
-  wake frame: rotor_wd (RotorWD)
---------------------------------------------------
-  wakes:
-    0) this_model (PorteAgelWake)(k=0.04, sp=quadratic)
---------------------------------------------------
-  turbine models:
-    0) windio_turbine (CpCtFromTwo)
---------------------------------------------------
-
-Initializing model &#39;PointDataModelList19&#39;
-Initializing model &#39;SetAmbPointResults9&#39;
-Initializing model &#39;PointWakesCalculation9&#39;
-Initializing model &#39;PointDataModelList18&#39;
-
-Input data:
-
- &lt;xarray.Dataset&gt; Size: 288B
-Dimensions:            (state: 1, turbine: 16, StatesTable2_vars: 4, tmodels: 1)
-Coordinates:
-  * state              (state) int64 8B 0
-  * StatesTable2_vars  (StatesTable2_vars) &lt;U3 48B &#39;TI&#39; &#39;WD&#39; &#39;RHO&#39; &#39;WS&#39;
-  * tmodels            (tmodels) &lt;U14 56B &#39;windio_turbine&#39;
-Dimensions without coordinates: turbine
-Data variables:
-    weight             (state, turbine) float64 128B dask.array&lt;chunksize=(1, 16), meta=np.ndarray&gt;
-    StatesTable2_data  (state, StatesTable2_vars) float64 32B dask.array&lt;chunksize=(1, 4), meta=np.ndarray&gt;
-    tmodel_sels        (state, turbine, tmodels) bool 16B dask.array&lt;chunksize=(1, 16, 1), meta=np.ndarray&gt; 
-
-
-Output farm variables: AMB_CT, AMB_P, AMB_REWS, AMB_REWS2, AMB_REWS3, AMB_RHO, AMB_TI, AMB_WD, AMB_YAW, CT, D, H, P, REWS, REWS2, REWS3, RHO, TI, WD, X, Y, YAW, order, weight
-
-Chunks: {&#39;state&#39;: 1000, &#39;point&#39;: 10000}
-
-
-Input farm data:
-
- &lt;xarray.Dataset&gt; Size: 3kB
-Dimensions:    (state: 1, turbine: 16)
-Coordinates:
-  * state      (state) int64 8B 0
-Dimensions without coordinates: turbine
-Data variables: (12/25)
-    AMB_CT     (state, turbine) float64 128B dask.array&lt;chunksize=(1, 16), meta=np.ndarray&gt;
-    AMB_P      (state, turbine) float64 128B dask.array&lt;chunksize=(1, 16), meta=np.ndarray&gt;
-    AMB_REWS   (state, turbine) float64 128B dask.array&lt;chunksize=(1, 16), meta=np.ndarray&gt;
-    AMB_REWS2  (state, turbine) float64 128B dask.array&lt;chunksize=(1, 16), meta=np.ndarray&gt;
-    AMB_REWS3  (state, turbine) float64 128B dask.array&lt;chunksize=(1, 16), meta=np.ndarray&gt;
-    AMB_RHO    (state, turbine) float64 128B dask.array&lt;chunksize=(1, 16), meta=np.ndarray&gt;
-    ...         ...
-    X          (state, turbine) float64 128B dask.array&lt;chunksize=(1, 16), meta=np.ndarray&gt;
-    Y          (state, turbine) float64 128B dask.array&lt;chunksize=(1, 16), meta=np.ndarray&gt;
-    YAW        (state, turbine) float64 128B dask.array&lt;chunksize=(1, 16), meta=np.ndarray&gt;
-    order      (state, turbine) int64 128B dask.array&lt;chunksize=(1, 16), meta=np.ndarray&gt;
-    weight     (state, turbine) float64 128B dask.array&lt;chunksize=(1, 16), meta=np.ndarray&gt;
-    tname      (turbine) &lt;U3 192B dask.array&lt;chunksize=(16,), meta=np.ndarray&gt; 
-
-
-Input point data:
-
- &lt;xarray.Dataset&gt; Size: 6MB
-Dimensions:  (state: 1, point: 250000, xyh: 3)
-Coordinates:
-  * state    (state) int64 8B 0
-Dimensions without coordinates: point, xyh
-Data variables:
-    points   (state, point, xyh) float64 6MB dask.array&lt;chunksize=(1, 10000, 3), meta=np.ndarray&gt; 
-
-
-Output point variables: WD, WS, TI, RHO, AMB_WD, AMB_WS, AMB_TI, AMB_RHO
-
-Chunks: {&#39;state&#39;: 1000, &#39;point&#39;: 10000}
-
-Calculating 8 variables at 250000 points in 1 states
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Finalizing model &#39;StatesTable2&#39;
-Finalizing model &#39;PointDataModelList19&#39;
-Finalizing model &#39;SetAmbPointResults9&#39;
-Finalizing model &#39;PointWakesCalculation9&#39;
-Finalizing model &#39;PointDataModelList18&#39;
-Finalizing model &#39;grid16&#39;
-Finalizing model &#39;basic_ctrl_prer&#39;
-Finalizing model &#39;windio_turbine&#39;
-Finalizing model &#39;basic_ctrl_postr&#39;
-Finalizing model &#39;basic_ctrl&#39;
-Finalizing model &#39;rotor_wd&#39;
-Finalizing model &#39;quadratic&#39;
-Finalizing model &#39;this_model&#39;
-Finalizing model &#39;GridRotor92&#39;
-Finalizing model &#39;PartialDistSlicedWake35&#39;
-Finalizing model &#39;auto&#39;
-Finalizing model &#39;Downwind&#39;
-</pre></div>
-</div>
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.tri._tricontour.TriContourSet at 0x7fc3b4f01940&gt;
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.tri._tricontour.TriContourSet at 0x7f903410e3c0&gt;
 </pre></div>
 </div>
 <img alt="_images/fe036ee4e04dfa56252642688f547cbb896465902b1bcd2328da310ecb83561d.png" src="_images/fe036ee4e04dfa56252642688f547cbb896465902b1bcd2328da310ecb83561d.png" />
-<img alt="_images/c94e4d82827be70116c8547b3751916646c309430c0cc2393dd6e2274bf5645b.png" src="_images/c94e4d82827be70116c8547b3751916646c309430c0cc2393dd6e2274bf5645b.png" />
-<img alt="_images/0dd29a41e64af5a493ca2ea49212e636edc2d0c7aa5cfeeb31bff6ef060236f1.png" src="_images/0dd29a41e64af5a493ca2ea49212e636edc2d0c7aa5cfeeb31bff6ef060236f1.png" />
+<img alt="_images/ccf8be778d3fa4141f3723c1de383b308c6528c45d007d1cf043ba42d763886f.png" src="_images/ccf8be778d3fa4141f3723c1de383b308c6528c45d007d1cf043ba42d763886f.png" />
+<img alt="_images/faafc3ec6ff87971d1e5da890392beb735b31989c00c2df7d2c3027e770a3845.png" src="_images/faafc3ec6ff87971d1e5da890392beb735b31989c00c2df7d2c3027e770a3845.png" />
 </div>
 </div>
 </section>
