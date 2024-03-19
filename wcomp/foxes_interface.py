@@ -15,6 +15,7 @@ from foxes.models.turbine_types import CpCtFromTwo
 from foxes.output import FlowPlots2D
 from foxes.models.model_book import ModelBook
 from foxes.models.wake_models.wind import JensenWake
+from foxes.models.wake_models.wind import PorteAgelWake
 
 from windIO.utils.yml_utils import load_yaml
 from .base_interface import WCompBase
@@ -29,6 +30,20 @@ WAKE_MODEL_MAPPING = {
         "model_ref": JensenWake,
         "parameters": {
             "k": "alpha",
+        }
+    },
+    # "bastankah2014": {
+    #     "model_ref": BastankhahWake,
+    #     "parameters": {
+    #         "alpha": "k",
+    #     }
+    # },
+    "bastankhah2016": {
+        "model_ref": PorteAgelWake,
+        "parameters": {
+            "alpha": "alpha",
+            "beta": "beta",
+            "k": "k",
         }
     },
 }

@@ -13,7 +13,7 @@ from py_wake.wind_turbines.power_ct_functions import PowerCtFunctions
 from py_wake.wind_farm_models.engineering_models import PropagateDownwind
 from py_wake.literature.noj import Jensen_1983
 from py_wake.literature.gaussian_models import Niayifar_PorteAgel_2016
-# from py_wake.deficit_models.gaussian import BastankhahGaussianDeficit
+from py_wake.deficit_models.gaussian import BastankhahGaussianDeficit
 from py_wake.deflection_models.deflection_model import DeflectionModel
 
 from windIO.utils.yml_utils import load_yaml
@@ -32,21 +32,25 @@ WAKE_MODEL_MAPPING = {
             "k": "alpha",
         }
     },
-    "niayifar-porteagel": {
-        "model_ref": Niayifar_PorteAgel_2016,
-        "parameters": {
-            "a1": "a0",
-            "a2": "a1",
-        }
-    },
-    # "bastankhah2016": {
-        
-    #     "model_ref": BastankhahGaussianDeficit,
+    # "niayifar-porteagel": {
+    #     "model_ref": Niayifar_PorteAgel_2016,
     #     "parameters": {
-    #         "k": "a0",
+    #         "a1": "a0",
     #         "a2": "a1",
     #     }
-    #     (self, ct2a=ct2a_madsen, k=0.0324555, ceps=.2,
+    # },
+    # "bastankhah2014": {
+    #     "model_ref": BastankhahGaussianDeficit,
+    #     "parameters": {
+    # #         "k": "a0",
+    # #         "a2": "a1",
+    #     }
+    # },
+    # "bastankhah2016": {     # NOT IMPLEMENTED
+    #     "model_ref": None,
+    #     "parameters": {
+    #     }
+    # },
 }
 
 class WCompPyWake(WCompBase):

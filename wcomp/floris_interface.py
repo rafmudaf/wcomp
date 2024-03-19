@@ -35,22 +35,24 @@ WAKE_MODEL_MAPPING = {
         "model_ref": "none",
         "parameters": {}
     },
+    "bastankhah2014": {     # NOT IMPLEMENTED
+        "model_ref": None,
+        "parameters": {}
+    },
     "bastankhah2016": {
         "model_ref": "gauss",
         "parameters": {
-            "ka": "ka",
-            "kb": "kb",
-            # ad: float = field(converter=float, default=0.0)
-            # bd: float = field(converter=float, default=0.0)
-            # alpha: float = field(converter=float, default=0.58)
-            # beta: float = field(converter=float, default=0.077)
-            # ka: float = field(converter=float, default=0.38)
-            # kb: float = field(converter=float, default=0.004)
-            # dm: float = field(converter=float, default=1.0)
+            "alpha": "alpha",
+            "beta": "beta",
+            "ka": "k",
+            "kb": "k",
         }
     }
-
 }
+
+# ASSUMPTION: FLORIS has a vertical and horizontal wake expansion rate for Bastankhah 2016, but FOXES uses the same for both.
+# This is also mentioned in the paper in section 7 Model Predictions.
+# For simplicity in connecting the models, I'm setting FLORIS to use the same for both.
 
 basic_dict = {
     'name': 'Jensen-Jimenez',
@@ -84,9 +86,9 @@ basic_dict = {
             'turbulence_model': 'crespo_hernandez',
             'velocity_model': 'jensen'
         },
-        'enable_secondary_steering': True,
-        'enable_yaw_added_recovery': True,
-        'enable_transverse_velocities': True,
+        'enable_secondary_steering': False,
+        'enable_yaw_added_recovery': False,
+        'enable_transverse_velocities': False,
         'wake_deflection_parameters': {
             'jimenez': {
                 'ad': 0.0,
