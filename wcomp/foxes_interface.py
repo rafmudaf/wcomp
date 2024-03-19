@@ -484,15 +484,15 @@ class WCompFoxes(WCompBase):
         # print(x2_bounds)
         o = FlowPlots2D(self.algo, self.farm_results)
         # g = o.gen_states_fig_xy("WS", resolution=10, figsize=(10, 5), verbosity=0)
-        xres = (x1_bounds[1] - x1_bounds[0]) / resolution[0]
-        yres = (x2_bounds[1] - x2_bounds[0]) / resolution[1]
+        # xres = (x1_bounds[1] - x1_bounds[0]) / resolution[0]
+        # yres = (x2_bounds[1] - x2_bounds[0]) / resolution[1]
         grid_points, u = o.get_mean_fig_xy(
             "WS",
+            resolution=resolution,
             xmin=x1_bounds[0],
             xmax=x1_bounds[1],
             ymin=x2_bounds[0],
             ymax=x2_bounds[1],
-            resolution=(xres, yres),
             figsize=(10, 5)
         )
         x = grid_points[:, :, 0]
