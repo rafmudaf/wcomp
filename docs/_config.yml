@@ -13,8 +13,8 @@ execute:
 #   latex_documents:
 #     targetname: book.tex
 
-bibtex_bibfiles:
-  - references.bib
+# bibtex_bibfiles:
+#   - references.bib
 
 repository:
   url: https://github.com/rafmudaf/wcomp

@@ -15,6 +15,7 @@ from py_wake.literature.noj import Jensen_1983
 from py_wake.literature.gaussian_models import Niayifar_PorteAgel_2016
 from py_wake.deficit_models.gaussian import BastankhahGaussianDeficit
 from py_wake.deflection_models.deflection_model import DeflectionModel
+from py_wake.literature.turbopark import Nygaard_2022
 
 from windIO.utils.yml_utils import load_yaml
 
@@ -51,6 +52,12 @@ WAKE_MODEL_MAPPING = {
     #     "parameters": {
     #     }
     # },
+    "turbopark": {
+        "model_ref": Nygaard_2022,
+        "parameters": {
+            "A": "A",
+        }
+    },
 }
 
 class WCompPyWake(WCompBase):

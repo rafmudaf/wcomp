@@ -29,12 +29,6 @@ WAKE_MODEL_MAPPING = {
             "we": "alpha",
         }
     },
-
-    # Deflection model
-    None: {
-        "model_ref": "none",
-        "parameters": {}
-    },
     "bastankhah2014": {     # NOT IMPLEMENTED
         "model_ref": None,
         "parameters": {}
@@ -47,7 +41,19 @@ WAKE_MODEL_MAPPING = {
             "ka": "k",
             "kb": "k",
         }
-    }
+    },
+    "turbopark": {
+        "model_ref": "turbopark",
+        "parameters": {
+            "A": "A",
+        }
+    },
+
+    # Deflection model
+    None: {
+        "model_ref": "none",
+        "parameters": {}
+    },
 }
 
 # ASSUMPTION: FLORIS has a vertical and horizontal wake expansion rate for Bastankhah 2016, but FOXES uses the same for both.

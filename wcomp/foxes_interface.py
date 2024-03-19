@@ -16,6 +16,7 @@ from foxes.output import FlowPlots2D
 from foxes.models.model_book import ModelBook
 from foxes.models.wake_models.wind import JensenWake
 from foxes.models.wake_models.wind import PorteAgelWake
+from foxes.models.wake_models.wind import TurbOParkWake
 
 from windIO.utils.yml_utils import load_yaml
 from .base_interface import WCompBase
@@ -44,6 +45,12 @@ WAKE_MODEL_MAPPING = {
             "alpha": "alpha",
             "beta": "beta",
             "k": "k",
+        }
+    },
+    "turbopark": {
+        "model_ref": TurbOParkWake,
+        "parameters": {
+            "A": "A",
         }
     },
 }

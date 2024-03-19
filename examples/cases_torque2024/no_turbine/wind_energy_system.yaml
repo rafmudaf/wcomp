@@ -1,0 +1,5 @@
+name: IEA 15MW turbine with Jensen velocity deficit model
+site: !include energy_site.yaml
+wind_farm: !include wind_farm.yaml
+attributes:
+  analyses:
