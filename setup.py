@@ -15,7 +15,7 @@ REQUIRES_PYTHON = ">=3.10"
 # What packages are required for this module to be executed?
 REQUIRED = [
     "floris",   # At develop, latest hash is c7f8f36
-    "foxes",    # At v0.5.1 with two additional commits on rafmudaf/foxes, latest hash is 275f645
+    "foxes",    # At v0.6.2 with one additional commit on rafmudaf/foxes, latest hash is a3e3c48
     "py-wake",  # At master with two additional commits on rafmudaf/PyWake, latest hash is 35e63b7
     "numpy>=1.20",
     "windIO",

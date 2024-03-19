@@ -22,7 +22,7 @@ in the comparison directly.
 
 The wake modeling software currently integrated to `wcomp` are:
 - [Floris](https://github.com/NREL/floris)
-- [FOXES](https://github.com/FraunhoferIWES/foxes)
+- [foxes](https://github.com/FraunhoferIWES/foxes)
 - [PyWake](https://gitlab.windenergy.dtu.dk/TOPFARM/PyWake)
 
 The package diagram below shows the modules within `wcomp` and how each relates to the
@@ -52,7 +52,7 @@ Currently, `wcomp` must be installed manually with `pip`. The dependencies are:
 
 - windIO v1.0, can be installed directly from PyPI
 - FLORIS v3.5, can be installed directly from PyPI but preferably locally from https://github.com/nrel/floris
-- FOXES v0.5.1 plus two additional commits, must be installed from https://github.com/rafmudaf/foxes at main branch
+- foxes v0.6.2 plus one additional commit, must be installed from https://github.com/rafmudaf/foxes at main branch
 - PyWake v2.5.0 plus two additional commits, must be installed from https://github.com/rafmudaf/PyWake at master branch
 
 Follow these steps to install the dependencies and `wcomp`:

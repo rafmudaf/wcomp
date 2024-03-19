@@ -27,7 +27,7 @@ Currently, `wcomp` must be installed manually `pip`. The dependencies are:
 
 - windIO v1.0, can be installed directly from PyPI
 - FLORIS v3.5, can be installed directly from PyPI but preferably locally from https://github.com/nrel/floris
-- FOXES v0.5.1 plus two additional commits, must be installed from https://github.com/rafmudaf/foxes at main branch
+- foxes v0.6.2 plus one additional commit, must be installed from https://github.com/rafmudaf/foxes at main branch
 - PyWake v2.5.0 plus two additional commits, must be installed from https://github.com/rafmudaf/PyWake at master branch
 
 Follow these steps to install the dependencies and `wcomp`:
@@ -69,7 +69,7 @@ The `windIO` package is used both to define the comparison cases and to load the
 ```mermaid
 graph TD
     L["FLORIS"]
-    M["FOXES"]
+    M["foxes"]
     N["PyWake"]
 
     A["windIO"]

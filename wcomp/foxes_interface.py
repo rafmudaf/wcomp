@@ -15,7 +15,8 @@ from foxes.models.turbine_types import CpCtFromTwo
 from foxes.output import FlowPlots2D
 from foxes.models.model_book import ModelBook
 from foxes.models.wake_models.wind import JensenWake
-from foxes.models.wake_models.wind import PorteAgelWake
+from foxes.models.wake_models.wind import Bastankhah2014
+from foxes.models.wake_models.wind import Bastankhah2016
 from foxes.models.wake_models.wind import TurbOParkWake
 from foxes.models.wake_frames import YawedWakes
 
@@ -37,13 +38,13 @@ WAKE_MODEL_MAPPING = {
         }
     },
     # "bastankah2014": {
-    #     "model_ref": BastankhahWake,
+    #     "model_ref": Bastankhah2014,
     #     "parameters": {
     #         "alpha": "k",
     #     }
     # },
     "bastankhah2016": {
-        "model_ref": PorteAgelWake,
+        "model_ref": Bastankhah2016,
         "parameters": {
             "alpha": "alpha",
             "beta": "beta",
@@ -318,7 +319,7 @@ class WCompFoxes(WCompBase):
         temp_model_name = "this_model"
         mbook.wake_models[temp_model_name] = _velocity_model(
             **_velocity_model_parameters,
-            superposition="quadratic"
+            superposition="ws_quadratic"
         )
         # mbook.print_toc(subset="wake_models")
         return Downwind(
@@ -506,22 +507,22 @@ class WCompFoxes(WCompBase):
 
         x1_bounds = (np.min(self.farm_results.X) - 2 * self.rotor_diameter, np.max(self.farm_results.X) + 10 * self.rotor_diameter)
         x2_bounds = (np.min(self.farm_results.Y) - 2 * self.rotor_diameter, np.max(self.farm_results.Y) + 2 * self.rotor_diameter)
-        # print("foxes bounds")
-        # print(x1_bounds)
-        # print(x2_bounds)
         o = FlowPlots2D(self.algo, self.farm_results)
         # g = o.gen_states_fig_xy("WS", resolution=10, figsize=(10, 5), verbosity=0)
         # xres = (x1_bounds[1] - x1_bounds[0]) / resolution[0]
         # yres = (x2_bounds[1] - x2_bounds[0]) / resolution[1]
-        grid_points, u = o.get_mean_fig_xy(
-            "WS",
+        u, grid_data = o.get_mean_data_xy(
             resolution=resolution,
+            variables=["WS"],
             xmin=x1_bounds[0],
             xmax=x1_bounds[1],
             ymin=x2_bounds[0],
             ymax=x2_bounds[1],
-            figsize=(10, 5)
+            z=self.hub_height,
+            ret_grid=True,
+            data_format="numpy",
         )
+        x_pos, y_pos, z_pos, grid_points = grid_data
         x = grid_points[:, :, 0]
         y = grid_points[:, :, 1]
         # z = grid_points[:, :, 2]
@@ -529,7 +530,7 @@ class WCompFoxes(WCompBase):
         plane = WakePlane(
             x[0],
             y[0],
-            u[0],
+            u[:,:,0].flatten(),
             "z",
             resolution,
         )
@@ -554,15 +555,18 @@ class WCompFoxes(WCompBase):
         # g = o.gen_states_fig_xy("WS", resolution=10, figsize=(10, 5), verbosity=0)
         # xres = (x1_bounds[1] - x1_bounds[0]) / resolution[0]
         # yres = (x2_bounds[1] - x2_bounds[0]) / resolution[1]
-        grid_points, u = o.get_mean_fig_yz(
-            "WS",
+        u, grid_data = o.get_mean_data_yz(
             resolution=resolution,
+            variables=["WS"],
             ymin=x1_bounds[0],
             ymax=x1_bounds[1],
             zmin=x2_bounds[0],
             zmax=x2_bounds[1],
-            figsize=(10, 5)
+            x=x_coordinate,
+            ret_grid=True,
+            data_format="numpy",
         )
+        x_pos, y_pos, z_pos, grid_points = grid_data
         # x = grid_points[:, :, 0]
         y = grid_points[:, :, 1]
         z = grid_points[:, :, 2]
@@ -570,7 +574,7 @@ class WCompFoxes(WCompBase):
         plane = WakePlane(
             y[0],
             z[0],
-            u[0],
+            u[:,:,0].flatten(),
             "x",
             resolution,
         )
