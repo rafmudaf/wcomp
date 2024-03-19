@@ -5,5 +5,30 @@ attributes:
   gross_AEP: 469.536
   net_AEP: 366.94157116
   analyses:
+    yaw_angles:
+    - 0.0
+    - 0.0
+    - 0.0
+    - 0.0
+    - 0.0
+    - 0.0
+    - 0.0
+    - 0.0
+    - 0.0
+    - 0.0
+    - 0.0
+    - 0.0
+    - 0.0
+    - 0.0
+    - 0.0
+    - 0.0
     wake_model:
-      name: Bastankhah_quadratic_k004
+      velocity:
+        name: bastankhah2016
+        parameters:
+          alpha: 0.58
+          beta: 0.077
+          k: 0.04
+      deflection:
+        name:
+        parameters:

@@ -5,5 +5,13 @@ attributes:
   gross_AEP: 469.536
   net_AEP: 366.94157116
   analyses:
+    yaw_angles:
+    - 0.0
     wake_model:
-      name: Jensen_quadratic_k007
+      velocity:
+        name: jensen
+        parameters:
+          alpha: 0.1
+      deflection:
+        name:
+        parameters:
