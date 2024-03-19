@@ -515,6 +515,42 @@ class WCompFoxes(WCompBase):
         )
         return plane
     
-    def xsection_contour(self, wind_direction: float, resolution: tuple, x_coordinate: float) -> WakePlane:
-        # TODO
-        pass
+    def xsection_contour(
+        self,
+        wind_direction: float,
+        resolution: tuple,
+        x_coordinate: float
+    ) -> WakePlane:
+        x1_bounds = (np.min(self.farm_results.Y) - 2 * self.rotor_diameter, np.max(self.farm_results.Y) + 2 * self.rotor_diameter)
+        x2_bounds = (0.001, 6 * self.hub_height)
+        o = FlowPlots2D(self.algo, self.farm_results)
+        # g = o.gen_states_fig_xy("WS", resolution=10, figsize=(10, 5), verbosity=0)
+        # xres = (x1_bounds[1] - x1_bounds[0]) / resolution[0]
+        # yres = (x2_bounds[1] - x2_bounds[0]) / resolution[1]
+        grid_points, u = o.get_mean_fig_yz(
+            "WS",
+            resolution=resolution,
+            ymin=x1_bounds[0],
+            ymax=x1_bounds[1],
+            zmin=x2_bounds[0],
+            zmax=x2_bounds[1],
+            figsize=(10, 5)
+        )
+        # x = grid_points[:, :, 0]
+        y = grid_points[:, :, 1]
+        z = grid_points[:, :, 2]
+
+        plane = WakePlane(
+            y[0],
+            z[0],
+            u[0],
+            "x",
+            resolution,
+        )
+        plot_plane(
+            plane,
+            ax=plt.gca(),
+            color_bar=True,
+            clevels=100
+        )
+        return plane
