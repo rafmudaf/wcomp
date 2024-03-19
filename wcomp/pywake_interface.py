@@ -14,7 +14,7 @@ from py_wake.wind_farm_models.engineering_models import PropagateDownwind
 from py_wake.literature.noj import Jensen_1983
 from py_wake.literature.gaussian_models import Niayifar_PorteAgel_2016
 from py_wake.deficit_models.gaussian import BastankhahGaussianDeficit
-from py_wake.deflection_models.deflection_model import DeflectionModel
+from py_wake.deflection_models import JimenezWakeDeflection
 from py_wake.literature.turbopark import Nygaard_2022
 
 from windIO.utils.yml_utils import load_yaml
@@ -27,6 +27,8 @@ from .plotting import plot_plane, plot_profile
 # to the tool's specific name. It also maps parameter names from the
 # referenced papers to the parameters in the implementation.
 WAKE_MODEL_MAPPING = {
+
+    # Velocity models
     "jensen": {
         "model_ref": Jensen_1983,
         "parameters": {
@@ -58,6 +60,20 @@ WAKE_MODEL_MAPPING = {
             "A": "A",
         }
     },
+
+    # Deflection model
+    # None: {
+    #     "model_ref": "none",
+    #     "parameters": {}
+    # },
+    "jimenez": {
+        "model_ref": JimenezWakeDeflection,
+        "parameters": {}    # No parameters
+    },
+    # "bastankhah2016_deflection": {
+    #     "model_ref": ,
+    #     "parameters": {}    # No parameters
+    # },
 }
 
 class WCompPyWake(WCompBase):

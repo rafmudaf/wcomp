@@ -17,6 +17,7 @@ from foxes.models.model_book import ModelBook
 from foxes.models.wake_models.wind import JensenWake
 from foxes.models.wake_models.wind import PorteAgelWake
 from foxes.models.wake_models.wind import TurbOParkWake
+from foxes.models.wake_frames import YawedWakes
 
 from windIO.utils.yml_utils import load_yaml
 from .base_interface import WCompBase
@@ -27,6 +28,8 @@ from .plotting import plot_plane, plot_profile
 # to the tool's specific name. It also maps parameter names from the
 # referenced papers to the parameters in the implementation.
 WAKE_MODEL_MAPPING = {
+
+    # Velocity models
     "jensen": {
         "model_ref": JensenWake,
         "parameters": {
@@ -51,6 +54,23 @@ WAKE_MODEL_MAPPING = {
         "model_ref": TurbOParkWake,
         "parameters": {
             "A": "A",
+        }
+    },
+
+    # Deflection model
+    # "jimenez": {
+    #     "model_ref": ,
+    #     "parameters": {
+    #         "alpha": "alpha",
+    #         "beta": "beta",
+    #         "k": "k",
+    #     }
+    # }
+    "bastankhah2016_deflection": {
+        "model_ref": YawedWakes,
+        "parameters": {
+            "alpha": "alpha",
+            "beta": "beta",
         }
     },
 }
