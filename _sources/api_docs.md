@@ -8,8 +8,7 @@
     wcomp.base_interface
     wcomp.floris_interface
     wcomp.foxes_interface
+    wcomp.pywake_interface
     wcomp.output_struct
     wcomp.plotting
 ```
-
-wcomp.pywake_interface

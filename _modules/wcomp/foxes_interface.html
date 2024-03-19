@@ -190,6 +190,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../../_autosummary/wcomp.base_interface.html">wcomp.base_interface</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../_autosummary/wcomp.floris_interface.html">wcomp.floris_interface</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../_autosummary/wcomp.foxes_interface.html">wcomp.foxes_interface</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../_autosummary/wcomp.pywake_interface.html">wcomp.pywake_interface</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../_autosummary/wcomp.output_struct.html">wcomp.output_struct</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../_autosummary/wcomp.plotting.html">wcomp.plotting</a></li>
 </ul>
@@ -382,6 +383,12 @@ document.write(`
             <span class="s2">&quot;k&quot;</span><span class="p">:</span> <span class="s2">&quot;alpha&quot;</span><span class="p">,</span>
         <span class="p">}</span>
     <span class="p">},</span>
+    <span class="c1"># &quot;bastankah2014&quot;: {</span>
+    <span class="c1">#     &quot;model_ref&quot;: BastankhahWake,</span>
+    <span class="c1">#     &quot;parameters&quot;: {</span>
+    <span class="c1">#         &quot;alpha&quot;: &quot;k&quot;,</span>
+    <span class="c1">#     }</span>
+    <span class="c1"># },</span>
     <span class="s2">&quot;bastankhah2016&quot;</span><span class="p">:</span> <span class="p">{</span>
         <span class="s2">&quot;model_ref&quot;</span><span class="p">:</span> <span class="n">PorteAgelWake</span><span class="p">,</span>
         <span class="s2">&quot;parameters&quot;</span><span class="p">:</span> <span class="p">{</span>
@@ -398,6 +405,14 @@ document.write(`
     <span class="p">},</span>
 
     <span class="c1"># Deflection model</span>
+    <span class="c1"># &quot;jimenez&quot;: {</span>
+    <span class="c1">#     &quot;model_ref&quot;: ,</span>
+    <span class="c1">#     &quot;parameters&quot;: {</span>
+    <span class="c1">#         &quot;alpha&quot;: &quot;alpha&quot;,</span>
+    <span class="c1">#         &quot;beta&quot;: &quot;beta&quot;,</span>
+    <span class="c1">#         &quot;k&quot;: &quot;k&quot;,</span>
+    <span class="c1">#     }</span>
+    <span class="c1"># }</span>
     <span class="s2">&quot;bastankhah2016_deflection&quot;</span><span class="p">:</span> <span class="p">{</span>
         <span class="s2">&quot;model_ref&quot;</span><span class="p">:</span> <span class="n">YawedWakes</span><span class="p">,</span>
         <span class="s2">&quot;parameters&quot;</span><span class="p">:</span> <span class="p">{</span>
@@ -406,21 +421,6 @@ document.write(`
         <span class="p">}</span>
     <span class="p">},</span>
 <span class="p">}</span>
-<span class="c1">## Not implemented</span>
-<span class="c1"># &quot;bastankah2014&quot;: {</span>
-<span class="c1">#     &quot;model_ref&quot;: BastankhahWake,</span>
-<span class="c1">#     &quot;parameters&quot;: {</span>
-<span class="c1">#         &quot;alpha&quot;: &quot;k&quot;,</span>
-<span class="c1">#     }</span>
-<span class="c1"># },</span>
-<span class="c1"># &quot;jimenez&quot;: {</span>
-<span class="c1">#     &quot;model_ref&quot;: ,</span>
-<span class="c1">#     &quot;parameters&quot;: {</span>
-<span class="c1">#         &quot;alpha&quot;: &quot;alpha&quot;,</span>
-<span class="c1">#         &quot;beta&quot;: &quot;beta&quot;,</span>
-<span class="c1">#         &quot;k&quot;: &quot;k&quot;,</span>
-<span class="c1">#     }</span>
-<span class="c1"># }</span>
 
 <div class="viewcode-block" id="WCompFoxes">
 <a class="viewcode-back" href="../../_autosummary/wcomp.foxes_interface.html#wcomp.foxes_interface.WCompFoxes">[docs]</a>
