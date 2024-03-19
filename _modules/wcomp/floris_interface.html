@@ -189,8 +189,6 @@
 <li class="toctree-l1 has-children"><a class="reference internal" href="../../api_docs.html">API Documentation</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-1"><i class="fa-solid fa-chevron-down"></i></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../_autosummary/wcomp.base_interface.html">wcomp.base_interface</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../_autosummary/wcomp.floris_interface.html">wcomp.floris_interface</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../_autosummary/wcomp.foxes_interface.html">wcomp.foxes_interface</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../_autosummary/wcomp.pywake_interface.html">wcomp.pywake_interface</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../_autosummary/wcomp.output_struct.html">wcomp.output_struct</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../_autosummary/wcomp.plotting.html">wcomp.plotting</a></li>
 </ul>
@@ -364,17 +362,67 @@ document.write(`
 <span class="c1"># &quot;windIO_model_name&quot;: {</span>
 <span class="c1">#   &quot;model_ref&quot;: the current software&#39;s reference for this wake model,</span>
 <span class="c1">#   &quot;parameters&quot;: {</span>
-<span class="c1">#       &quot;windIO_parameter&quot;: current software&#39;s analogous parameter</span>
+<span class="c1">#       &quot;model parameter&quot;: windIO parameter</span>
 <span class="c1">#   }</span>
 <span class="c1"># }</span>
-<span class="c1"># WAKE_MODEL_MAPPING = {</span>
-<span class="c1">#     &quot;jensen&quot;: {</span>
-<span class="c1">#         &quot;model_ref&quot;: &quot;jensen&quot;,</span>
-<span class="c1">#         &quot;parameters&quot;: {</span>
-<span class="c1">#             &quot;alpha&quot;: &quot;we&quot;,</span>
-<span class="c1">#         }</span>
-<span class="c1">#     },    </span>
-<span class="c1"># }</span>
+<span class="n">WAKE_MODEL_MAPPING</span> <span class="o">=</span> <span class="p">{</span>
+
+    <span class="c1"># Velocity models</span>
+    <span class="s2">&quot;jensen&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">&quot;model_ref&quot;</span><span class="p">:</span> <span class="s2">&quot;jensen&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;parameters&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">&quot;we&quot;</span><span class="p">:</span> <span class="s2">&quot;alpha&quot;</span><span class="p">,</span>
+        <span class="p">}</span>
+    <span class="p">},</span>
+    <span class="s2">&quot;bastankhah2014&quot;</span><span class="p">:</span> <span class="p">{</span>     <span class="c1"># NOT IMPLEMENTED</span>
+        <span class="s2">&quot;model_ref&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="s2">&quot;parameters&quot;</span><span class="p">:</span> <span class="p">{}</span>
+    <span class="p">},</span>
+    <span class="s2">&quot;bastankhah2016&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">&quot;model_ref&quot;</span><span class="p">:</span> <span class="s2">&quot;gauss&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;parameters&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">&quot;alpha&quot;</span><span class="p">:</span> <span class="s2">&quot;alpha&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;beta&quot;</span><span class="p">:</span> <span class="s2">&quot;beta&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;ka&quot;</span><span class="p">:</span> <span class="s2">&quot;k&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;kb&quot;</span><span class="p">:</span> <span class="s2">&quot;k&quot;</span><span class="p">,</span>
+        <span class="p">}</span>
+    <span class="p">},</span>
+    <span class="s2">&quot;turbopark&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">&quot;model_ref&quot;</span><span class="p">:</span> <span class="s2">&quot;turbopark&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;parameters&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">&quot;A&quot;</span><span class="p">:</span> <span class="s2">&quot;A&quot;</span><span class="p">,</span>
+        <span class="p">}</span>
+    <span class="p">},</span>
+
+    <span class="c1"># Deflection model</span>
+    <span class="kc">None</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">&quot;model_ref&quot;</span><span class="p">:</span> <span class="s2">&quot;none&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;parameters&quot;</span><span class="p">:</span> <span class="p">{}</span>
+    <span class="p">},</span>
+    <span class="s2">&quot;jimenez&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">&quot;model_ref&quot;</span><span class="p">:</span> <span class="s2">&quot;jimenez&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;parameters&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">&quot;ad&quot;</span><span class="p">:</span> <span class="s2">&quot;ad&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;bd&quot;</span><span class="p">:</span> <span class="s2">&quot;bd&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;kd&quot;</span><span class="p">:</span> <span class="s2">&quot;kd&quot;</span><span class="p">,</span>
+        <span class="p">}</span>
+    <span class="p">},</span>
+    <span class="s2">&quot;bastankhah2016_deflection&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">&quot;model_ref&quot;</span><span class="p">:</span> <span class="s2">&quot;gauss&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;parameters&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">&quot;ad&quot;</span><span class="p">:</span> <span class="s2">&quot;ad&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;bd&quot;</span><span class="p">:</span> <span class="s2">&quot;bd&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;alpha&quot;</span><span class="p">:</span> <span class="s2">&quot;alpha&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;beta&quot;</span><span class="p">:</span> <span class="s2">&quot;beta&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;ka&quot;</span><span class="p">:</span> <span class="s2">&quot;ka&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;kb&quot;</span><span class="p">:</span> <span class="s2">&quot;kb&quot;</span><span class="p">,</span>
+        <span class="p">}</span>
+    <span class="p">},</span>
+<span class="p">}</span>
+
+<span class="c1"># ASSUMPTION: FLORIS has a vertical and horizontal wake expansion rate for Bastankhah 2016, but FOXES uses the same for both.</span>
+<span class="c1"># This is also mentioned in the paper in section 7 Model Predictions.</span>
+<span class="c1"># For simplicity in connecting the models, I&#39;m setting FLORIS to use the same for both.</span>
 
 <span class="n">basic_dict</span> <span class="o">=</span> <span class="p">{</span>
     <span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;Jensen-Jimenez&#39;</span><span class="p">,</span>
@@ -408,9 +456,9 @@ document.write(`
             <span class="s1">&#39;turbulence_model&#39;</span><span class="p">:</span> <span class="s1">&#39;crespo_hernandez&#39;</span><span class="p">,</span>
             <span class="s1">&#39;velocity_model&#39;</span><span class="p">:</span> <span class="s1">&#39;jensen&#39;</span>
         <span class="p">},</span>
-        <span class="s1">&#39;enable_secondary_steering&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
-        <span class="s1">&#39;enable_yaw_added_recovery&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
-        <span class="s1">&#39;enable_transverse_velocities&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="s1">&#39;enable_secondary_steering&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="s1">&#39;enable_yaw_added_recovery&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="s1">&#39;enable_transverse_velocities&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
         <span class="s1">&#39;wake_deflection_parameters&#39;</span><span class="p">:</span> <span class="p">{</span>
             <span class="s1">&#39;jimenez&#39;</span><span class="p">:</span> <span class="p">{</span>
                 <span class="s1">&#39;ad&#39;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">,</span>
@@ -446,26 +494,18 @@ document.write(`
     <span class="n">LINE_PLOT_LINESTYLE</span> <span class="o">=</span> <span class="s2">&quot;--&quot;</span>
     <span class="n">LEGEND</span> <span class="o">=</span> <span class="s2">&quot;Floris&quot;</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">,</span>
-        <span class="n">input_file</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">Path</span><span class="p">,</span>
-        <span class="n">velocity_deficit</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
-        <span class="n">velocity_deficit_p</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span>
-        <span class="n">deflection</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;none&quot;</span><span class="p">,</span>
-        <span class="n">deflection_p</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-        <span class="n">yaw_angles</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">],</span>
-    <span class="p">):</span>
-        <span class="n">input_dictionary</span> <span class="o">=</span> <span class="n">load_yaml</span><span class="p">(</span><span class="n">input_file</span><span class="p">)</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">input_file</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">Path</span><span class="p">):</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">velocity_deficit_model_string</span> <span class="o">=</span> <span class="n">velocity_deficit</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">velocity_deficit_parameters</span> <span class="o">=</span> <span class="n">velocity_deficit_p</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">deflection_model_string</span> <span class="o">=</span> <span class="n">deflection</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">deflection_parameters</span> <span class="o">=</span> <span class="n">deflection_p</span>
+        <span class="n">input_dictionary</span> <span class="o">=</span> <span class="n">load_yaml</span><span class="p">(</span><span class="n">input_file</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">floris_dict</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_create_floris_dict</span><span class="p">(</span><span class="n">input_dictionary</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">fi</span> <span class="o">=</span> <span class="n">FlorisInterface</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">floris_dict</span><span class="p">)</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">yaw_angles</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="n">yaw_angles</span><span class="p">]])</span>
+        <span class="n">n_wind_directions</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">fi</span><span class="o">.</span><span class="n">floris</span><span class="o">.</span><span class="n">flow_field</span><span class="o">.</span><span class="n">n_wind_directions</span>
+        <span class="n">n_wind_speeds</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">fi</span><span class="o">.</span><span class="n">floris</span><span class="o">.</span><span class="n">flow_field</span><span class="o">.</span><span class="n">n_wind_speeds</span>
+        <span class="n">n_turbines</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">fi</span><span class="o">.</span><span class="n">floris</span><span class="o">.</span><span class="n">farm</span><span class="o">.</span><span class="n">n_turbines</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">yaw_angles</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">n_wind_directions</span><span class="p">,</span> <span class="n">n_wind_speeds</span><span class="p">,</span> <span class="n">n_turbines</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">yaw_angles</span><span class="p">[:,:]</span> <span class="o">=</span> <span class="n">input_dictionary</span><span class="p">[</span><span class="s2">&quot;attributes&quot;</span><span class="p">][</span><span class="s2">&quot;analyses&quot;</span><span class="p">][</span><span class="s2">&quot;yaw_angles&quot;</span><span class="p">]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">fi</span><span class="o">.</span><span class="n">calculate_wake</span><span class="p">(</span><span class="n">yaw_angles</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">yaw_angles</span><span class="p">)</span>
 
     <span class="nd">@property</span>
@@ -522,29 +562,35 @@ document.write(`
             <span class="s1">&#39;turbine_type&#39;</span><span class="p">:</span> <span class="p">[</span><span class="n">new_turbine</span><span class="p">]</span>
         <span class="p">}</span>
 
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">deflection_parameters</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">_deflection_parameters</span> <span class="o">=</span> <span class="p">{</span><span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">deflection_parameters</span><span class="p">}</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">_deflection_parameters</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">wes_analysis</span> <span class="o">=</span> <span class="n">wes</span><span class="p">[</span><span class="s2">&quot;attributes&quot;</span><span class="p">][</span><span class="s2">&quot;analyses&quot;</span><span class="p">]</span>
+        <span class="n">_velocity_model_mapping</span> <span class="o">=</span> <span class="n">WAKE_MODEL_MAPPING</span><span class="p">[</span><span class="n">wes_analysis</span><span class="p">[</span><span class="s2">&quot;wake_model&quot;</span><span class="p">][</span><span class="s2">&quot;velocity&quot;</span><span class="p">][</span><span class="s2">&quot;name&quot;</span><span class="p">]]</span>
+        <span class="n">_velocity_model</span> <span class="o">=</span> <span class="n">_velocity_model_mapping</span><span class="p">[</span><span class="s2">&quot;model_ref&quot;</span><span class="p">]</span>
+        <span class="n">_velocity_model_parameters</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="n">k</span><span class="p">:</span> <span class="n">wes_analysis</span><span class="p">[</span><span class="s2">&quot;wake_model&quot;</span><span class="p">][</span><span class="s2">&quot;velocity&quot;</span><span class="p">][</span><span class="s2">&quot;parameters&quot;</span><span class="p">][</span><span class="n">v</span><span class="p">]</span>
+            <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">_velocity_model_mapping</span><span class="p">[</span><span class="s2">&quot;parameters&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
+        <span class="p">}</span>
 
+        <span class="n">_deflection_model_mapping</span> <span class="o">=</span> <span class="n">WAKE_MODEL_MAPPING</span><span class="p">[</span><span class="n">wes_analysis</span><span class="p">[</span><span class="s2">&quot;wake_model&quot;</span><span class="p">][</span><span class="s2">&quot;deflection&quot;</span><span class="p">][</span><span class="s2">&quot;name&quot;</span><span class="p">]]</span>
+        <span class="n">_deflection_model</span> <span class="o">=</span> <span class="n">_deflection_model_mapping</span><span class="p">[</span><span class="s2">&quot;model_ref&quot;</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">_deflection_model</span> <span class="o">!=</span> <span class="s2">&quot;none&quot;</span><span class="p">:</span>
+            <span class="n">_deflection_model_parameters</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="n">k</span><span class="p">:</span> <span class="n">wes_analysis</span><span class="p">[</span><span class="s2">&quot;wake_model&quot;</span><span class="p">][</span><span class="s2">&quot;deflection&quot;</span><span class="p">][</span><span class="s2">&quot;parameters&quot;</span><span class="p">][</span><span class="n">v</span><span class="p">]</span>
+                <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">_deflection_model_mapping</span><span class="p">[</span><span class="s2">&quot;parameters&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
+            <span class="p">}</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">_deflection_model_parameters</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="n">new_dict</span><span class="p">[</span><span class="s1">&#39;wake&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
             <span class="s1">&#39;model_strings&#39;</span><span class="p">:</span> <span class="p">{</span>
                 <span class="s1">&#39;combination_model&#39;</span><span class="p">:</span> <span class="s1">&#39;sosfs&#39;</span><span class="p">,</span>
-                <span class="s1">&#39;deflection_model&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">deflection_model_string</span><span class="p">,</span>
+                <span class="s1">&#39;deflection_model&#39;</span><span class="p">:</span> <span class="n">_deflection_model</span><span class="p">,</span>
                 <span class="s1">&#39;turbulence_model&#39;</span><span class="p">:</span> <span class="s1">&#39;crespo_hernandez&#39;</span><span class="p">,</span>
-                <span class="s1">&#39;velocity_model&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">velocity_deficit_model_string</span>
+                <span class="s1">&#39;velocity_model&#39;</span><span class="p">:</span> <span class="n">_velocity_model</span>
             <span class="p">},</span>
             <span class="s1">&#39;enable_secondary_steering&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
             <span class="s1">&#39;enable_yaw_added_recovery&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
             <span class="s1">&#39;enable_transverse_velocities&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
-            <span class="s1">&#39;wake_deflection_parameters&#39;</span><span class="p">:</span> <span class="p">{</span> 
-                <span class="bp">self</span><span class="o">.</span><span class="n">deflection_model_string</span><span class="p">:</span> <span class="n">_deflection_parameters</span>
-            <span class="p">},</span>
-            <span class="s1">&#39;wake_velocity_parameters&#39;</span><span class="p">:</span> <span class="p">{</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">velocity_deficit_model_string</span><span class="p">:</span> <span class="p">{</span>
-                    <span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">velocity_deficit_parameters</span>
-                <span class="p">}</span>
-            <span class="p">},</span>
+            <span class="s1">&#39;wake_deflection_parameters&#39;</span><span class="p">:</span> <span class="p">{</span><span class="n">_deflection_model</span><span class="p">:</span> <span class="n">_deflection_model_parameters</span><span class="p">},</span>
+            <span class="s1">&#39;wake_velocity_parameters&#39;</span><span class="p">:</span> <span class="p">{</span><span class="n">_velocity_model</span><span class="p">:</span> <span class="n">_velocity_model_parameters</span><span class="p">},</span>
             <span class="s1">&#39;wake_turbulence_parameters&#39;</span><span class="p">:</span> <span class="p">{</span>
                 <span class="s1">&#39;crespo_hernandez&#39;</span><span class="p">:</span> <span class="p">{</span>
                     <span class="s1">&#39;initial&#39;</span><span class="p">:</span> <span class="mf">0.1</span><span class="p">,</span>
