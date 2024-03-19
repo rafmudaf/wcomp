@@ -4,5 +4,7 @@
 format: jb-book
 root: index 
 chapters:
+- file: wesc2023_demo
+- file: torque2024_1turbine
 - file: architecture
 - file: api_docs
