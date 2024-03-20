@@ -492,11 +492,7 @@ class WCompFoxes(WCompBase):
 
     # 2D contour plots
 
-    def horizontal_contour(
-        self,
-        wind_direction: float,
-        resolution: tuple
-    ) -> WakePlane:
+    def horizontal_contour(self, wind_direction: float, resolution: float) -> WakePlane:
         """
         This routine creates a 2D horizontal contour of all turbines in the farm.
         NOTE: the `get_mean_fig_xy` routine requires a single resolution setting
@@ -505,38 +501,34 @@ class WCompFoxes(WCompBase):
         of the plot.
         """
 
-        x1_bounds = (np.min(self.farm_results.X) - 2 * self.rotor_diameter, np.max(self.farm_results.X) + 10 * self.rotor_diameter)
-        x2_bounds = (np.min(self.farm_results.Y) - 2 * self.rotor_diameter, np.max(self.farm_results.Y) + 2 * self.rotor_diameter)
+        x_min = np.min(self.farm_results.X) - 2 * self.rotor_diameter
+        x_max = np.max(self.farm_results.X) + 10 * self.rotor_diameter
+        y_min = np.min(self.farm_results.Y) - 2 * self.rotor_diameter
+        y_max = np.max(self.farm_results.Y) + 2 * self.rotor_diameter
+
         o = FlowPlots2D(self.algo, self.farm_results)
-        # g = o.gen_states_fig_xy("WS", resolution=10, figsize=(10, 5), verbosity=0)
-        # xres = (x1_bounds[1] - x1_bounds[0]) / resolution[0]
-        # yres = (x2_bounds[1] - x2_bounds[0]) / resolution[1]
         u, grid_data = o.get_mean_data_xy(
             resolution=resolution,
             variables=["WS"],
-            xmin=x1_bounds[0],
-            xmax=x1_bounds[1],
-            ymin=x2_bounds[0],
-            ymax=x2_bounds[1],
+            xmin=x_min,
+            xmax=x_max,
+            ymin=y_min,
+            ymax=y_max,
             z=self.hub_height,
             ret_grid=True,
             data_format="numpy",
         )
-        x_pos, y_pos, z_pos, grid_points = grid_data
-        x = grid_points[:, :, 0]
-        y = grid_points[:, :, 1]
-        # z = grid_points[:, :, 2]
 
-        plane = WakePlane(
-            x[0],
-            y[0],
-            u[:,:,0].flatten(),
-            "z",
-            resolution,
-        )
+        x_pos, y_pos, z_pos, grid_points = grid_data
+        x = grid_points[0, :, 0]
+        y = grid_points[0, :, 1]
+        # z = grid_points[0, :, 2]
+        u = u[:,:,0].flatten()
+
+        plane = WakePlane(x, y, u, "z", resolution)
         plot_plane(
             plane,
-            ax=plt.gca(), #axarr,
+            ax=plt.gca(),
             # cmap='Blues_r',
             # color_bar=True,
             clevels=100
@@ -546,42 +538,39 @@ class WCompFoxes(WCompBase):
     def xsection_contour(
         self,
         wind_direction: float,
-        resolution: tuple,
+        resolution: float,
         x_coordinate: float
     ) -> WakePlane:
-        x1_bounds = (np.min(self.farm_results.Y) - 2 * self.rotor_diameter, np.max(self.farm_results.Y) + 2 * self.rotor_diameter)
-        x2_bounds = (0.001, 6 * self.hub_height)
+
+        y_min = np.min(self.farm_results.Y) - 2 * self.rotor_diameter
+        y_max = np.max(self.farm_results.Y) + 2 * self.rotor_diameter
+        z_min = 0.001
+        z_max = 6 * self.hub_height
+
         o = FlowPlots2D(self.algo, self.farm_results)
-        # g = o.gen_states_fig_xy("WS", resolution=10, figsize=(10, 5), verbosity=0)
-        # xres = (x1_bounds[1] - x1_bounds[0]) / resolution[0]
-        # yres = (x2_bounds[1] - x2_bounds[0]) / resolution[1]
         u, grid_data = o.get_mean_data_yz(
             resolution=resolution,
             variables=["WS"],
-            ymin=x1_bounds[0],
-            ymax=x1_bounds[1],
-            zmin=x2_bounds[0],
-            zmax=x2_bounds[1],
+            ymin=y_min,
+            ymax=y_max,
+            zmin=z_min,
+            zmax=z_max,
             x=x_coordinate,
             ret_grid=True,
             data_format="numpy",
         )
         x_pos, y_pos, z_pos, grid_points = grid_data
-        # x = grid_points[:, :, 0]
-        y = grid_points[:, :, 1]
-        z = grid_points[:, :, 2]
+        # x = grid_points[0, :, 0]
+        y = grid_points[0, :, 1]
+        z = grid_points[0, :, 2]
+        u = u[:,:,0].flatten()
 
-        plane = WakePlane(
-            y[0],
-            z[0],
-            u[:,:,0].flatten(),
-            "x",
-            resolution,
-        )
+        plane = WakePlane(y, z, u, "x", resolution)
         plot_plane(
             plane,
             ax=plt.gca(),
-            color_bar=True,
+            # cmap='Blues_r',
+            # color_bar=True,
             clevels=100
         )
         return plane

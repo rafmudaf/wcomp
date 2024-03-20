@@ -325,66 +325,66 @@ class WCompPyWake(WCompBase):
 
     # 2D contour plots
 
-    def horizontal_contour(self, wind_direction: float, resolution: tuple) -> WakePlane:
+    def horizontal_contour(self, wind_direction: float, resolution: float) -> WakePlane:
         """
         Args:
             wind_direction (float): The wind direction to use for the visualization
-            resolution (tuple): The (x, y) resolution of the horizontal plane
+            resolution (float): The spacial resolution of the horizontal plane
         """
 
-        x1_bounds = (np.min(self.sim_res.x) - 2 * self.rotor_diameter, np.max(self.sim_res.x) + 10 * self.rotor_diameter)
-        x2_bounds = (np.min(self.sim_res.y) - 2 * self.rotor_diameter, np.max(self.sim_res.y) + 2 * self.rotor_diameter)
+        x_min = np.min(self.sim_res.x) - 2 * self.rotor_diameter
+        x_max = np.max(self.sim_res.x) + 10 * self.rotor_diameter
+        y_min = np.min(self.sim_res.y) - 2 * self.rotor_diameter
+        y_max = np.max(self.sim_res.y) + 2 * self.rotor_diameter
 
         grid = HorizontalGrid(
-            x=np.linspace(x1_bounds[0], x1_bounds[1], int(resolution[0])),
-            y=np.linspace(x2_bounds[0], x2_bounds[1], int(resolution[1])),
+            x=np.linspace(x_min, x_max, int((x_max - x_min) / resolution) + 1),
+            y=np.linspace(y_min, y_max, int((y_max - y_min) / resolution) + 1),
             h=self.hub_height,
         )
         flow_map = self.sim_res.flow_map(wd=wind_direction, grid=grid)
-        # flow_map.plot_wake_map()
 
-        plane = WakePlane(
-            flow_map.X.flatten(),
-            flow_map.Y.flatten(),
-            flow_map.WS_eff.to_numpy().flatten(),
-            "z",
-            resolution,
-        )
+        x = flow_map.X.flatten()
+        y = flow_map.Y.flatten()
+        u = flow_map.WS_eff.to_numpy().flatten()
+
+        plane = WakePlane(x, y, u, "z", resolution)
         plot_plane(
             plane,
-            ax=plt.gca(), #axarr,
+            ax=plt.gca(),
             # cmap='Blues_r',
             # color_bar=True,
             clevels=100
         )
         return plane
 
-    def xsection_contour(self, wind_direction: float, resolution: tuple, x_coordinate: float) -> WakePlane:
-        x1_bounds = (np.min(self.sim_res.y) - 2 * self.rotor_diameter, np.max(self.sim_res.y) + 2 * self.rotor_diameter)
-        x2_bounds = (0.001, 6 * self.hub_height)
+    def xsection_contour(
+        self,
+        wind_direction: float,
+        resolution: float,
+        x_coordinate: float
+    ) -> WakePlane:
+
+        y_min = np.min(self.sim_res.y) - 2 * self.rotor_diameter
+        y_max = np.max(self.sim_res.y) + 2 * self.rotor_diameter
+        z_min = 0.001
+        z_max = 6 * self.hub_height
 
         grid = YZGrid(
             x=x_coordinate,
-            y=np.linspace(x1_bounds[0], x1_bounds[1], int(resolution[0])),
-            z=np.linspace(x2_bounds[0], x2_bounds[1], int(resolution[1])),
+            y=np.linspace(y_min, y_max, int((y_max - y_min) / resolution) + 1),
+            z=np.linspace(z_min, z_max, int((z_max - z_min) / resolution) + 1),
         )
         flow_map = self.sim_res.flow_map(wd=wind_direction, grid=grid)
-        # flow_map.plot_wake_map()
 
-        x1 = flow_map.X.flatten()
-        x2 = flow_map.Y.flatten()
+        y = flow_map.Y.flatten()
+        z = flow_map.Z.flatten()
         u = flow_map.WS_eff.to_numpy().flatten()
 
-        plane = WakePlane(
-            x1,
-            x2,
-            u,
-            "x",
-            resolution,
-        )
+        plane = WakePlane(y, z, u, "x", resolution)
         plot_plane(
             plane,
-            ax=plt.gca(), #axarr,
+            ax=plt.gca(),
             # cmap='Blues_r',
             # color_bar=True,
             clevels=100
