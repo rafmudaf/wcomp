@@ -1,4 +1,4 @@
-# python compiled files
+G# python compiled files
 __pycache__/
 .cache
 *.ipynb_checkpoints
@@ -24,3 +24,7 @@ _site/
 .jekyll-cache/
 _build
 _autosummary/
+
+
+
+test_foxes.py

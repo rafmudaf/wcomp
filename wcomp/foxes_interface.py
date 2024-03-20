@@ -12,6 +12,7 @@ from foxes.core import WindFarm, WakeModel
 from foxes.input.farm_layout import add_from_df
 from foxes.input.states import StatesTable
 from foxes.models.turbine_types import CpCtFromTwo
+from foxes.models.turbine_models import kTI
 from foxes.output import FlowPlots2D
 from foxes.models.model_book import ModelBook
 from foxes.models.wake_models.wind import JensenWake
@@ -48,7 +49,9 @@ WAKE_MODEL_MAPPING = {
         "parameters": {
             "alpha": "alpha",
             "beta": "beta",
-            "k": "k",
+            "kTI": "k",
+            "kb": "k",
+            "induction": "Betz",
         }
     },
     "turbopark": {
@@ -72,6 +75,9 @@ WAKE_MODEL_MAPPING = {
         "parameters": {
             "alpha": "alpha",
             "beta": "beta",
+            "kTI": "k",
+            "kb": "k",
+            "induction": "Betz",
         }
     },
 }
@@ -177,7 +183,7 @@ class WCompFoxes(WCompBase):
         
         ovars = {v: v for v in data.columns if v != FV.WEIGHT}
         ovars.update({k: v for k, v in fixed_vars.items() if k not in data.columns})
-
+        
         return StatesTable(
             data,
             output_vars=ovars,
@@ -309,15 +315,23 @@ class WCompFoxes(WCompBase):
 
         """
         wes_analysis = analyses
-        _velocity_model_mapping = WAKE_MODEL_MAPPING[wes_analysis["wake_model"]["velocity"]["name"]]
+        wake_model_name = wes_analysis["wake_model"]["velocity"]["name"]
+        _velocity_model_mapping = WAKE_MODEL_MAPPING[wake_model_name]
         _velocity_model = _velocity_model_mapping["model_ref"]
         _velocity_model_parameters = {
-            k: wes_analysis["wake_model"]["velocity"]["parameters"][v]
+            k: wes_analysis["wake_model"]["velocity"]["parameters"].get(v, v)
             for k, v in _velocity_model_mapping["parameters"].items()
         }
 
-        temp_model_name = "this_model"
-        mbook.wake_models[temp_model_name] = _velocity_model(
+        if FV.KTI in _velocity_model_parameters:
+            kti = _velocity_model_parameters.pop(FV.KTI)
+            kb = _velocity_model_parameters.pop(FV.KB, 0.)
+            _velocity_model_parameters["k"] = None
+            mbook.turbine_models["kTI"] = kTI(kTI=kti, kb=kb)
+            for t in farm.turbines:
+                t.add_model("kTI")
+
+        mbook.wake_models[wake_model_name] = _velocity_model(
             **_velocity_model_parameters,
             superposition="ws_quadratic"
         )
@@ -328,7 +342,8 @@ class WCompFoxes(WCompBase):
             states,
             verbosity=0,
             rotor_model="grid16",
-            wake_models=[temp_model_name],
+            partial_wakes_model="rotor_points",
+            wake_models=[wake_model_name],
             **algo_pars
         )
 
