@@ -11,7 +11,10 @@ class WakeProfile:
 
     def __sub__(self, other):
         if np.shape(self.x1) != np.shape(other.x1):
-            raise ValueError("Operands must have consistent grid shapes.")
+            raise ValueError(
+                "Operands must have consistent grid shapes. "
+                f"self {self.x1.shape}, other {other.x1.shape}."
+            )
 
         return WakeProfile(
             self.x1,
@@ -37,12 +40,21 @@ class WakePlane:
     def __sub__(self, other):
 
         if self.normal_vector != other.normal_vector:
-            raise ValueError("Operands must have consistent normal vectors.")
+            raise ValueError(
+                "Operands must have consistent normal vectors. "
+                f"self {self.normal_vector}, other {other.normal_vector}."
+            )
         if self.resolution != other.resolution:
-            raise ValueError("Operands must have consistent resolutions.")
+            raise ValueError(
+                "Operands must have consistent resolutions. "
+                f"self {self.resolution}, other {other.resolution}."
+            )
         if np.shape(self.x1) != np.shape(other.x1) \
             or np.shape(self.x2) != np.shape(other.x2):
-            raise ValueError("Operands must have consistent grid shapes.")
+            raise ValueError(
+                "Operands must have consistent grid shapes. "
+                f"self {self.x1.shape}, other {other.x1.shape}."
+            )
 
         return WakePlane(
             self.x1,
