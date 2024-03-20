@@ -872,11 +872,7 @@ document.write(`
 
 <div class="viewcode-block" id="WCompFoxes.horizontal_contour">
 <a class="viewcode-back" href="../../_autosummary/wcomp.foxes_interface.html#wcomp.foxes_interface.WCompFoxes.horizontal_contour">[docs]</a>
-    <span class="k">def</span> <span class="nf">horizontal_contour</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">,</span>
-        <span class="n">wind_direction</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
-        <span class="n">resolution</span><span class="p">:</span> <span class="nb">tuple</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">WakePlane</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">horizontal_contour</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">wind_direction</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">resolution</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">WakePlane</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        This routine creates a 2D horizontal contour of all turbines in the farm.</span>
 <span class="sd">        NOTE: the `get_mean_fig_xy` routine requires a single resolution setting</span>
@@ -885,38 +881,34 @@ document.write(`
 <span class="sd">        of the plot.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
-        <span class="n">x1_bounds</span> <span class="o">=</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">farm_results</span><span class="o">.</span><span class="n">X</span><span class="p">)</span> <span class="o">-</span> <span class="mi">2</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">rotor_diameter</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">farm_results</span><span class="o">.</span><span class="n">X</span><span class="p">)</span> <span class="o">+</span> <span class="mi">10</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">rotor_diameter</span><span class="p">)</span>
-        <span class="n">x2_bounds</span> <span class="o">=</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">farm_results</span><span class="o">.</span><span class="n">Y</span><span class="p">)</span> <span class="o">-</span> <span class="mi">2</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">rotor_diameter</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">farm_results</span><span class="o">.</span><span class="n">Y</span><span class="p">)</span> <span class="o">+</span> <span class="mi">2</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">rotor_diameter</span><span class="p">)</span>
+        <span class="n">x_min</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">farm_results</span><span class="o">.</span><span class="n">X</span><span class="p">)</span> <span class="o">-</span> <span class="mi">2</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">rotor_diameter</span>
+        <span class="n">x_max</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">farm_results</span><span class="o">.</span><span class="n">X</span><span class="p">)</span> <span class="o">+</span> <span class="mi">10</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">rotor_diameter</span>
+        <span class="n">y_min</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">farm_results</span><span class="o">.</span><span class="n">Y</span><span class="p">)</span> <span class="o">-</span> <span class="mi">2</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">rotor_diameter</span>
+        <span class="n">y_max</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">farm_results</span><span class="o">.</span><span class="n">Y</span><span class="p">)</span> <span class="o">+</span> <span class="mi">2</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">rotor_diameter</span>
+
         <span class="n">o</span> <span class="o">=</span> <span class="n">FlowPlots2D</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">algo</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">farm_results</span><span class="p">)</span>
-        <span class="c1"># g = o.gen_states_fig_xy(&quot;WS&quot;, resolution=10, figsize=(10, 5), verbosity=0)</span>
-        <span class="c1"># xres = (x1_bounds[1] - x1_bounds[0]) / resolution[0]</span>
-        <span class="c1"># yres = (x2_bounds[1] - x2_bounds[0]) / resolution[1]</span>
         <span class="n">u</span><span class="p">,</span> <span class="n">grid_data</span> <span class="o">=</span> <span class="n">o</span><span class="o">.</span><span class="n">get_mean_data_xy</span><span class="p">(</span>
             <span class="n">resolution</span><span class="o">=</span><span class="n">resolution</span><span class="p">,</span>
             <span class="n">variables</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;WS&quot;</span><span class="p">],</span>
-            <span class="n">xmin</span><span class="o">=</span><span class="n">x1_bounds</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
-            <span class="n">xmax</span><span class="o">=</span><span class="n">x1_bounds</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
-            <span class="n">ymin</span><span class="o">=</span><span class="n">x2_bounds</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
-            <span class="n">ymax</span><span class="o">=</span><span class="n">x2_bounds</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
+            <span class="n">xmin</span><span class="o">=</span><span class="n">x_min</span><span class="p">,</span>
+            <span class="n">xmax</span><span class="o">=</span><span class="n">x_max</span><span class="p">,</span>
+            <span class="n">ymin</span><span class="o">=</span><span class="n">y_min</span><span class="p">,</span>
+            <span class="n">ymax</span><span class="o">=</span><span class="n">y_max</span><span class="p">,</span>
             <span class="n">z</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">hub_height</span><span class="p">,</span>
             <span class="n">ret_grid</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
             <span class="n">data_format</span><span class="o">=</span><span class="s2">&quot;numpy&quot;</span><span class="p">,</span>
         <span class="p">)</span>
-        <span class="n">x_pos</span><span class="p">,</span> <span class="n">y_pos</span><span class="p">,</span> <span class="n">z_pos</span><span class="p">,</span> <span class="n">grid_points</span> <span class="o">=</span> <span class="n">grid_data</span>
-        <span class="n">x</span> <span class="o">=</span> <span class="n">grid_points</span><span class="p">[:,</span> <span class="p">:,</span> <span class="mi">0</span><span class="p">]</span>
-        <span class="n">y</span> <span class="o">=</span> <span class="n">grid_points</span><span class="p">[:,</span> <span class="p">:,</span> <span class="mi">1</span><span class="p">]</span>
-        <span class="c1"># z = grid_points[:, :, 2]</span>
 
-        <span class="n">plane</span> <span class="o">=</span> <span class="n">WakePlane</span><span class="p">(</span>
-            <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
-            <span class="n">y</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
-            <span class="n">u</span><span class="p">[:,:,</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">flatten</span><span class="p">(),</span>
-            <span class="s2">&quot;z&quot;</span><span class="p">,</span>
-            <span class="n">resolution</span><span class="p">,</span>
-        <span class="p">)</span>
+        <span class="n">x_pos</span><span class="p">,</span> <span class="n">y_pos</span><span class="p">,</span> <span class="n">z_pos</span><span class="p">,</span> <span class="n">grid_points</span> <span class="o">=</span> <span class="n">grid_data</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">grid_points</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="p">:,</span> <span class="mi">0</span><span class="p">]</span>
+        <span class="n">y</span> <span class="o">=</span> <span class="n">grid_points</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="p">:,</span> <span class="mi">1</span><span class="p">]</span>
+        <span class="c1"># z = grid_points[0, :, 2]</span>
+        <span class="n">u</span> <span class="o">=</span> <span class="n">u</span><span class="p">[:,:,</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span>
+
+        <span class="n">plane</span> <span class="o">=</span> <span class="n">WakePlane</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">u</span><span class="p">,</span> <span class="s2">&quot;z&quot;</span><span class="p">,</span> <span class="n">resolution</span><span class="p">)</span>
         <span class="n">plot_plane</span><span class="p">(</span>
             <span class="n">plane</span><span class="p">,</span>
-            <span class="n">ax</span><span class="o">=</span><span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">(),</span> <span class="c1">#axarr,</span>
+            <span class="n">ax</span><span class="o">=</span><span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">(),</span>
             <span class="c1"># cmap=&#39;Blues_r&#39;,</span>
             <span class="c1"># color_bar=True,</span>
             <span class="n">clevels</span><span class="o">=</span><span class="mi">100</span>
@@ -929,42 +921,39 @@ document.write(`
     <span class="k">def</span> <span class="nf">xsection_contour</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">wind_direction</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
-        <span class="n">resolution</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">,</span>
+        <span class="n">resolution</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
         <span class="n">x_coordinate</span><span class="p">:</span> <span class="nb">float</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">WakePlane</span><span class="p">:</span>
-        <span class="n">x1_bounds</span> <span class="o">=</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">farm_results</span><span class="o">.</span><span class="n">Y</span><span class="p">)</span> <span class="o">-</span> <span class="mi">2</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">rotor_diameter</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">farm_results</span><span class="o">.</span><span class="n">Y</span><span class="p">)</span> <span class="o">+</span> <span class="mi">2</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">rotor_diameter</span><span class="p">)</span>
-        <span class="n">x2_bounds</span> <span class="o">=</span> <span class="p">(</span><span class="mf">0.001</span><span class="p">,</span> <span class="mi">6</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">hub_height</span><span class="p">)</span>
+
+        <span class="n">y_min</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">farm_results</span><span class="o">.</span><span class="n">Y</span><span class="p">)</span> <span class="o">-</span> <span class="mi">2</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">rotor_diameter</span>
+        <span class="n">y_max</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">farm_results</span><span class="o">.</span><span class="n">Y</span><span class="p">)</span> <span class="o">+</span> <span class="mi">2</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">rotor_diameter</span>
+        <span class="n">z_min</span> <span class="o">=</span> <span class="mf">0.001</span>
+        <span class="n">z_max</span> <span class="o">=</span> <span class="mi">6</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">hub_height</span>
+
         <span class="n">o</span> <span class="o">=</span> <span class="n">FlowPlots2D</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">algo</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">farm_results</span><span class="p">)</span>
-        <span class="c1"># g = o.gen_states_fig_xy(&quot;WS&quot;, resolution=10, figsize=(10, 5), verbosity=0)</span>
-        <span class="c1"># xres = (x1_bounds[1] - x1_bounds[0]) / resolution[0]</span>
-        <span class="c1"># yres = (x2_bounds[1] - x2_bounds[0]) / resolution[1]</span>
         <span class="n">u</span><span class="p">,</span> <span class="n">grid_data</span> <span class="o">=</span> <span class="n">o</span><span class="o">.</span><span class="n">get_mean_data_yz</span><span class="p">(</span>
             <span class="n">resolution</span><span class="o">=</span><span class="n">resolution</span><span class="p">,</span>
             <span class="n">variables</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;WS&quot;</span><span class="p">],</span>
-            <span class="n">ymin</span><span class="o">=</span><span class="n">x1_bounds</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
-            <span class="n">ymax</span><span class="o">=</span><span class="n">x1_bounds</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
-            <span class="n">zmin</span><span class="o">=</span><span class="n">x2_bounds</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
-            <span class="n">zmax</span><span class="o">=</span><span class="n">x2_bounds</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
+            <span class="n">ymin</span><span class="o">=</span><span class="n">y_min</span><span class="p">,</span>
+            <span class="n">ymax</span><span class="o">=</span><span class="n">y_max</span><span class="p">,</span>
+            <span class="n">zmin</span><span class="o">=</span><span class="n">z_min</span><span class="p">,</span>
+            <span class="n">zmax</span><span class="o">=</span><span class="n">z_max</span><span class="p">,</span>
             <span class="n">x</span><span class="o">=</span><span class="n">x_coordinate</span><span class="p">,</span>
             <span class="n">ret_grid</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
             <span class="n">data_format</span><span class="o">=</span><span class="s2">&quot;numpy&quot;</span><span class="p">,</span>
         <span class="p">)</span>
         <span class="n">x_pos</span><span class="p">,</span> <span class="n">y_pos</span><span class="p">,</span> <span class="n">z_pos</span><span class="p">,</span> <span class="n">grid_points</span> <span class="o">=</span> <span class="n">grid_data</span>
-        <span class="c1"># x = grid_points[:, :, 0]</span>
-        <span class="n">y</span> <span class="o">=</span> <span class="n">grid_points</span><span class="p">[:,</span> <span class="p">:,</span> <span class="mi">1</span><span class="p">]</span>
-        <span class="n">z</span> <span class="o">=</span> <span class="n">grid_points</span><span class="p">[:,</span> <span class="p">:,</span> <span class="mi">2</span><span class="p">]</span>
+        <span class="c1"># x = grid_points[0, :, 0]</span>
+        <span class="n">y</span> <span class="o">=</span> <span class="n">grid_points</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="p">:,</span> <span class="mi">1</span><span class="p">]</span>
+        <span class="n">z</span> <span class="o">=</span> <span class="n">grid_points</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="p">:,</span> <span class="mi">2</span><span class="p">]</span>
+        <span class="n">u</span> <span class="o">=</span> <span class="n">u</span><span class="p">[:,:,</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span>
 
-        <span class="n">plane</span> <span class="o">=</span> <span class="n">WakePlane</span><span class="p">(</span>
-            <span class="n">y</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
-            <span class="n">z</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
-            <span class="n">u</span><span class="p">[:,:,</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">flatten</span><span class="p">(),</span>
-            <span class="s2">&quot;x&quot;</span><span class="p">,</span>
-            <span class="n">resolution</span><span class="p">,</span>
-        <span class="p">)</span>
+        <span class="n">plane</span> <span class="o">=</span> <span class="n">WakePlane</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="p">,</span> <span class="n">u</span><span class="p">,</span> <span class="s2">&quot;x&quot;</span><span class="p">,</span> <span class="n">resolution</span><span class="p">)</span>
         <span class="n">plot_plane</span><span class="p">(</span>
             <span class="n">plane</span><span class="p">,</span>
             <span class="n">ax</span><span class="o">=</span><span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">(),</span>
-            <span class="n">color_bar</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+            <span class="c1"># cmap=&#39;Blues_r&#39;,</span>
+            <span class="c1"># color_bar=True,</span>
             <span class="n">clevels</span><span class="o">=</span><span class="mi">100</span>
         <span class="p">)</span>
         <span class="k">return</span> <span class="n">plane</span></div>

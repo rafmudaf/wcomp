@@ -538,19 +538,21 @@ document.write(`
 <h3>Horizontal 2D turbine wake profile and diff plot<a class="headerlink" href="#horizontal-2d-turbine-wake-profile-and-diff-plot" title="Link to this heading">#</a></h3>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">resolution</span> <span class="o">=</span> <span class="mi">10</span>
+
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
 <span class="n">fig</span><span class="o">.</span><span class="n">suptitle</span><span class="p">(</span><span class="s2">&quot;Horizontal streamwise velocity contour&quot;</span><span class="p">)</span>
 
 <span class="n">plt</span><span class="o">.</span><span class="n">axes</span><span class="p">(</span><span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
 <span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">xaxis</span><span class="o">.</span><span class="n">set_ticklabels</span><span class="p">([])</span>
-<span class="n">pywake_plane</span> <span class="o">=</span> <span class="n">pywake_1turbine</span><span class="o">.</span><span class="n">horizontal_contour</span><span class="p">(</span><span class="n">wind_direction</span><span class="o">=</span><span class="mi">270</span><span class="p">,</span> <span class="n">resolution</span><span class="o">=</span><span class="p">(</span><span class="mi">500</span><span class="p">,</span> <span class="mi">500</span><span class="p">))</span>
+<span class="n">pywake_plane</span> <span class="o">=</span> <span class="n">pywake_1turbine</span><span class="o">.</span><span class="n">horizontal_contour</span><span class="p">(</span><span class="n">wind_direction</span><span class="o">=</span><span class="mi">270</span><span class="p">,</span> <span class="n">resolution</span><span class="o">=</span><span class="n">resolution</span><span class="p">)</span>
 
 <span class="n">plt</span><span class="o">.</span><span class="n">axes</span><span class="p">(</span><span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
 <span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">xaxis</span><span class="o">.</span><span class="n">set_ticklabels</span><span class="p">([])</span>
-<span class="n">floris_plane</span> <span class="o">=</span> <span class="n">floris_1turbine</span><span class="o">.</span><span class="n">horizontal_contour</span><span class="p">(</span><span class="n">wind_direction</span><span class="o">=</span><span class="mi">270</span><span class="p">,</span> <span class="n">resolution</span><span class="o">=</span><span class="p">(</span><span class="mi">500</span><span class="p">,</span> <span class="mi">500</span><span class="p">))</span>
+<span class="n">floris_plane</span> <span class="o">=</span> <span class="n">floris_1turbine</span><span class="o">.</span><span class="n">horizontal_contour</span><span class="p">(</span><span class="n">wind_direction</span><span class="o">=</span><span class="mi">270</span><span class="p">,</span> <span class="n">resolution</span><span class="o">=</span><span class="n">resolution</span><span class="p">)</span>
 
 <span class="n">plt</span><span class="o">.</span><span class="n">axes</span><span class="p">(</span><span class="n">ax</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
-<span class="n">foxes_plane</span> <span class="o">=</span> <span class="n">foxes_1turbine</span><span class="o">.</span><span class="n">horizontal_contour</span><span class="p">(</span><span class="n">wind_direction</span><span class="o">=</span><span class="mi">270</span><span class="p">,</span> <span class="n">resolution</span><span class="o">=</span><span class="p">(</span><span class="mi">500</span><span class="p">,</span> <span class="mi">500</span><span class="p">))</span>
+<span class="n">foxes_plane</span> <span class="o">=</span> <span class="n">foxes_1turbine</span><span class="o">.</span><span class="n">horizontal_contour</span><span class="p">(</span><span class="n">wind_direction</span><span class="o">=</span><span class="mi">270</span><span class="p">,</span> <span class="n">resolution</span><span class="o">=</span><span class="n">resolution</span><span class="p">)</span>
 
 <span class="c1"># Diff of the 2D wakes</span>
 <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
@@ -586,17 +588,17 @@ document.write(`
     <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;PuOr&#39;</span><span class="p">,</span>
     <span class="n">clevels</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>
     <span class="n">color_bar</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-    <span class="n">title</span><span class="o">=</span><span class="s2">&quot;FLORIS - FOXES&quot;</span>
+    <span class="n">title</span><span class="o">=</span><span class="s2">&quot;FLORIS - foxes&quot;</span>
 <span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.tri._tricontour.TriContourSet at 0x7f90347b8080&gt;
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.tri._tricontour.TriContourSet at 0x7fe5de455a00&gt;
 </pre></div>
 </div>
-<img alt="_images/2989543efebefb3ffe4ec8389b30218fd2b38cc108b4bafd1540a948cfd778cf.png" src="_images/2989543efebefb3ffe4ec8389b30218fd2b38cc108b4bafd1540a948cfd778cf.png" />
-<img alt="_images/01c774a1123b851d1e2d11ba52741d53b5ecda0d59b27de0c9b94c94ed6a05a8.png" src="_images/01c774a1123b851d1e2d11ba52741d53b5ecda0d59b27de0c9b94c94ed6a05a8.png" />
+<img alt="_images/864876c05701832f7f08681c1b65b9847c4142b4ab45792a1f60348a751bfe03.png" src="_images/864876c05701832f7f08681c1b65b9847c4142b4ab45792a1f60348a751bfe03.png" />
+<img alt="_images/04dce27a4dfb6fdb8d6b0bbcd55601cfd912364951268a3b57246e39eb20a2ef.png" src="_images/04dce27a4dfb6fdb8d6b0bbcd55601cfd912364951268a3b57246e39eb20a2ef.png" />
 </div>
 </div>
 </section>
@@ -664,14 +666,15 @@ Turbine 15, T15: windio_turbine
 <span class="n">ax</span><span class="o">.</span><span class="n">grid</span><span class="p">()</span>
 
 
+<span class="n">resolution</span> <span class="o">=</span> <span class="mi">10</span>
 <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
-<span class="n">pywake_plane</span> <span class="o">=</span> <span class="n">pywake_Nturbine</span><span class="o">.</span><span class="n">horizontal_contour</span><span class="p">(</span><span class="n">wind_direction</span><span class="o">=</span><span class="mi">270</span><span class="p">,</span> <span class="n">resolution</span><span class="o">=</span><span class="p">(</span><span class="mi">500</span><span class="p">,</span> <span class="mi">500</span><span class="p">))</span>
+<span class="n">pywake_plane</span> <span class="o">=</span> <span class="n">pywake_Nturbine</span><span class="o">.</span><span class="n">horizontal_contour</span><span class="p">(</span><span class="n">wind_direction</span><span class="o">=</span><span class="mi">270</span><span class="p">,</span> <span class="n">resolution</span><span class="o">=</span><span class="n">resolution</span><span class="p">)</span>
 
 <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
-<span class="n">floris_plane</span> <span class="o">=</span> <span class="n">floris_Nturbine</span><span class="o">.</span><span class="n">horizontal_contour</span><span class="p">(</span><span class="n">wind_direction</span><span class="o">=</span><span class="mi">270</span><span class="p">,</span> <span class="n">resolution</span><span class="o">=</span><span class="p">(</span><span class="mi">500</span><span class="p">,</span> <span class="mi">500</span><span class="p">))</span>
+<span class="n">floris_plane</span> <span class="o">=</span> <span class="n">floris_Nturbine</span><span class="o">.</span><span class="n">horizontal_contour</span><span class="p">(</span><span class="n">wind_direction</span><span class="o">=</span><span class="mi">270</span><span class="p">,</span> <span class="n">resolution</span><span class="o">=</span><span class="n">resolution</span><span class="p">)</span>
 
 <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
-<span class="n">foxes_plane</span> <span class="o">=</span> <span class="n">foxes_Nturbine</span><span class="o">.</span><span class="n">horizontal_contour</span><span class="p">(</span><span class="n">wind_direction</span><span class="o">=</span><span class="mi">270</span><span class="p">,</span> <span class="n">resolution</span><span class="o">=</span><span class="p">(</span><span class="mi">500</span><span class="p">,</span> <span class="mi">500</span><span class="p">))</span>
+<span class="n">foxes_plane</span> <span class="o">=</span> <span class="n">foxes_Nturbine</span><span class="o">.</span><span class="n">horizontal_contour</span><span class="p">(</span><span class="n">wind_direction</span><span class="o">=</span><span class="mi">270</span><span class="p">,</span> <span class="n">resolution</span><span class="o">=</span><span class="n">resolution</span><span class="p">)</span>
 
 <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
 <span class="n">diff</span> <span class="o">=</span> <span class="n">floris_plane</span> <span class="o">-</span> <span class="n">pywake_plane</span>
@@ -706,16 +709,16 @@ Turbine 15, T15: windio_turbine
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.tri._tricontour.TriContourSet at 0x7f90347a63c0&gt;
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.tri._tricontour.TriContourSet at 0x7fe5dcca8350&gt;
 </pre></div>
 </div>
 <img alt="_images/837b5ccaecb840092f2b009ff418bbfd3c2f8f4f3de6b0763e79d03fd9d03eb7.png" src="_images/837b5ccaecb840092f2b009ff418bbfd3c2f8f4f3de6b0763e79d03fd9d03eb7.png" />
 <img alt="_images/2899b79fb5ee7c1899440d3e31bd9c05b24a6f1b11760d20d76373cd36583c3f.png" src="_images/2899b79fb5ee7c1899440d3e31bd9c05b24a6f1b11760d20d76373cd36583c3f.png" />
-<img alt="_images/4a1e482d92a190522dee9bd99e3707b4d71ddce4aad907bd7139d3baf205f066.png" src="_images/4a1e482d92a190522dee9bd99e3707b4d71ddce4aad907bd7139d3baf205f066.png" />
-<img alt="_images/dbe8f04b2e0ce6c7ba51e9f4cb8f2aba962075c0dd45dc8d19503fdb9e831c0e.png" src="_images/dbe8f04b2e0ce6c7ba51e9f4cb8f2aba962075c0dd45dc8d19503fdb9e831c0e.png" />
-<img alt="_images/a9011cab4915b5b6e4904cda04a83be538ab851daac4c348a8b6826a1ee90b24.png" src="_images/a9011cab4915b5b6e4904cda04a83be538ab851daac4c348a8b6826a1ee90b24.png" />
-<img alt="_images/bc3416703c9cd03ea88972d1f14938c29a82d29cb02d594e4e4787cd3b841e37.png" src="_images/bc3416703c9cd03ea88972d1f14938c29a82d29cb02d594e4e4787cd3b841e37.png" />
-<img alt="_images/96476960ff2e8584f00eab8891be52895a89424e48c7e834ad315df5f02cb15b.png" src="_images/96476960ff2e8584f00eab8891be52895a89424e48c7e834ad315df5f02cb15b.png" />
+<img alt="_images/2a7b61176701cd094894a4d9e4ffbb36b09e049b1db812771bd04eabc3b752d0.png" src="_images/2a7b61176701cd094894a4d9e4ffbb36b09e049b1db812771bd04eabc3b752d0.png" />
+<img alt="_images/1cce44e336a96484c17a39f8eacbd884dc582d74e4df43471506e35945b735da.png" src="_images/1cce44e336a96484c17a39f8eacbd884dc582d74e4df43471506e35945b735da.png" />
+<img alt="_images/7600ab38146a4c79f877ab29e1d959522e24fd2c8bb5643493687ae1846d4450.png" src="_images/7600ab38146a4c79f877ab29e1d959522e24fd2c8bb5643493687ae1846d4450.png" />
+<img alt="_images/beda2c34a60bbd03da92855d4d0bca67e7b60a33c1250aa03548a1f3c8e9d3c9.png" src="_images/beda2c34a60bbd03da92855d4d0bca67e7b60a33c1250aa03548a1f3c8e9d3c9.png" />
+<img alt="_images/756f3203a1088e34def4e12d39d8d5f9f34b5170ae3f822b3a132d8b61dfd557.png" src="_images/756f3203a1088e34def4e12d39d8d5f9f34b5170ae3f822b3a132d8b61dfd557.png" />
 </div>
 </div>
 </section>
@@ -725,7 +728,9 @@ Turbine 15, T15: windio_turbine
 <p>Similarly, comparing results for different wake models requires only creating a new <code class="docutils literal notranslate"><span class="pre">windIO</span></code> case description.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># pywake_bastankah = WCompPyWake(case_bastankah)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">resolution</span> <span class="o">=</span> <span class="mi">10</span>
+
+<span class="c1"># pywake_bastankah = WCompPyWake(case_bastankah)</span>
 <span class="n">floris_bastankah</span> <span class="o">=</span> <span class="n">WCompFloris</span><span class="p">(</span><span class="n">case_bastankah</span><span class="p">)</span>
 <span class="n">foxes_bastankah</span> <span class="o">=</span> <span class="n">WCompFoxes</span><span class="p">(</span><span class="n">case_bastankah</span><span class="p">)</span>
 
@@ -733,10 +738,10 @@ Turbine 15, T15: windio_turbine
 <span class="c1"># pywake_plane = pywake_bastankah.horizontal_contour(wind_direction=270, resolution=(500, 500))</span>
 
 <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
-<span class="n">floris_plane</span> <span class="o">=</span> <span class="n">floris_bastankah</span><span class="o">.</span><span class="n">horizontal_contour</span><span class="p">(</span><span class="n">wind_direction</span><span class="o">=</span><span class="mi">270</span><span class="p">,</span> <span class="n">resolution</span><span class="o">=</span><span class="p">(</span><span class="mi">500</span><span class="p">,</span> <span class="mi">500</span><span class="p">))</span>
+<span class="n">floris_plane</span> <span class="o">=</span> <span class="n">floris_bastankah</span><span class="o">.</span><span class="n">horizontal_contour</span><span class="p">(</span><span class="n">wind_direction</span><span class="o">=</span><span class="mi">270</span><span class="p">,</span> <span class="n">resolution</span><span class="o">=</span><span class="n">resolution</span><span class="p">)</span>
 
 <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
-<span class="n">foxes_plane</span> <span class="o">=</span> <span class="n">foxes_bastankah</span><span class="o">.</span><span class="n">horizontal_contour</span><span class="p">(</span><span class="n">wind_direction</span><span class="o">=</span><span class="mi">270</span><span class="p">,</span> <span class="n">resolution</span><span class="o">=</span><span class="p">(</span><span class="mi">500</span><span class="p">,</span> <span class="mi">500</span><span class="p">))</span>
+<span class="n">foxes_plane</span> <span class="o">=</span> <span class="n">foxes_bastankah</span><span class="o">.</span><span class="n">horizontal_contour</span><span class="p">(</span><span class="n">wind_direction</span><span class="o">=</span><span class="mi">270</span><span class="p">,</span> <span class="n">resolution</span><span class="o">=</span><span class="n">resolution</span><span class="p">)</span>
 
 <span class="c1"># Cross section of the wake</span>
 <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
@@ -745,11 +750,11 @@ Turbine 15, T15: windio_turbine
 <span class="n">plt</span><span class="o">.</span><span class="n">axes</span><span class="p">(</span><span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
 <span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">xaxis</span><span class="o">.</span><span class="n">set_ticklabels</span><span class="p">([])</span>
 <span class="c1"># pywake_plane = pywake_bastankah.xsection_contour(wind_direction=270, resolution=(500, 500), x_coordinate=0.0)</span>
-<span class="n">floris_plane</span> <span class="o">=</span> <span class="n">floris_bastankah</span><span class="o">.</span><span class="n">xsection_contour</span><span class="p">(</span><span class="n">wind_direction</span><span class="o">=</span><span class="mi">270</span><span class="p">,</span> <span class="n">resolution</span><span class="o">=</span><span class="p">(</span><span class="mi">500</span><span class="p">,</span> <span class="mi">500</span><span class="p">),</span> <span class="n">x_coordinate</span><span class="o">=</span><span class="mf">0.0</span><span class="p">)</span>
+<span class="n">floris_plane</span> <span class="o">=</span> <span class="n">floris_bastankah</span><span class="o">.</span><span class="n">xsection_contour</span><span class="p">(</span><span class="n">wind_direction</span><span class="o">=</span><span class="mi">270</span><span class="p">,</span> <span class="n">resolution</span><span class="o">=</span><span class="n">resolution</span><span class="p">,</span> <span class="n">x_coordinate</span><span class="o">=</span><span class="mf">0.0</span><span class="p">)</span>
 
 <span class="n">plt</span><span class="o">.</span><span class="n">axes</span><span class="p">(</span><span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
 <span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">xaxis</span><span class="o">.</span><span class="n">set_ticklabels</span><span class="p">([])</span>
-<span class="n">foxes_plane</span> <span class="o">=</span> <span class="n">foxes_bastankah</span><span class="o">.</span><span class="n">xsection_contour</span><span class="p">(</span><span class="n">wind_direction</span><span class="o">=</span><span class="mi">270</span><span class="p">,</span> <span class="n">resolution</span><span class="o">=</span><span class="p">(</span><span class="mi">500</span><span class="p">,</span> <span class="mi">500</span><span class="p">),</span> <span class="n">x_coordinate</span><span class="o">=</span><span class="mf">0.0</span><span class="p">)</span>
+<span class="n">foxes_plane</span> <span class="o">=</span> <span class="n">foxes_bastankah</span><span class="o">.</span><span class="n">xsection_contour</span><span class="p">(</span><span class="n">wind_direction</span><span class="o">=</span><span class="mi">270</span><span class="p">,</span> <span class="n">resolution</span><span class="o">=</span><span class="n">resolution</span><span class="p">,</span> <span class="n">x_coordinate</span><span class="o">=</span><span class="mf">0.0</span><span class="p">)</span>
 
 <span class="n">plt</span><span class="o">.</span><span class="n">axes</span><span class="p">(</span><span class="n">ax</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
 <span class="n">ax</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">xaxis</span><span class="o">.</span><span class="n">set_ticklabels</span><span class="p">([])</span>
@@ -789,12 +794,12 @@ Turbine 14, T14: windio_turbine
 Turbine 15, T15: windio_turbine
 </pre></div>
 </div>
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.tri._tricontour.TriContourSet at 0x7f903410e3c0&gt;
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.tri._tricontour.TriContourSet at 0x7fe5de0c2cf0&gt;
 </pre></div>
 </div>
-<img alt="_images/fe036ee4e04dfa56252642688f547cbb896465902b1bcd2328da310ecb83561d.png" src="_images/fe036ee4e04dfa56252642688f547cbb896465902b1bcd2328da310ecb83561d.png" />
-<img alt="_images/ccf8be778d3fa4141f3723c1de383b308c6528c45d007d1cf043ba42d763886f.png" src="_images/ccf8be778d3fa4141f3723c1de383b308c6528c45d007d1cf043ba42d763886f.png" />
-<img alt="_images/faafc3ec6ff87971d1e5da890392beb735b31989c00c2df7d2c3027e770a3845.png" src="_images/faafc3ec6ff87971d1e5da890392beb735b31989c00c2df7d2c3027e770a3845.png" />
+<img alt="_images/86fd9a910734b596dc716314b941f54be53c433051e9b93033bd971109e49c32.png" src="_images/86fd9a910734b596dc716314b941f54be53c433051e9b93033bd971109e49c32.png" />
+<img alt="_images/7d332a3b6f22679a6a078a1a24f26dd74ebf7c1bc4dead33a501d33e96598c3a.png" src="_images/7d332a3b6f22679a6a078a1a24f26dd74ebf7c1bc4dead33a501d33e96598c3a.png" />
+<img alt="_images/1d81e3e9cd1e9017ec1bc82f657554e81c06001f8db43576cd4d90c527eb570b.png" src="_images/1d81e3e9cd1e9017ec1bc82f657554e81c06001f8db43576cd4d90c527eb570b.png" />
 </div>
 </div>
 </section>

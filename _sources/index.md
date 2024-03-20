@@ -51,9 +51,9 @@ classDiagram
 Currently, `wcomp` must be installed manually with `pip`. The dependencies are:
 
 - windIO v1.0, can be installed directly from PyPI
-- FLORIS v3.5, can be installed directly from PyPI but preferably locally from https://github.com/nrel/floris
-- foxes v0.6.2 plus one additional commit, must be installed from https://github.com/rafmudaf/foxes at main branch
-- PyWake v2.5.0 plus two additional commits, must be installed from https://github.com/rafmudaf/PyWake at master branch
+- FLORIS v3.6 (current develop branch), not yet released so must be installed from locally from https://github.com/nrel/floris
+- foxes v0.6.2, can be installed directly from PyPI
+- PyWake v2.5.0 plus three additional commits, must be installed from https://github.com/rafmudaf/PyWake at master branch
 
 Follow these steps to install the dependencies and `wcomp`:
 1. Create a new Python environment

@@ -458,7 +458,7 @@ A note on wind generator interaction (1983)
 <p>There, the wake width is given as 0.1 on pages 6 and 8.
 PyWake has 0.1 as default
 FLORIS has 0.05 as default, but it is changed to 0.1 here.
-FOXES has a set of predefined Jensen wake models available, but you are expected to create your own, as needed. That is done here with k=0.1.</p>
+foxes has a set of predefined Jensen wake models available, but you are expected to create your own, as needed. That is done here with k=0.1.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">this_case</span> <span class="o">=</span> <span class="n">CASE_DIR</span> <span class="o">/</span> <span class="n">Path</span><span class="p">(</span><span class="s1">&#39;jensen/wind_energy_system.yaml&#39;</span><span class="p">)</span>
@@ -523,7 +523,7 @@ FOXES has a set of predefined Jensen wake models available, but you are expected
 This model builds on Bastankhah / Porte-Agel 2014: <a class="reference external" href="https://www.sciencedirect.com/science/article/abs/pii/S0960148114000317">https://www.sciencedirect.com/science/article/abs/pii/S0960148114000317</a></p>
 <ul class="simple">
 <li><p>FLORIS -&gt; gauss velocity deficit is based on this paper. <a class="reference external" href="https://nrel.github.io/floris/wake_models.html#gauss-and-gch">https://nrel.github.io/floris/wake_models.html#gauss-and-gch</a></p></li>
-<li><p>FOXES -&gt; PorteAgelWake is based on this paper. See the docstring for that class</p></li>
+<li><p>foxes -&gt; PorteAgelWake is based on this paper. See the docstring for that class</p></li>
 <li><p>PyWake -&gt; Niayifar_PorteAgel_2016, self explanatory</p></li>
 </ul>
 <p>In the paper, the parameters are:
@@ -531,7 +531,7 @@ k* coefficients that fit the line through the turbulence intensities in equation
 <p>wake width is given as 0.1 on pages 6 and 8.
 PyWake has 0.1 as default
 FLORIS has 0.05 as default, but it is changed to 0.1 here.
-FOXES has a set of predefined Jensen wake models available, but you are expected to create your own, as needed. That is done here with k=0.1.</p>
+foxes has a set of predefined Jensen wake models available, but you are expected to create your own, as needed. That is done here with k=0.1.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">this_case</span> <span class="o">=</span> <span class="n">CASE_DIR</span> <span class="o">/</span> <span class="n">Path</span><span class="p">(</span><span class="s1">&#39;bastankhah/wind_energy_system.yaml&#39;</span><span class="p">)</span>
@@ -715,29 +715,55 @@ Application of a LES technique to characterize the wake deflection of a wind tur
 <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
 <span class="n">fig</span><span class="o">.</span><span class="n">suptitle</span><span class="p">(</span><span class="s2">&quot;Horizontal streamwise velocity contour&quot;</span><span class="p">)</span>
 
+<span class="n">resolution</span> <span class="o">=</span> <span class="mi">20</span>
+
 <span class="n">plt</span><span class="o">.</span><span class="n">axes</span><span class="p">(</span><span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
 <span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">xaxis</span><span class="o">.</span><span class="n">set_ticklabels</span><span class="p">([])</span>
-<span class="n">floris_plane</span> <span class="o">=</span> <span class="n">floris_1turbine</span><span class="o">.</span><span class="n">horizontal_contour</span><span class="p">(</span><span class="n">wind_direction</span><span class="o">=</span><span class="mi">270</span><span class="p">,</span> <span class="n">resolution</span><span class="o">=</span><span class="p">(</span><span class="mi">500</span><span class="p">,</span> <span class="mi">500</span><span class="p">))</span>
+<span class="n">pywake_plane</span> <span class="o">=</span> <span class="n">pywake_1turbine</span><span class="o">.</span><span class="n">horizontal_contour</span><span class="p">(</span><span class="n">wind_direction</span><span class="o">=</span><span class="mi">270</span><span class="p">,</span> <span class="n">resolution</span><span class="o">=</span><span class="n">resolution</span><span class="p">)</span>
 
-<span class="c1"># plt.axes(ax[1])</span>
-<span class="c1"># ax[1].xaxis.set_ticklabels([])</span>
-<span class="c1"># pywake_plane = pywake_1turbine.horizontal_contour(wind_direction=270, resolution=(500, 500))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">axes</span><span class="p">(</span><span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">xaxis</span><span class="o">.</span><span class="n">set_ticklabels</span><span class="p">([])</span>
+<span class="n">floris_plane</span> <span class="o">=</span> <span class="n">floris_1turbine</span><span class="o">.</span><span class="n">horizontal_contour</span><span class="p">(</span><span class="n">wind_direction</span><span class="o">=</span><span class="mi">270</span><span class="p">,</span> <span class="n">resolution</span><span class="o">=</span><span class="n">resolution</span><span class="p">)</span>
 
-<span class="c1"># plt.axes(ax[2])</span>
-<span class="c1"># diff = floris_plane - pywake_plane</span>
-<span class="c1"># abs_diff = np.abs(diff.values)</span>
-<span class="c1"># min_speed = -1 * np.max(abs_diff)</span>
-<span class="c1"># max_speed = np.max(abs_diff)</span>
-<span class="c1"># plot_plane(</span>
-<span class="c1">#     diff,</span>
-<span class="c1">#     ax=ax[2],</span>
-<span class="c1">#     min_speed=min_speed,</span>
-<span class="c1">#     max_speed=max_speed,</span>
-<span class="c1">#     cmap=&#39;PuOr&#39;,</span>
-<span class="c1">#     clevels=100,</span>
-<span class="c1">#     color_bar=True,</span>
-<span class="c1">#     title=&quot;Middle - Top&quot;</span>
-<span class="c1"># )</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">axes</span><span class="p">(</span><span class="n">ax</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">xaxis</span><span class="o">.</span><span class="n">set_ticklabels</span><span class="p">([])</span>
+<span class="n">foxes_plane</span> <span class="o">=</span> <span class="n">foxes_1turbine</span><span class="o">.</span><span class="n">horizontal_contour</span><span class="p">(</span><span class="n">wind_direction</span><span class="o">=</span><span class="mi">270</span><span class="p">,</span> <span class="n">resolution</span><span class="o">=</span><span class="n">resolution</span><span class="p">)</span>
+
+
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="n">fig</span><span class="o">.</span><span class="n">suptitle</span><span class="p">(</span><span class="s2">&quot;Diff: FLORIS as basis&quot;</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">axes</span><span class="p">(</span><span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+<span class="n">diff</span> <span class="o">=</span> <span class="n">floris_plane</span> <span class="o">-</span> <span class="n">pywake_plane</span>
+<span class="n">abs_diff</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">diff</span><span class="o">.</span><span class="n">values</span><span class="p">)</span>
+<span class="n">min_speed</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">abs_diff</span><span class="p">)</span>
+<span class="n">max_speed</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">abs_diff</span><span class="p">)</span>
+<span class="n">plot_plane</span><span class="p">(</span>
+    <span class="n">diff</span><span class="p">,</span>
+    <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+    <span class="n">min_speed</span><span class="o">=</span><span class="n">min_speed</span><span class="p">,</span>
+    <span class="n">max_speed</span><span class="o">=</span><span class="n">max_speed</span><span class="p">,</span>
+    <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;PuOr&#39;</span><span class="p">,</span>
+    <span class="n">clevels</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>
+    <span class="n">color_bar</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="n">title</span><span class="o">=</span><span class="s2">&quot;FLORIS - PyWake&quot;</span>
+<span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">axes</span><span class="p">(</span><span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+<span class="n">diff</span> <span class="o">=</span> <span class="n">floris_plane</span> <span class="o">-</span> <span class="n">foxes_plane</span>
+<span class="n">abs_diff</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">diff</span><span class="o">.</span><span class="n">values</span><span class="p">)</span>
+<span class="n">min_speed</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">abs_diff</span><span class="p">)</span>
+<span class="n">max_speed</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">abs_diff</span><span class="p">)</span>
+<span class="n">plot_plane</span><span class="p">(</span>
+    <span class="n">diff</span><span class="p">,</span>
+    <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
+    <span class="n">min_speed</span><span class="o">=</span><span class="n">min_speed</span><span class="p">,</span>
+    <span class="n">max_speed</span><span class="o">=</span><span class="n">max_speed</span><span class="p">,</span>
+    <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;PuOr&#39;</span><span class="p">,</span>
+    <span class="n">clevels</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>
+    <span class="n">color_bar</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="n">title</span><span class="o">=</span><span class="s2">&quot;FLORIS - foxes&quot;</span>
+<span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -745,9 +771,13 @@ Application of a LES technique to characterize the wake deflection of a wind tur
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Turbine 0, T0: windio_turbine
 </pre></div>
 </div>
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.tri._tricontour.TriContourSet at 0x7ff2800e2db0&gt;
+</pre></div>
+</div>
 <img alt="_images/06dea8071b4962311962aba63ea9e66f9f9b3f74d24a4cc6211a229755a8eb59.png" src="_images/06dea8071b4962311962aba63ea9e66f9f9b3f74d24a4cc6211a229755a8eb59.png" />
 <img alt="_images/3f94d8141a2e7718ff43737a29f0a3806fa4d82adcec81038210872eeb7ac064.png" src="_images/3f94d8141a2e7718ff43737a29f0a3806fa4d82adcec81038210872eeb7ac064.png" />
-<img alt="_images/063ba94decf9888dc89d4feaa48e25a46875e687cbbe1e8eddfd3fce2a04849d.png" src="_images/063ba94decf9888dc89d4feaa48e25a46875e687cbbe1e8eddfd3fce2a04849d.png" />
+<img alt="_images/1bbb5a7d246379185f1b6fd9be01d77acda3d066780b91e8625f1e63651ef43e.png" src="_images/1bbb5a7d246379185f1b6fd9be01d77acda3d066780b91e8625f1e63651ef43e.png" />
+<img alt="_images/2df6e0561ea78d93048505919d9436e999225d9d1de0912f38c9485f1f637f39.png" src="_images/2df6e0561ea78d93048505919d9436e999225d9d1de0912f38c9485f1f637f39.png" />
 </div>
 </div>
 </section>
@@ -763,20 +793,6 @@ Application of a LES technique to characterize the wake deflection of a wind tur
 <span class="c1"># pywake_1turbine = WCompPyWake(this_case)</span>
 
 <span class="n">ROTOR_D</span> <span class="o">=</span> <span class="n">floris_1turbine</span><span class="o">.</span><span class="n">rotor_diameter</span>
-
-<span class="c1"># from foxes.models.wake_models.wind.porte_agel import PorteAgelWake</span>
-<span class="c1"># from py_wake.literature.gaussian_models import Niayifar_PorteAgel_2016</span>
-
-<span class="c1"># pywake_1turbine = WCompPyWake(</span>
-<span class="c1">#     case_1turbine,</span>
-<span class="c1">#     Niayifar_PorteAgel_2016, {&quot;a&quot;: [0.38, 4e-3]},</span>
-<span class="c1">#     Niayifar_PorteAgel_2016, {&quot;a&quot;: [0.38, 4e-3]},</span>
-<span class="c1">#     yaw_angles=[10.0]</span>
-<span class="c1"># )</span>
-
-<span class="n">ROTOR_D</span> <span class="o">=</span> <span class="n">floris_1turbine</span><span class="o">.</span><span class="n">rotor_diameter</span>
-
-<span class="c1"># NOTE: Pywake plotting uses plt.gca -&gt; plt.gcf... get current figure meaning it will add onto the current figure</span>
 
 <span class="n">XMIN</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span> <span class="o">*</span> <span class="n">ROTOR_D</span>
 <span class="n">XMAX</span> <span class="o">=</span> <span class="mi">20</span> <span class="o">*</span> <span class="n">ROTOR_D</span>
@@ -814,32 +830,60 @@ Application of a LES technique to characterize the wake deflection of a wind tur
         <span class="n">ax</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;Y (m)&quot;</span><span class="p">)</span>
         <span class="n">ax</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
 
+<span class="n">resolution</span> <span class="o">=</span> <span class="mi">10</span>
+
 
 <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
 <span class="n">fig</span><span class="o">.</span><span class="n">suptitle</span><span class="p">(</span><span class="s2">&quot;Horizontal streamwise velocity contour&quot;</span><span class="p">)</span>
 
+<span class="n">resolution</span> <span class="o">=</span> <span class="mi">20</span>
+
 <span class="n">plt</span><span class="o">.</span><span class="n">axes</span><span class="p">(</span><span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
-<span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">xaxis</span><span class="o">.</span><span class="n">set_ticklabels</span><span class="p">([])</span>
-<span class="n">floris_plane</span> <span class="o">=</span> <span class="n">floris_1turbine</span><span class="o">.</span><span class="n">horizontal_contour</span><span class="p">(</span><span class="n">wind_direction</span><span class="o">=</span><span class="mi">270</span><span class="p">,</span> <span class="n">resolution</span><span class="o">=</span><span class="p">(</span><span class="mi">500</span><span class="p">,</span> <span class="mi">500</span><span class="p">))</span>
+<span class="c1"># ax[0].xaxis.set_ticklabels([])</span>
+<span class="c1"># pywake_plane = pywake_1turbine.horizontal_contour(wind_direction=270, resolution=resolution)</span>
 
 <span class="n">plt</span><span class="o">.</span><span class="n">axes</span><span class="p">(</span><span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
 <span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">xaxis</span><span class="o">.</span><span class="n">set_ticklabels</span><span class="p">([])</span>
-<span class="n">foxes_plane</span> <span class="o">=</span> <span class="n">foxes_1turbine</span><span class="o">.</span><span class="n">horizontal_contour</span><span class="p">(</span><span class="n">wind_direction</span><span class="o">=</span><span class="mi">270</span><span class="p">,</span> <span class="n">resolution</span><span class="o">=</span><span class="p">(</span><span class="mi">500</span><span class="p">,</span> <span class="mi">500</span><span class="p">))</span>
+<span class="n">floris_plane</span> <span class="o">=</span> <span class="n">floris_1turbine</span><span class="o">.</span><span class="n">horizontal_contour</span><span class="p">(</span><span class="n">wind_direction</span><span class="o">=</span><span class="mi">270</span><span class="p">,</span> <span class="n">resolution</span><span class="o">=</span><span class="n">resolution</span><span class="p">)</span>
 
 <span class="n">plt</span><span class="o">.</span><span class="n">axes</span><span class="p">(</span><span class="n">ax</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">xaxis</span><span class="o">.</span><span class="n">set_ticklabels</span><span class="p">([])</span>
+<span class="n">foxes_plane</span> <span class="o">=</span> <span class="n">foxes_1turbine</span><span class="o">.</span><span class="n">horizontal_contour</span><span class="p">(</span><span class="n">wind_direction</span><span class="o">=</span><span class="mi">270</span><span class="p">,</span> <span class="n">resolution</span><span class="o">=</span><span class="n">resolution</span><span class="p">)</span>
+
+
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="n">fig</span><span class="o">.</span><span class="n">suptitle</span><span class="p">(</span><span class="s2">&quot;Diff: FLORIS as basis&quot;</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">axes</span><span class="p">(</span><span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+<span class="c1"># diff = floris_plane - pywake_plane</span>
+<span class="c1"># abs_diff = np.abs(diff.values)</span>
+<span class="c1"># min_speed = -1 * np.max(abs_diff)</span>
+<span class="c1"># max_speed = np.max(abs_diff)</span>
+<span class="c1"># plot_plane(</span>
+<span class="c1">#     diff,</span>
+<span class="c1">#     ax=ax[0],</span>
+<span class="c1">#     min_speed=min_speed,</span>
+<span class="c1">#     max_speed=max_speed,</span>
+<span class="c1">#     cmap=&#39;PuOr&#39;,</span>
+<span class="c1">#     clevels=100,</span>
+<span class="c1">#     color_bar=True,</span>
+<span class="c1">#     title=&quot;FLORIS - PyWake&quot;</span>
+<span class="c1"># )</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">axes</span><span class="p">(</span><span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
 <span class="n">diff</span> <span class="o">=</span> <span class="n">floris_plane</span> <span class="o">-</span> <span class="n">foxes_plane</span>
 <span class="n">abs_diff</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">diff</span><span class="o">.</span><span class="n">values</span><span class="p">)</span>
 <span class="n">min_speed</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">abs_diff</span><span class="p">)</span>
 <span class="n">max_speed</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">abs_diff</span><span class="p">)</span>
 <span class="n">plot_plane</span><span class="p">(</span>
     <span class="n">diff</span><span class="p">,</span>
-    <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span>
+    <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
     <span class="n">min_speed</span><span class="o">=</span><span class="n">min_speed</span><span class="p">,</span>
     <span class="n">max_speed</span><span class="o">=</span><span class="n">max_speed</span><span class="p">,</span>
     <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;PuOr&#39;</span><span class="p">,</span>
     <span class="n">clevels</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>
     <span class="n">color_bar</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-    <span class="n">title</span><span class="o">=</span><span class="s2">&quot;Middle - Top&quot;</span>
+    <span class="n">title</span><span class="o">=</span><span class="s2">&quot;FLORIS - foxes&quot;</span>
 <span class="p">)</span>
 </pre></div>
 </div>
@@ -848,12 +892,13 @@ Application of a LES technique to characterize the wake deflection of a wind tur
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Turbine 0, T0: windio_turbine
 </pre></div>
 </div>
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.tri._tricontour.TriContourSet at 0x7512109152b0&gt;
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.tri._tricontour.TriContourSet at 0x7ff2701be120&gt;
 </pre></div>
 </div>
 <img alt="_images/398147f68db3727169c7bd08a0c9240b9f527fc71cd6a79db744341f4af62e14.png" src="_images/398147f68db3727169c7bd08a0c9240b9f527fc71cd6a79db744341f4af62e14.png" />
 <img alt="_images/7a1b78d4ee4895dcabcff12df9210729e652fa1a012b4edb74926431e3791d59.png" src="_images/7a1b78d4ee4895dcabcff12df9210729e652fa1a012b4edb74926431e3791d59.png" />
-<img alt="_images/9f034404d4f3d91c3e762735abb74fabba940a79939031206f6b3a2b478515f6.png" src="_images/9f034404d4f3d91c3e762735abb74fabba940a79939031206f6b3a2b478515f6.png" />
+<img alt="_images/5769756e95d86d1dde4143571a26a768ef92baecd3e218b5d222ac102cd9b132.png" src="_images/5769756e95d86d1dde4143571a26a768ef92baecd3e218b5d222ac102cd9b132.png" />
+<img alt="_images/9c4cbda76b57667061f5332b10f8dc2e05922088240d4d207ed6e32707167347.png" src="_images/9c4cbda76b57667061f5332b10f8dc2e05922088240d4d207ed6e32707167347.png" />
 </div>
 </div>
 </section>
