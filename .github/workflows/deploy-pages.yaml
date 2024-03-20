@@ -23,9 +23,7 @@ jobs:
     - name: Install dependencies
       run: |
         git clone https://github.com/rafmudaf/PyWake
-        git clone https://github.com/rafmudaf/foxes
         pip install -e PyWake
-        pip install -e foxes
         pip install -e ".[docs]"
 
     # Generate any required diagrams
