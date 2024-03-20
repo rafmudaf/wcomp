@@ -61,13 +61,13 @@ Follow these steps to install the dependencies and `wcomp`:
 
 ```bash
 pip install windIO
-git clone https://github.com/nrel/floris && pip install -e floris/
-git clone https://github.com/rafmudaf/foxes && pip install -e foxes/
+pip install foxes==0.6.2
+git clone https://github.com/nrel/floris -b develop && pip install -e floris/
 git clone https://github.com/rafmudaf/PyWake && pip install -e PyWake/
 ```
 
 3. Install `wcomp`:
 
 ```bash
-pip install wcomp
+pip install -e wcomp
 ```

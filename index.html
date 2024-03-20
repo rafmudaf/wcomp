@@ -486,15 +486,15 @@ others as dependencies (in other words, which modules import which other modules
 <li><p>Install the dependencies:</p></li>
 </ol>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>windIO
-git<span class="w"> </span>clone<span class="w"> </span>https://github.com/nrel/floris<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </span>floris/
-git<span class="w"> </span>clone<span class="w"> </span>https://github.com/rafmudaf/foxes<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </span>foxes/
+pip<span class="w"> </span>install<span class="w"> </span><span class="nv">foxes</span><span class="o">==</span><span class="m">0</span>.6.2
+git<span class="w"> </span>clone<span class="w"> </span>https://github.com/nrel/floris<span class="w"> </span>-b<span class="w"> </span>develop<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </span>floris/
 git<span class="w"> </span>clone<span class="w"> </span>https://github.com/rafmudaf/PyWake<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </span>PyWake/
 </pre></div>
 </div>
 <ol class="arabic simple" start="3">
 <li><p>Install <code class="docutils literal notranslate"><span class="pre">wcomp</span></code>:</p></li>
 </ol>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>wcomp
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </span>wcomp
 </pre></div>
 </div>
 <div class="toctree-wrapper compound">
