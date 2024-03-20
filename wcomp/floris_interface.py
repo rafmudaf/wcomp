@@ -380,11 +380,7 @@ class WCompFloris(WCompBase):
 
     # 2D contour plots
 
-    def horizontal_contour(
-        self,
-        wind_direction: float,
-        resolution: tuple,
-    ) -> WakePlane:
+    def horizontal_contour(self, wind_direction: float, resolution: float) -> WakePlane:
         """
         Creates the plot figures via matplotlib, but it does not show them.
         This requires plt.show() to be called when appropriate.
@@ -396,27 +392,30 @@ class WCompFloris(WCompBase):
             wind_direction (float): The wind direction to use for the visualization
             resolution (tuple): The (x, y) resolution of the horizontal plane
         """
-        # fig, axarr = plt.subplots(1, 1)
-        cut_plane = self.fi.calculate_horizontal_plane(
-            height=self.hub_height,
-            wd=[wind_direction],
-            x_resolution=resolution[0],
-            y_resolution=resolution[1],
-            yaw_angles=self.yaw_angles,
+        coordinates = np.array([
+            (x, y, self.hub_height)
+            for x, y in list(zip(self.fi.layout_x, self.fi.layout_y))
+        ])
+        _x, _y, _ = coordinates.T
+        x_min = np.min(_x) - 2 * self.rotor_diameter
+        x_max = np.max(_x) + 10 * self.rotor_diameter
+        y_min = np.min(_y) - 2 * self.rotor_diameter
+        y_max = np.max(_y) + 2 * self.rotor_diameter
+        x, y = np.meshgrid(
+            np.linspace(x_min, x_max, int((x_max - x_min) / resolution) + 1),
+            np.linspace(y_min, y_max, int((y_max - y_min) / resolution) + 1),
+            indexing='ij'
         )
-        # print("FLORIS bounds")
-        # print(min(cut_plane.df.x1), max(cut_plane.df.x1))
-        # print(min(cut_plane.df.x2), max(cut_plane.df.x2))
-        plane = WakePlane(
-            cut_plane.df.x1,
-            cut_plane.df.x2,
-            cut_plane.df.u,
-            cut_plane.normal_vector,
-            cut_plane.resolution
-        )
+        x = x.flatten()
+        y = y.flatten()
+        z = self.hub_height * np.ones_like(x)
+
+        u = self.fi.sample_flow_at_points(x, y, z)[0,0]
+
+        plane = WakePlane(x, y, u, "z", resolution)
         plot_plane(
             plane,
-            ax=plt.gca(), #axarr,
+            ax=plt.gca(),
             # cmap='Blues_r',
             # color_bar=True,
             clevels=100
@@ -426,7 +425,7 @@ class WCompFloris(WCompBase):
     def xsection_contour(
         self,
         wind_direction: float,
-        resolution: tuple,
+        resolution: float,
         x_coordinate: float
     ) -> WakePlane:
         """
@@ -440,24 +439,32 @@ class WCompFloris(WCompBase):
             wind_direction (float): The wind direction to use for the visualization
             resolution (tuple): The (x, y) resolution of the horizontal plane
         """
-        cut_plane = self.fi.calculate_cross_plane(
-            downstream_dist=x_coordinate,
-            wd=[wind_direction],
-            y_resolution=resolution[0],
-            z_resolution=resolution[1],
-            yaw_angles=self.yaw_angles,
+        coordinates = np.array([
+            (x, y, self.hub_height)
+            for x, y in list(zip(self.fi.layout_x, self.fi.layout_y))
+        ])
+        _, _y, _z = coordinates.T
+        y_min = np.min(_y) - 2 * self.rotor_diameter
+        y_max = np.max(_y) + 2 * self.rotor_diameter
+        z_min = 0.001
+        z_max = 6 * self.hub_height
+        y, z = np.meshgrid(
+            np.linspace(y_min, y_max, int((y_max - y_min) / resolution) + 1),
+            np.linspace(z_min, z_max, int((z_max - z_min) / resolution) + 1),
+            indexing='ij'
         )
-        plane = WakePlane(
-            cut_plane.df.x1,
-            cut_plane.df.x2,
-            cut_plane.df.u,
-            cut_plane.normal_vector,
-            cut_plane.resolution
-        )
+        y = y.flatten()
+        z = z.flatten()
+        x = x_coordinate * np.ones_like(y)
+
+        u = self.fi.sample_flow_at_points(x, y, z)[0,0]
+
+        plane = WakePlane(y, z, u, "x", resolution)
         plot_plane(
             plane,
             ax=plt.gca(),
-            color_bar=True,
+            # cmap='Blues_r',
+            # color_bar=True,
             clevels=100
         )
         return plane
