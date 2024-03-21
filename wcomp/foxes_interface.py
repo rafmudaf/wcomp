@@ -328,7 +328,7 @@ class WCompFoxes(WCompBase):
         _velocity_model_mapping = WAKE_MODEL_MAPPING[wake_model_name]
         _velocity_model = _velocity_model_mapping["model_ref"]
         _velocity_model_parameters = {
-            k: wes_analysis["wake_model"]["velocity"]["parameters"].get(v, v)
+            k: wes_analysis["wake_model"]["velocity"]["parameters"][v]
             for k, v in _velocity_model_mapping["parameters"].items()
         }
 
