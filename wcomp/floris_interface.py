@@ -29,10 +29,10 @@ WAKE_MODEL_MAPPING = {
             "we": "alpha",
         }
     },
-    "bastankhah2014": {     # NOT IMPLEMENTED
-        "model_ref": None,
-        "parameters": {}
-    },
+    # "bastankhah2014": {     # NOT IMPLEMENTED
+    #     "model_ref": None,
+    #     "parameters": {}
+    # },
     "bastankhah2016": {
         "model_ref": "gauss",
         "parameters": {
@@ -50,34 +50,22 @@ WAKE_MODEL_MAPPING = {
     },
 
     # Deflection model
-    None: {
-        "model_ref": "none",
-        "parameters": {}
-    },
     "jimenez": {
         "model_ref": "jimenez",
         "parameters": {
-            "ad": "ad",
-            "bd": "bd",
-            "kd": "kd",
+            "kd": "beta",
         }
     },
     "bastankhah2016_deflection": {
         "model_ref": "gauss",
         "parameters": {
-            "ad": "ad",
-            "bd": "bd",
             "alpha": "alpha",
             "beta": "beta",
-            "ka": "ka",
-            "kb": "kb",
+            "ka": "k",
+            "kb": "k",
         }
     },
 }
-
-# ASSUMPTION: FLORIS has a vertical and horizontal wake expansion rate for Bastankhah 2016, but foxes uses the same for both.
-# This is also mentioned in the paper in section 7 Model Predictions.
-# For simplicity in connecting the models, I'm setting FLORIS to use the same for both.
 
 basic_dict = {
     'name': 'Jensen-Jimenez',
@@ -222,16 +210,17 @@ class WCompFloris(WCompBase):
             k: wes_analysis["wake_model"]["velocity"]["parameters"][v]
             for k, v in _velocity_model_mapping["parameters"].items()
         }
-
-        _deflection_model_mapping = WAKE_MODEL_MAPPING[wes_analysis["wake_model"]["deflection"]["name"]]
-        _deflection_model = _deflection_model_mapping["model_ref"]
-        if _deflection_model != "none":
+        if wes_analysis["wake_model"]["deflection"]["name"] is not None:
+            _deflection_model_mapping = WAKE_MODEL_MAPPING[wes_analysis["wake_model"]["deflection"]["name"]]
+            _deflection_model = _deflection_model_mapping["model_ref"]
             _deflection_model_parameters = {
                 k: wes_analysis["wake_model"]["deflection"]["parameters"][v]
                 for k, v in _deflection_model_mapping["parameters"].items()
             }
         else:
+            _deflection_model = "none"
             _deflection_model_parameters = {}
+
         new_dict['wake'] = {
             'model_strings': {
                 'combination_model': 'sosfs',
@@ -270,21 +259,13 @@ class WCompFloris(WCompBase):
         y_coordinate: float,
         zmax: float
     ):
-        """
-        Creates the plot figures via matplotlib, but it does not show them.
-        This requires plt.show() to be called when appropriate.
-
-        Args:
-            wind_direction (float): The wind direction to use for the visualization
-            resolution (tuple): The (x, y) resolution of the horizontal plane
-        """
         ax = plt.gca()
 
         cut_plane = self.fi.calculate_y_plane(
             crossstream_dist=y_coordinate,
             wd=[wind_direction],
-            x_resolution=20,
-            z_resolution=20,
+            x_resolution=self.N_POINTS_1D,
+            z_resolution=self.N_POINTS_1D,
             x_bounds=[x_coordinate, x_coordinate],
             z_bounds=[0, zmax],
             yaw_angles=self.yaw_angles,
@@ -311,21 +292,13 @@ class WCompFloris(WCompBase):
         xmin: float,
         xmax: float
     ):
-        """
-        Creates the plot figures via matplotlib, but it does not show them.
-        This requires plt.show() to be called when appropriate.
-
-        Args:
-            wind_direction (float): The wind direction to use for the visualization
-            resolution (tuple): The (x, y) resolution of the horizontal plane
-        """
         ax = plt.gca()
 
         cut_plane = self.fi.calculate_y_plane(
             crossstream_dist=y_coordinate,
             wd=[wind_direction],
-            x_resolution=50,
-            z_resolution=50,
+            x_resolution=self.N_POINTS_1D,
+            z_resolution=self.N_POINTS_1D,
             x_bounds=[xmin, xmax],
             z_bounds=[self.hub_height, self.hub_height],
             yaw_angles=self.yaw_angles,
@@ -358,7 +331,7 @@ class WCompFloris(WCompBase):
             height=self.hub_height,
             wd=[wind_direction],
             # x_resolution=resolution[0],
-            y_resolution=20,
+            y_resolution=self.N_POINTS_1D,
             x_bounds=[x_coordinate, x_coordinate],
             y_bounds=[ymin, ymax],
             yaw_angles=self.yaw_angles,
@@ -380,18 +353,7 @@ class WCompFloris(WCompBase):
 
     # 2D contour plots
 
-    def horizontal_contour(self, wind_direction: float, resolution: float) -> WakePlane:
-        """
-        Creates the plot figures via matplotlib, but it does not show them.
-        This requires plt.show() to be called when appropriate.
-        NOTE:
-        - The height of the plane is the hub height of the first wind turbine.
-        If there are different hub heights, handle this appropriately.
-
-        Args:
-            wind_direction (float): The wind direction to use for the visualization
-            resolution (tuple): The (x, y) resolution of the horizontal plane
-        """
+    def horizontal_contour(self, wind_direction: float) -> WakePlane:
         coordinates = np.array([
             (x, y, self.hub_height)
             for x, y in list(zip(self.fi.layout_x, self.fi.layout_y))
@@ -402,8 +364,8 @@ class WCompFloris(WCompBase):
         y_min = np.min(_y) - 2 * self.rotor_diameter
         y_max = np.max(_y) + 2 * self.rotor_diameter
         x, y = np.meshgrid(
-            np.linspace(x_min, x_max, int((x_max - x_min) / resolution) + 1),
-            np.linspace(y_min, y_max, int((y_max - y_min) / resolution) + 1),
+            np.linspace(x_min, x_max, int((x_max - x_min) / self.RESOLUTION_2D) + 1),
+            np.linspace(y_min, y_max, int((y_max - y_min) / self.RESOLUTION_2D) + 1),
             indexing='ij'
         )
         x = x.flatten()
@@ -412,7 +374,7 @@ class WCompFloris(WCompBase):
 
         u = self.fi.sample_flow_at_points(x, y, z)[0,0]
 
-        plane = WakePlane(x, y, u, "z", resolution)
+        plane = WakePlane(x, y, u, "z")
         plot_plane(
             plane,
             ax=plt.gca(),
@@ -422,23 +384,7 @@ class WCompFloris(WCompBase):
         )
         return plane
 
-    def xsection_contour(
-        self,
-        wind_direction: float,
-        resolution: float,
-        x_coordinate: float
-    ) -> WakePlane:
-        """
-        Creates the plot figures via matplotlib, but it does not show them.
-        This requires plt.show() to be called when appropriate.
-        NOTE:
-        - The height of the plane is the hub height of the first wind turbine.
-        If there are different hub heights, handle this appropriately.
-
-        Args:
-            wind_direction (float): The wind direction to use for the visualization
-            resolution (tuple): The (x, y) resolution of the horizontal plane
-        """
+    def xsection_contour(self, wind_direction: float, x_coordinate: float) -> WakePlane:
         coordinates = np.array([
             (x, y, self.hub_height)
             for x, y in list(zip(self.fi.layout_x, self.fi.layout_y))
@@ -449,8 +395,8 @@ class WCompFloris(WCompBase):
         z_min = 0.001
         z_max = 6 * self.hub_height
         y, z = np.meshgrid(
-            np.linspace(y_min, y_max, int((y_max - y_min) / resolution) + 1),
-            np.linspace(z_min, z_max, int((z_max - z_min) / resolution) + 1),
+            np.linspace(y_min, y_max, int((y_max - y_min) / self.RESOLUTION_2D) + 1),
+            np.linspace(z_min, z_max, int((z_max - z_min) / self.RESOLUTION_2D) + 1),
             indexing='ij'
         )
         y = y.flatten()
@@ -459,7 +405,7 @@ class WCompFloris(WCompBase):
 
         u = self.fi.sample_flow_at_points(x, y, z)[0,0]
 
-        plane = WakePlane(y, z, u, "x", resolution)
+        plane = WakePlane(y, z, u, "x")
         plot_plane(
             plane,
             ax=plt.gca(),

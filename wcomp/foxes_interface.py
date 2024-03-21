@@ -7,6 +7,7 @@ import foxes.variables as FV
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
+import foxes
 from foxes.algorithms.downwind import Downwind
 from foxes.core import WindFarm, WakeModel
 from foxes.input.farm_layout import add_from_df
@@ -29,6 +30,12 @@ from .plotting import plot_plane, plot_profile
 # This dictionary maps generic model names in the windIO input file
 # to the tool's specific name. It also maps parameter names from the
 # referenced papers to the parameters in the implementation.
+# "windIO_model_name": {
+#   "model_ref": the current software's reference for this wake model,
+#   "parameters": {
+#       "model parameter": windIO parameter
+#   }
+# }
 WAKE_MODEL_MAPPING = {
 
     # Velocity models
@@ -38,12 +45,12 @@ WAKE_MODEL_MAPPING = {
             "k": "alpha",
         }
     },
-    # "bastankah2014": {
-    #     "model_ref": Bastankhah2014,
-    #     "parameters": {
-    #         "alpha": "k",
-    #     }
-    # },
+    "bastankhah2014": {
+        "model_ref": Bastankhah2014,
+        "parameters": {
+            "k": "k_star",
+        }
+    },
     "bastankhah2016": {
         "model_ref": Bastankhah2016,
         "parameters": {
@@ -314,6 +321,8 @@ class WCompFoxes(WCompBase):
             The algorithm
 
         """
+        yaw_angles = np.array([analyses["yaw_angles"]])
+
         wes_analysis = analyses
         wake_model_name = wes_analysis["wake_model"]["velocity"]["name"]
         _velocity_model_mapping = WAKE_MODEL_MAPPING[wake_model_name]
@@ -331,11 +340,32 @@ class WCompFoxes(WCompBase):
             for t in farm.turbines:
                 t.add_model("kTI")
 
+        if wes_analysis["wake_model"]["deflection"]["name"] is not None:
+            # NOTE: foxes supports only one deflection model, so there's no need to parse the
+            # deflection model settings from windIO.
+            # Check the name, and error if it isn't Bastankhah2016
+            if wes_analysis["wake_model"]["deflection"]["name"] != "bastankhah2016_deflection":
+                raise ValueError("foxes supports only Bastankhah2016 for the deflection model.")
+
+            # _deflection_model_mapping = WAKE_MODEL_MAPPING[wes_analysis["wake_model"]["deflection"]["name"]]
+            # _deflection_model = _deflection_model_mapping["model_ref"]
+            # _deflection_model_parameters = {
+            #     k: wes_analysis["wake_model"]["deflection"]["parameters"][v]
+            #     for k, v in _deflection_model_mapping["parameters"].items()
+            # }
+            # _deflection_model = _deflection_model(**_deflection_model_parameters)
+            mbook.turbine_models["set_yawm"] = foxes.models.turbine_models.SetFarmVars()
+            mbook.turbine_models["set_yawm"].add_var(FV.YAWM, yaw_angles)
+            wake_frame="yawed"
+        else:
+            wake_frame="rotor_wd"
+
         mbook.wake_models[wake_model_name] = _velocity_model(
             **_velocity_model_parameters,
             superposition="ws_quadratic"
         )
         # mbook.print_toc(subset="wake_models")
+        
         return Downwind(
             mbook,
             farm,
@@ -344,6 +374,7 @@ class WCompFoxes(WCompBase):
             rotor_model="grid16",
             partial_wakes_model="rotor_points",
             wake_models=[wake_model_name],
+            wake_frame=wake_frame,
             **algo_pars
         )
 
@@ -409,11 +440,10 @@ class WCompFoxes(WCompBase):
         ax = plt.gca()
 
         # create points of interest, shape (n_states, n_points, 3):
-        n_points = 20
-        points = np.zeros((1, n_points, 3))
+        points = np.zeros((1, self.N_POINTS_1D, 3))
         points[:, :, 0] = x_coordinate
         points[:, :, 1] = y_coordinate
-        points[:, :, 2] = np.linspace(0, zmax, n_points)[None, :]
+        points[:, :, 2] = np.linspace(0, zmax, self.N_POINTS_1D)[None, :]
         point_results = self.algo.calc_points(self.farm_results, points)
 
         profile = WakeProfile(
@@ -439,17 +469,11 @@ class WCompFoxes(WCompBase):
         xmin: float,
         xmax: float
     ):
-        """
-        Args:
-            wind_direction (float): The wind direction to use for the visualization
-            resolution (tuple): The (x, y) resolution of the horizontal plane
-        """
         ax = plt.gca()
 
         # create points of interest, shape (n_states, n_points, 3):
-        n_points = 50
-        points = np.zeros((1, n_points, 3))
-        points[:, :, 0] = np.linspace(xmin, xmax, n_points)[None, :]
+        points = np.zeros((1, self.N_POINTS_1D, 3))
+        points[:, :, 0] = np.linspace(xmin, xmax, self.N_POINTS_1D)[None, :]
         points[:, :, 1] = y_coordinate
         points[:, :, 2] = self.hub_height
 
@@ -480,10 +504,9 @@ class WCompFoxes(WCompBase):
         ax = plt.gca()
 
         # create points of interest, shape (n_states, n_points, 3):
-        n_points = 20
-        points = np.zeros((1, n_points, 3))
-        points[:, :, 0] = x_coordinate * np.ones((1, n_points))[None, :]
-        points[:, :, 1] = np.linspace(ymin, ymax, n_points)[None, :]
+        points = np.zeros((1, self.N_POINTS_1D, 3))
+        points[:, :, 0] = x_coordinate * np.ones((1, self.N_POINTS_1D))[None, :]
+        points[:, :, 1] = np.linspace(ymin, ymax, self.N_POINTS_1D)[None, :]
         points[:, :, 2] = self.hub_height
 
         # calculate point results:
@@ -507,15 +530,7 @@ class WCompFoxes(WCompBase):
 
     # 2D contour plots
 
-    def horizontal_contour(self, wind_direction: float, resolution: float) -> WakePlane:
-        """
-        This routine creates a 2D horizontal contour of all turbines in the farm.
-        NOTE: the `get_mean_fig_xy` routine requires a single resolution setting
-        and uses this for both directions in the plot. This is distinct from the
-        other interfaces where a resolution is supported for each direction
-        of the plot.
-        """
-
+    def horizontal_contour(self, wind_direction: float) -> WakePlane:
         x_min = np.min(self.farm_results.X) - 2 * self.rotor_diameter
         x_max = np.max(self.farm_results.X) + 10 * self.rotor_diameter
         y_min = np.min(self.farm_results.Y) - 2 * self.rotor_diameter
@@ -523,7 +538,7 @@ class WCompFoxes(WCompBase):
 
         o = FlowPlots2D(self.algo, self.farm_results)
         u, grid_data = o.get_mean_data_xy(
-            resolution=resolution,
+            resolution=self.RESOLUTION_2D,
             variables=["WS"],
             xmin=x_min,
             xmax=x_max,
@@ -540,7 +555,7 @@ class WCompFoxes(WCompBase):
         # z = grid_points[0, :, 2]
         u = u[:,:,0].flatten()
 
-        plane = WakePlane(x, y, u, "z", resolution)
+        plane = WakePlane(x, y, u, "z")
         plot_plane(
             plane,
             ax=plt.gca(),
@@ -550,13 +565,7 @@ class WCompFoxes(WCompBase):
         )
         return plane
     
-    def xsection_contour(
-        self,
-        wind_direction: float,
-        resolution: float,
-        x_coordinate: float
-    ) -> WakePlane:
-
+    def xsection_contour(self, wind_direction: float, x_coordinate: float) -> WakePlane:
         y_min = np.min(self.farm_results.Y) - 2 * self.rotor_diameter
         y_max = np.max(self.farm_results.Y) + 2 * self.rotor_diameter
         z_min = 0.001
@@ -564,7 +573,7 @@ class WCompFoxes(WCompBase):
 
         o = FlowPlots2D(self.algo, self.farm_results)
         u, grid_data = o.get_mean_data_yz(
-            resolution=resolution,
+            resolution=self.RESOLUTION_2D,
             variables=["WS"],
             ymin=y_min,
             ymax=y_max,
@@ -580,7 +589,7 @@ class WCompFoxes(WCompBase):
         z = grid_points[0, :, 2]
         u = u[:,:,0].flatten()
 
-        plane = WakePlane(y, z, u, "x", resolution)
+        plane = WakePlane(y, z, u, "x")
         plot_plane(
             plane,
             ax=plt.gca(),

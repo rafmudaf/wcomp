@@ -29,13 +29,11 @@ class WakePlane:
         x2: np.ndarray,
         values: np.ndarray,
         normal_vector: str,
-        resolution: Tuple
     ):
         self.x1 = x1
         self.x2 = x2
         self.values = values
         self.normal_vector = normal_vector
-        self.resolution = resolution        # TODO: Not actively used, is this needed?
 
     def __sub__(self, other):
 
@@ -43,11 +41,6 @@ class WakePlane:
             raise ValueError(
                 "Operands must have consistent normal vectors. "
                 f"self {self.normal_vector}, other {other.normal_vector}."
-            )
-        if self.resolution != other.resolution:
-            raise ValueError(
-                "Operands must have consistent resolutions. "
-                f"self {self.resolution}, other {other.resolution}."
             )
         if np.shape(self.x1) != np.shape(other.x1) \
             or np.shape(self.x2) != np.shape(other.x2):
@@ -61,7 +54,6 @@ class WakePlane:
             self.x2,
             self.values - other.values,
             self.normal_vector,
-            self.resolution
         )
 
 class WakeVolume:

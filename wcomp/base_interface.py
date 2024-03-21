@@ -17,6 +17,8 @@ class WCompBase(ABC):
 
     LINE_PLOT_COLOR = "OVERWRITE"   # Color to use for all line plots; use matplotlib color codes
     LEGEND = "OVERWRITE"            # Legend entry; typically should be the name of the corresponding software
+    N_POINTS_1D = 100               # Number of points to use for 1D line plots
+    RESOLUTION_2D = 10              # Resolution for 2D contour plots in meters
 
     def __init__(self, input_file: str | Path):
         """
@@ -245,11 +247,7 @@ class WCompBase(ABC):
 
     # 2D contour plots
 
-    def horizontal_contour(
-        self,
-        wind_direction: float,
-        resolution: tuple
-    ) -> WakePlane:
+    def horizontal_contour(self, wind_direction: float) -> WakePlane:
         """
         This function produces a contour plot of the velocity in the x-y plane where
         x is streamwise and y is lateral. The contour is located at the hub height.
@@ -266,7 +264,6 @@ class WCompBase(ABC):
 
         Args:
             wind_direction (float): Incoming wind direction in degrees with West at 270 degrees.
-            resolution (tuple): Number of points in the (x, y) directions for the contour plot grid
 
         Raises:
             NotImplementedError: This function must be implemented in a subclass
@@ -287,7 +284,6 @@ class WCompBase(ABC):
                     y,      # ^ ^ ^
                     u,
                     "z",
-                    resolution,
                 )
 
                 # Plot the plane
@@ -305,12 +301,7 @@ class WCompBase(ABC):
         """
         raise NotImplementedError("WCompBase.horizontal_contour")
 
-    def xsection_contour(
-        self,
-        wind_direction: float,
-        resolution: tuple,
-        x_coordinate: float
-    ) -> WakePlane:
+    def xsection_contour(self, wind_direction: float, x_coordinate: float) -> WakePlane:
         """
         This function produces a contour plot of the velocity in the y-z plane where
         y is lateral and z is vertical. The contour is located in the streamwise direction at the
@@ -328,8 +319,6 @@ class WCompBase(ABC):
         Args:
             wind_direction (float): Wind direction to align the plot in the visualization in
                 degrees with West being 270 degrees and North being 0 degrees
-            resolution (tuple): Grid resolution for the contour plot;
-                element 0 is the resolution in y and element 1 is the resolution in z
             x_coordinate (float): The streamwise location for the extracted plane
 
         Raises:
@@ -351,7 +340,6 @@ class WCompBase(ABC):
                     z,      # ^ ^ ^
                     u,
                     "x",
-                    resolution,
                 )
 
                 # Plot the plane
