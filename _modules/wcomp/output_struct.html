@@ -383,13 +383,11 @@ document.write(`
         <span class="n">x2</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
         <span class="n">values</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
         <span class="n">normal_vector</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
-        <span class="n">resolution</span><span class="p">:</span> <span class="n">Tuple</span>
     <span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">x1</span> <span class="o">=</span> <span class="n">x1</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">x2</span> <span class="o">=</span> <span class="n">x2</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">values</span> <span class="o">=</span> <span class="n">values</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">normal_vector</span> <span class="o">=</span> <span class="n">normal_vector</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">resolution</span> <span class="o">=</span> <span class="n">resolution</span>        <span class="c1"># TODO: Not actively used, is this needed?</span>
 
     <span class="k">def</span> <span class="fm">__sub__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
 
@@ -397,11 +395,6 @@ document.write(`
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
                 <span class="s2">&quot;Operands must have consistent normal vectors. &quot;</span>
                 <span class="sa">f</span><span class="s2">&quot;self </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">normal_vector</span><span class="si">}</span><span class="s2">, other </span><span class="si">{</span><span class="n">other</span><span class="o">.</span><span class="n">normal_vector</span><span class="si">}</span><span class="s2">.&quot;</span>
-            <span class="p">)</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">resolution</span> <span class="o">!=</span> <span class="n">other</span><span class="o">.</span><span class="n">resolution</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-                <span class="s2">&quot;Operands must have consistent resolutions. &quot;</span>
-                <span class="sa">f</span><span class="s2">&quot;self </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">resolution</span><span class="si">}</span><span class="s2">, other </span><span class="si">{</span><span class="n">other</span><span class="o">.</span><span class="n">resolution</span><span class="si">}</span><span class="s2">.&quot;</span>
             <span class="p">)</span>
         <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">shape</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">x1</span><span class="p">)</span> <span class="o">!=</span> <span class="n">np</span><span class="o">.</span><span class="n">shape</span><span class="p">(</span><span class="n">other</span><span class="o">.</span><span class="n">x1</span><span class="p">)</span> \
             <span class="ow">or</span> <span class="n">np</span><span class="o">.</span><span class="n">shape</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">x2</span><span class="p">)</span> <span class="o">!=</span> <span class="n">np</span><span class="o">.</span><span class="n">shape</span><span class="p">(</span><span class="n">other</span><span class="o">.</span><span class="n">x2</span><span class="p">):</span>
@@ -415,7 +408,6 @@ document.write(`
             <span class="bp">self</span><span class="o">.</span><span class="n">x2</span><span class="p">,</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">values</span> <span class="o">-</span> <span class="n">other</span><span class="o">.</span><span class="n">values</span><span class="p">,</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">normal_vector</span><span class="p">,</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">resolution</span>
         <span class="p">)</span></div>
 
 

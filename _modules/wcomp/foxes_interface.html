@@ -356,6 +356,7 @@ document.write(`
 <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">foxes</span>
 <span class="kn">from</span> <span class="nn">foxes.algorithms.downwind</span> <span class="kn">import</span> <span class="n">Downwind</span>
 <span class="kn">from</span> <span class="nn">foxes.core</span> <span class="kn">import</span> <span class="n">WindFarm</span><span class="p">,</span> <span class="n">WakeModel</span>
 <span class="kn">from</span> <span class="nn">foxes.input.farm_layout</span> <span class="kn">import</span> <span class="n">add_from_df</span>
@@ -427,6 +428,7 @@ document.write(`
         <span class="s2">&quot;parameters&quot;</span><span class="p">:</span> <span class="p">{</span>
             <span class="s2">&quot;alpha&quot;</span><span class="p">:</span> <span class="s2">&quot;alpha&quot;</span><span class="p">,</span>
             <span class="s2">&quot;beta&quot;</span><span class="p">:</span> <span class="s2">&quot;beta&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;k&quot;</span><span class="p">:</span> <span class="s2">&quot;k&quot;</span><span class="p">,</span>
         <span class="p">}</span>
     <span class="p">},</span>
 <span class="p">}</span>
@@ -676,6 +678,8 @@ document.write(`
 <span class="sd">            The algorithm</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">yaw_angles</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">analyses</span><span class="p">[</span><span class="s2">&quot;yaw_angles&quot;</span><span class="p">]])</span>
+
         <span class="n">wes_analysis</span> <span class="o">=</span> <span class="n">analyses</span>
         <span class="n">_velocity_model_mapping</span> <span class="o">=</span> <span class="n">WAKE_MODEL_MAPPING</span><span class="p">[</span><span class="n">wes_analysis</span><span class="p">[</span><span class="s2">&quot;wake_model&quot;</span><span class="p">][</span><span class="s2">&quot;velocity&quot;</span><span class="p">][</span><span class="s2">&quot;name&quot;</span><span class="p">]]</span>
         <span class="n">_velocity_model</span> <span class="o">=</span> <span class="n">_velocity_model_mapping</span><span class="p">[</span><span class="s2">&quot;model_ref&quot;</span><span class="p">]</span>
@@ -683,6 +687,26 @@ document.write(`
             <span class="n">k</span><span class="p">:</span> <span class="n">wes_analysis</span><span class="p">[</span><span class="s2">&quot;wake_model&quot;</span><span class="p">][</span><span class="s2">&quot;velocity&quot;</span><span class="p">][</span><span class="s2">&quot;parameters&quot;</span><span class="p">][</span><span class="n">v</span><span class="p">]</span>
             <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">_velocity_model_mapping</span><span class="p">[</span><span class="s2">&quot;parameters&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
         <span class="p">}</span>
+
+        <span class="k">if</span> <span class="n">wes_analysis</span><span class="p">[</span><span class="s2">&quot;wake_model&quot;</span><span class="p">][</span><span class="s2">&quot;deflection&quot;</span><span class="p">][</span><span class="s2">&quot;name&quot;</span><span class="p">]</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="c1"># NOTE: foxes supports only one deflection model, so there&#39;s no need to parse the</span>
+            <span class="c1"># deflection model settings from windIO.</span>
+            <span class="c1"># Check the name, and error if it isn&#39;t Bastankhah2016</span>
+            <span class="k">if</span> <span class="n">wes_analysis</span><span class="p">[</span><span class="s2">&quot;wake_model&quot;</span><span class="p">][</span><span class="s2">&quot;deflection&quot;</span><span class="p">][</span><span class="s2">&quot;name&quot;</span><span class="p">]</span> <span class="o">!=</span> <span class="s2">&quot;bastankhah2016_deflection&quot;</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;foxes supports only Bastankhah2016 for the deflection model.&quot;</span><span class="p">)</span>
+
+            <span class="c1"># _deflection_model_mapping = WAKE_MODEL_MAPPING[wes_analysis[&quot;wake_model&quot;][&quot;deflection&quot;][&quot;name&quot;]]</span>
+            <span class="c1"># _deflection_model = _deflection_model_mapping[&quot;model_ref&quot;]</span>
+            <span class="c1"># _deflection_model_parameters = {</span>
+            <span class="c1">#     k: wes_analysis[&quot;wake_model&quot;][&quot;deflection&quot;][&quot;parameters&quot;][v]</span>
+            <span class="c1">#     for k, v in _deflection_model_mapping[&quot;parameters&quot;].items()</span>
+            <span class="c1"># }</span>
+            <span class="c1"># _deflection_model = _deflection_model(**_deflection_model_parameters)</span>
+            <span class="n">mbook</span><span class="o">.</span><span class="n">turbine_models</span><span class="p">[</span><span class="s2">&quot;set_yawm&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">foxes</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">turbine_models</span><span class="o">.</span><span class="n">SetFarmVars</span><span class="p">()</span>
+            <span class="n">mbook</span><span class="o">.</span><span class="n">turbine_models</span><span class="p">[</span><span class="s2">&quot;set_yawm&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">add_var</span><span class="p">(</span><span class="n">FV</span><span class="o">.</span><span class="n">YAWM</span><span class="p">,</span> <span class="n">yaw_angles</span><span class="p">)</span>
+            <span class="n">wake_frame</span><span class="o">=</span><span class="s2">&quot;yawed&quot;</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">wake_frame</span><span class="o">=</span><span class="s2">&quot;rotor_wd&quot;</span>
 
         <span class="n">temp_model_name</span> <span class="o">=</span> <span class="s2">&quot;this_model&quot;</span>
         <span class="n">mbook</span><span class="o">.</span><span class="n">wake_models</span><span class="p">[</span><span class="n">temp_model_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">_velocity_model</span><span class="p">(</span>
@@ -697,6 +721,7 @@ document.write(`
             <span class="n">verbosity</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
             <span class="n">rotor_model</span><span class="o">=</span><span class="s2">&quot;grid16&quot;</span><span class="p">,</span>
             <span class="n">wake_models</span><span class="o">=</span><span class="p">[</span><span class="n">temp_model_name</span><span class="p">],</span>
+            <span class="n">wake_frame</span><span class="o">=</span><span class="n">wake_frame</span><span class="p">,</span>
             <span class="o">**</span><span class="n">algo_pars</span>
         <span class="p">)</span></div>
 
@@ -771,11 +796,10 @@ document.write(`
         <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">()</span>
 
         <span class="c1"># create points of interest, shape (n_states, n_points, 3):</span>
-        <span class="n">n_points</span> <span class="o">=</span> <span class="mi">20</span>
-        <span class="n">points</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span> <span class="n">n_points</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>
+        <span class="n">points</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">N_POINTS_1D</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>
         <span class="n">points</span><span class="p">[:,</span> <span class="p">:,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">x_coordinate</span>
         <span class="n">points</span><span class="p">[:,</span> <span class="p">:,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">y_coordinate</span>
-        <span class="n">points</span><span class="p">[:,</span> <span class="p">:,</span> <span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">zmax</span><span class="p">,</span> <span class="n">n_points</span><span class="p">)[</span><span class="kc">None</span><span class="p">,</span> <span class="p">:]</span>
+        <span class="n">points</span><span class="p">[:,</span> <span class="p">:,</span> <span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">zmax</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">N_POINTS_1D</span><span class="p">)[</span><span class="kc">None</span><span class="p">,</span> <span class="p">:]</span>
         <span class="n">point_results</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">algo</span><span class="o">.</span><span class="n">calc_points</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">farm_results</span><span class="p">,</span> <span class="n">points</span><span class="p">)</span>
 
         <span class="n">profile</span> <span class="o">=</span> <span class="n">WakeProfile</span><span class="p">(</span>
@@ -804,17 +828,11 @@ document.write(`
         <span class="n">xmin</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
         <span class="n">xmax</span><span class="p">:</span> <span class="nb">float</span>
     <span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Args:</span>
-<span class="sd">            wind_direction (float): The wind direction to use for the visualization</span>
-<span class="sd">            resolution (tuple): The (x, y) resolution of the horizontal plane</span>
-<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">()</span>
 
         <span class="c1"># create points of interest, shape (n_states, n_points, 3):</span>
-        <span class="n">n_points</span> <span class="o">=</span> <span class="mi">50</span>
-        <span class="n">points</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span> <span class="n">n_points</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>
-        <span class="n">points</span><span class="p">[:,</span> <span class="p">:,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">xmin</span><span class="p">,</span> <span class="n">xmax</span><span class="p">,</span> <span class="n">n_points</span><span class="p">)[</span><span class="kc">None</span><span class="p">,</span> <span class="p">:]</span>
+        <span class="n">points</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">N_POINTS_1D</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>
+        <span class="n">points</span><span class="p">[:,</span> <span class="p">:,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">xmin</span><span class="p">,</span> <span class="n">xmax</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">N_POINTS_1D</span><span class="p">)[</span><span class="kc">None</span><span class="p">,</span> <span class="p">:]</span>
         <span class="n">points</span><span class="p">[:,</span> <span class="p">:,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">y_coordinate</span>
         <span class="n">points</span><span class="p">[:,</span> <span class="p">:,</span> <span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">hub_height</span>
 
@@ -848,10 +866,9 @@ document.write(`
         <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">()</span>
 
         <span class="c1"># create points of interest, shape (n_states, n_points, 3):</span>
-        <span class="n">n_points</span> <span class="o">=</span> <span class="mi">20</span>
-        <span class="n">points</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span> <span class="n">n_points</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>
-        <span class="n">points</span><span class="p">[:,</span> <span class="p">:,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">x_coordinate</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span> <span class="n">n_points</span><span class="p">))[</span><span class="kc">None</span><span class="p">,</span> <span class="p">:]</span>
-        <span class="n">points</span><span class="p">[:,</span> <span class="p">:,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">ymin</span><span class="p">,</span> <span class="n">ymax</span><span class="p">,</span> <span class="n">n_points</span><span class="p">)[</span><span class="kc">None</span><span class="p">,</span> <span class="p">:]</span>
+        <span class="n">points</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">N_POINTS_1D</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>
+        <span class="n">points</span><span class="p">[:,</span> <span class="p">:,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">x_coordinate</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">N_POINTS_1D</span><span class="p">))[</span><span class="kc">None</span><span class="p">,</span> <span class="p">:]</span>
+        <span class="n">points</span><span class="p">[:,</span> <span class="p">:,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">ymin</span><span class="p">,</span> <span class="n">ymax</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">N_POINTS_1D</span><span class="p">)[</span><span class="kc">None</span><span class="p">,</span> <span class="p">:]</span>
         <span class="n">points</span><span class="p">[:,</span> <span class="p">:,</span> <span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">hub_height</span>
 
         <span class="c1"># calculate point results:</span>
@@ -878,15 +895,7 @@ document.write(`
 
 <div class="viewcode-block" id="WCompFoxes.horizontal_contour">
 <a class="viewcode-back" href="../../_autosummary/wcomp.foxes_interface.html#wcomp.foxes_interface.WCompFoxes.horizontal_contour">[docs]</a>
-    <span class="k">def</span> <span class="nf">horizontal_contour</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">wind_direction</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">resolution</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">WakePlane</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        This routine creates a 2D horizontal contour of all turbines in the farm.</span>
-<span class="sd">        NOTE: the `get_mean_fig_xy` routine requires a single resolution setting</span>
-<span class="sd">        and uses this for both directions in the plot. This is distinct from the</span>
-<span class="sd">        other interfaces where a resolution is supported for each direction</span>
-<span class="sd">        of the plot.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-
+    <span class="k">def</span> <span class="nf">horizontal_contour</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">wind_direction</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">WakePlane</span><span class="p">:</span>
         <span class="n">x_min</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">farm_results</span><span class="o">.</span><span class="n">X</span><span class="p">)</span> <span class="o">-</span> <span class="mi">2</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">rotor_diameter</span>
         <span class="n">x_max</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">farm_results</span><span class="o">.</span><span class="n">X</span><span class="p">)</span> <span class="o">+</span> <span class="mi">10</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">rotor_diameter</span>
         <span class="n">y_min</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">farm_results</span><span class="o">.</span><span class="n">Y</span><span class="p">)</span> <span class="o">-</span> <span class="mi">2</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">rotor_diameter</span>
@@ -894,7 +903,7 @@ document.write(`
 
         <span class="n">o</span> <span class="o">=</span> <span class="n">FlowPlots2D</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">algo</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">farm_results</span><span class="p">)</span>
         <span class="n">u</span><span class="p">,</span> <span class="n">grid_data</span> <span class="o">=</span> <span class="n">o</span><span class="o">.</span><span class="n">get_mean_data_xy</span><span class="p">(</span>
-            <span class="n">resolution</span><span class="o">=</span><span class="n">resolution</span><span class="p">,</span>
+            <span class="n">resolution</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">RESOLUTION_2D</span><span class="p">,</span>
             <span class="n">variables</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;WS&quot;</span><span class="p">],</span>
             <span class="n">xmin</span><span class="o">=</span><span class="n">x_min</span><span class="p">,</span>
             <span class="n">xmax</span><span class="o">=</span><span class="n">x_max</span><span class="p">,</span>
@@ -911,7 +920,7 @@ document.write(`
         <span class="c1"># z = grid_points[0, :, 2]</span>
         <span class="n">u</span> <span class="o">=</span> <span class="n">u</span><span class="p">[:,:,</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span>
 
-        <span class="n">plane</span> <span class="o">=</span> <span class="n">WakePlane</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">u</span><span class="p">,</span> <span class="s2">&quot;z&quot;</span><span class="p">,</span> <span class="n">resolution</span><span class="p">)</span>
+        <span class="n">plane</span> <span class="o">=</span> <span class="n">WakePlane</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">u</span><span class="p">,</span> <span class="s2">&quot;z&quot;</span><span class="p">)</span>
         <span class="n">plot_plane</span><span class="p">(</span>
             <span class="n">plane</span><span class="p">,</span>
             <span class="n">ax</span><span class="o">=</span><span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">(),</span>
@@ -924,13 +933,7 @@ document.write(`
     
 <div class="viewcode-block" id="WCompFoxes.xsection_contour">
 <a class="viewcode-back" href="../../_autosummary/wcomp.foxes_interface.html#wcomp.foxes_interface.WCompFoxes.xsection_contour">[docs]</a>
-    <span class="k">def</span> <span class="nf">xsection_contour</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">,</span>
-        <span class="n">wind_direction</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
-        <span class="n">resolution</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
-        <span class="n">x_coordinate</span><span class="p">:</span> <span class="nb">float</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">WakePlane</span><span class="p">:</span>
-
+    <span class="k">def</span> <span class="nf">xsection_contour</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">wind_direction</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">x_coordinate</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">WakePlane</span><span class="p">:</span>
         <span class="n">y_min</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">farm_results</span><span class="o">.</span><span class="n">Y</span><span class="p">)</span> <span class="o">-</span> <span class="mi">2</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">rotor_diameter</span>
         <span class="n">y_max</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">farm_results</span><span class="o">.</span><span class="n">Y</span><span class="p">)</span> <span class="o">+</span> <span class="mi">2</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">rotor_diameter</span>
         <span class="n">z_min</span> <span class="o">=</span> <span class="mf">0.001</span>
@@ -938,7 +941,7 @@ document.write(`
 
         <span class="n">o</span> <span class="o">=</span> <span class="n">FlowPlots2D</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">algo</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">farm_results</span><span class="p">)</span>
         <span class="n">u</span><span class="p">,</span> <span class="n">grid_data</span> <span class="o">=</span> <span class="n">o</span><span class="o">.</span><span class="n">get_mean_data_yz</span><span class="p">(</span>
-            <span class="n">resolution</span><span class="o">=</span><span class="n">resolution</span><span class="p">,</span>
+            <span class="n">resolution</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">RESOLUTION_2D</span><span class="p">,</span>
             <span class="n">variables</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;WS&quot;</span><span class="p">],</span>
             <span class="n">ymin</span><span class="o">=</span><span class="n">y_min</span><span class="p">,</span>
             <span class="n">ymax</span><span class="o">=</span><span class="n">y_max</span><span class="p">,</span>
@@ -954,7 +957,7 @@ document.write(`
         <span class="n">z</span> <span class="o">=</span> <span class="n">grid_points</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="p">:,</span> <span class="mi">2</span><span class="p">]</span>
         <span class="n">u</span> <span class="o">=</span> <span class="n">u</span><span class="p">[:,:,</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span>
 
-        <span class="n">plane</span> <span class="o">=</span> <span class="n">WakePlane</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="p">,</span> <span class="n">u</span><span class="p">,</span> <span class="s2">&quot;x&quot;</span><span class="p">,</span> <span class="n">resolution</span><span class="p">)</span>
+        <span class="n">plane</span> <span class="o">=</span> <span class="n">WakePlane</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="p">,</span> <span class="n">u</span><span class="p">,</span> <span class="s2">&quot;x&quot;</span><span class="p">)</span>
         <span class="n">plot_plane</span><span class="p">(</span>
             <span class="n">plane</span><span class="p">,</span>
             <span class="n">ax</span><span class="o">=</span><span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">(),</span>
