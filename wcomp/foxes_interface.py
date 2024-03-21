@@ -7,6 +7,7 @@ import foxes.variables as FV
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
+import foxes
 from foxes.algorithms.downwind import Downwind
 from foxes.core import WindFarm, WakeModel
 from foxes.input.farm_layout import add_from_df
@@ -78,6 +79,7 @@ WAKE_MODEL_MAPPING = {
         "parameters": {
             "alpha": "alpha",
             "beta": "beta",
+            "k": "k",
         }
     },
 }
@@ -314,6 +316,8 @@ class WCompFoxes(WCompBase):
             The algorithm
 
         """
+        yaw_angles = np.array([analyses["yaw_angles"]])
+
         wes_analysis = analyses
         _velocity_model_mapping = WAKE_MODEL_MAPPING[wes_analysis["wake_model"]["velocity"]["name"]]
         _velocity_model = _velocity_model_mapping["model_ref"]
@@ -321,6 +325,26 @@ class WCompFoxes(WCompBase):
             k: wes_analysis["wake_model"]["velocity"]["parameters"][v]
             for k, v in _velocity_model_mapping["parameters"].items()
         }
+
+        if wes_analysis["wake_model"]["deflection"]["name"] is not None:
+            # NOTE: foxes supports only one deflection model, so there's no need to parse the
+            # deflection model settings from windIO.
+            # Check the name, and error if it isn't Bastankhah2016
+            if wes_analysis["wake_model"]["deflection"]["name"] != "bastankhah2016_deflection":
+                raise ValueError("foxes supports only Bastankhah2016 for the deflection model.")
+
+            # _deflection_model_mapping = WAKE_MODEL_MAPPING[wes_analysis["wake_model"]["deflection"]["name"]]
+            # _deflection_model = _deflection_model_mapping["model_ref"]
+            # _deflection_model_parameters = {
+            #     k: wes_analysis["wake_model"]["deflection"]["parameters"][v]
+            #     for k, v in _deflection_model_mapping["parameters"].items()
+            # }
+            # _deflection_model = _deflection_model(**_deflection_model_parameters)
+            mbook.turbine_models["set_yawm"] = foxes.models.turbine_models.SetFarmVars()
+            mbook.turbine_models["set_yawm"].add_var(FV.YAWM, yaw_angles)
+            wake_frame="yawed"
+        else:
+            wake_frame="rotor_wd"
 
         temp_model_name = "this_model"
         mbook.wake_models[temp_model_name] = _velocity_model(
@@ -335,6 +359,7 @@ class WCompFoxes(WCompBase):
             verbosity=0,
             rotor_model="grid16",
             wake_models=[temp_model_name],
+            wake_frame=wake_frame,
             **algo_pars
         )
 

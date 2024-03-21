@@ -59,12 +59,10 @@ WAKE_MODEL_MAPPING = {
     "bastankhah2016_deflection": {
         "model_ref": "gauss",
         "parameters": {
-            "ad": "ad",
-            "bd": "bd",
             "alpha": "alpha",
             "beta": "beta",
-            "ka": "ka",
-            "kb": "kb",
+            "ka": "k",
+            "kb": "k",
         }
     },
 }
