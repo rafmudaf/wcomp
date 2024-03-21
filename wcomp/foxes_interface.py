@@ -58,7 +58,6 @@ WAKE_MODEL_MAPPING = {
             "beta": "beta",
             "kTI": "k",
             "kb": "k",
-            "induction": "Betz",
         }
     },
     "turbopark": {
@@ -84,7 +83,6 @@ WAKE_MODEL_MAPPING = {
             "beta": "beta",
             "kTI": "k",
             "kb": "k",
-            "induction": "Betz",
         }
     },
 }
@@ -331,6 +329,7 @@ class WCompFoxes(WCompBase):
             k: wes_analysis["wake_model"]["velocity"]["parameters"][v]
             for k, v in _velocity_model_mapping["parameters"].items()
         }
+        _velocity_model_parameters["induction"] = "Betz"
 
         if FV.KTI in _velocity_model_parameters:
             kti = _velocity_model_parameters.pop(FV.KTI)
@@ -360,6 +359,8 @@ class WCompFoxes(WCompBase):
                 t.insert_model(0, "set_yawm")
                 t.insert_model(1, "yawm2yaw")
             wake_frame="yawed"
+            # TODO: How to set axial_induction=Betz for deflection
+            # Does it need to be set for deflection?
         else:
             wake_frame="rotor_wd"
 
