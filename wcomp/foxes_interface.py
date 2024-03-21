@@ -13,6 +13,7 @@ from foxes.core import WindFarm, WakeModel
 from foxes.input.farm_layout import add_from_df
 from foxes.input.states import StatesTable
 from foxes.models.turbine_types import CpCtFromTwo
+from foxes.models.turbine_models import kTI
 from foxes.output import FlowPlots2D
 from foxes.models.model_book import ModelBook
 from foxes.models.wake_models.wind import JensenWake
@@ -55,7 +56,8 @@ WAKE_MODEL_MAPPING = {
         "parameters": {
             "alpha": "alpha",
             "beta": "beta",
-            "k": "k",
+            "kTI": "k",
+            "kb": "k",
         }
     },
     "turbopark": {
@@ -79,7 +81,8 @@ WAKE_MODEL_MAPPING = {
         "parameters": {
             "alpha": "alpha",
             "beta": "beta",
-            "k": "k",
+            "kTI": "k",
+            "kb": "k",
         }
     },
 }
@@ -319,12 +322,22 @@ class WCompFoxes(WCompBase):
         yaw_angles = np.array([analyses["yaw_angles"]])
 
         wes_analysis = analyses
-        _velocity_model_mapping = WAKE_MODEL_MAPPING[wes_analysis["wake_model"]["velocity"]["name"]]
+        wake_model_name = wes_analysis["wake_model"]["velocity"]["name"]
+        _velocity_model_mapping = WAKE_MODEL_MAPPING[wake_model_name]
         _velocity_model = _velocity_model_mapping["model_ref"]
         _velocity_model_parameters = {
             k: wes_analysis["wake_model"]["velocity"]["parameters"][v]
             for k, v in _velocity_model_mapping["parameters"].items()
         }
+        _velocity_model_parameters["induction"] = "Betz"
+
+        if FV.KTI in _velocity_model_parameters:
+            kti = _velocity_model_parameters.pop(FV.KTI)
+            kb = _velocity_model_parameters.pop(FV.KB, 0.)
+            _velocity_model_parameters["k"] = None
+            mbook.turbine_models["kTI"] = kTI(kTI=kti, kb=kb)
+            for t in farm.turbines:
+                t.add_model("kTI")
 
         if wes_analysis["wake_model"]["deflection"]["name"] is not None:
             # NOTE: foxes supports only one deflection model, so there's no need to parse the
@@ -341,24 +354,30 @@ class WCompFoxes(WCompBase):
             # }
             # _deflection_model = _deflection_model(**_deflection_model_parameters)
             mbook.turbine_models["set_yawm"] = foxes.models.turbine_models.SetFarmVars()
-            mbook.turbine_models["set_yawm"].add_var(FV.YAWM, yaw_angles)
+            mbook.turbine_models["set_yawm"].add_var(FV.YAWM, -yaw_angles)
+            for t in farm.turbines:
+                t.insert_model(0, "set_yawm")
+                t.insert_model(1, "yawm2yaw")
             wake_frame="yawed"
+            # TODO: How to set axial_induction=Betz for deflection
+            # Does it need to be set for deflection?
         else:
             wake_frame="rotor_wd"
 
-        temp_model_name = "this_model"
-        mbook.wake_models[temp_model_name] = _velocity_model(
+        mbook.wake_models[wake_model_name] = _velocity_model(
             **_velocity_model_parameters,
             superposition="ws_quadratic"
         )
         # mbook.print_toc(subset="wake_models")
+
         return Downwind(
             mbook,
             farm,
             states,
             verbosity=0,
             rotor_model="grid16",
-            wake_models=[temp_model_name],
+            partial_wakes_model="rotor_points",
+            wake_models=[wake_model_name],
             wake_frame=wake_frame,
             **algo_pars
         )

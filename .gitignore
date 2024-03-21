@@ -24,3 +24,6 @@ _site/
 .jekyll-cache/
 _build
 _autosummary/
+
+# Test scripts
+test_foxes.py
