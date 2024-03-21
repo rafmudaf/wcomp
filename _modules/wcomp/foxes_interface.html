@@ -362,6 +362,7 @@ document.write(`
 <span class="kn">from</span> <span class="nn">foxes.input.farm_layout</span> <span class="kn">import</span> <span class="n">add_from_df</span>
 <span class="kn">from</span> <span class="nn">foxes.input.states</span> <span class="kn">import</span> <span class="n">StatesTable</span>
 <span class="kn">from</span> <span class="nn">foxes.models.turbine_types</span> <span class="kn">import</span> <span class="n">CpCtFromTwo</span>
+<span class="kn">from</span> <span class="nn">foxes.models.turbine_models</span> <span class="kn">import</span> <span class="n">kTI</span>
 <span class="kn">from</span> <span class="nn">foxes.output</span> <span class="kn">import</span> <span class="n">FlowPlots2D</span>
 <span class="kn">from</span> <span class="nn">foxes.models.model_book</span> <span class="kn">import</span> <span class="n">ModelBook</span>
 <span class="kn">from</span> <span class="nn">foxes.models.wake_models.wind</span> <span class="kn">import</span> <span class="n">JensenWake</span>
@@ -404,7 +405,8 @@ document.write(`
         <span class="s2">&quot;parameters&quot;</span><span class="p">:</span> <span class="p">{</span>
             <span class="s2">&quot;alpha&quot;</span><span class="p">:</span> <span class="s2">&quot;alpha&quot;</span><span class="p">,</span>
             <span class="s2">&quot;beta&quot;</span><span class="p">:</span> <span class="s2">&quot;beta&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;k&quot;</span><span class="p">:</span> <span class="s2">&quot;k&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;kTI&quot;</span><span class="p">:</span> <span class="s2">&quot;k&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;kb&quot;</span><span class="p">:</span> <span class="s2">&quot;k&quot;</span><span class="p">,</span>
         <span class="p">}</span>
     <span class="p">},</span>
     <span class="s2">&quot;turbopark&quot;</span><span class="p">:</span> <span class="p">{</span>
@@ -428,7 +430,8 @@ document.write(`
         <span class="s2">&quot;parameters&quot;</span><span class="p">:</span> <span class="p">{</span>
             <span class="s2">&quot;alpha&quot;</span><span class="p">:</span> <span class="s2">&quot;alpha&quot;</span><span class="p">,</span>
             <span class="s2">&quot;beta&quot;</span><span class="p">:</span> <span class="s2">&quot;beta&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;k&quot;</span><span class="p">:</span> <span class="s2">&quot;k&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;kTI&quot;</span><span class="p">:</span> <span class="s2">&quot;k&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;kb&quot;</span><span class="p">:</span> <span class="s2">&quot;k&quot;</span><span class="p">,</span>
         <span class="p">}</span>
     <span class="p">},</span>
 <span class="p">}</span>
@@ -681,12 +684,22 @@ document.write(`
         <span class="n">yaw_angles</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">analyses</span><span class="p">[</span><span class="s2">&quot;yaw_angles&quot;</span><span class="p">]])</span>
 
         <span class="n">wes_analysis</span> <span class="o">=</span> <span class="n">analyses</span>
-        <span class="n">_velocity_model_mapping</span> <span class="o">=</span> <span class="n">WAKE_MODEL_MAPPING</span><span class="p">[</span><span class="n">wes_analysis</span><span class="p">[</span><span class="s2">&quot;wake_model&quot;</span><span class="p">][</span><span class="s2">&quot;velocity&quot;</span><span class="p">][</span><span class="s2">&quot;name&quot;</span><span class="p">]]</span>
+        <span class="n">wake_model_name</span> <span class="o">=</span> <span class="n">wes_analysis</span><span class="p">[</span><span class="s2">&quot;wake_model&quot;</span><span class="p">][</span><span class="s2">&quot;velocity&quot;</span><span class="p">][</span><span class="s2">&quot;name&quot;</span><span class="p">]</span>
+        <span class="n">_velocity_model_mapping</span> <span class="o">=</span> <span class="n">WAKE_MODEL_MAPPING</span><span class="p">[</span><span class="n">wake_model_name</span><span class="p">]</span>
         <span class="n">_velocity_model</span> <span class="o">=</span> <span class="n">_velocity_model_mapping</span><span class="p">[</span><span class="s2">&quot;model_ref&quot;</span><span class="p">]</span>
         <span class="n">_velocity_model_parameters</span> <span class="o">=</span> <span class="p">{</span>
             <span class="n">k</span><span class="p">:</span> <span class="n">wes_analysis</span><span class="p">[</span><span class="s2">&quot;wake_model&quot;</span><span class="p">][</span><span class="s2">&quot;velocity&quot;</span><span class="p">][</span><span class="s2">&quot;parameters&quot;</span><span class="p">][</span><span class="n">v</span><span class="p">]</span>
             <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">_velocity_model_mapping</span><span class="p">[</span><span class="s2">&quot;parameters&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
         <span class="p">}</span>
+        <span class="n">_velocity_model_parameters</span><span class="p">[</span><span class="s2">&quot;induction&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;Betz&quot;</span>
+
+        <span class="k">if</span> <span class="n">FV</span><span class="o">.</span><span class="n">KTI</span> <span class="ow">in</span> <span class="n">_velocity_model_parameters</span><span class="p">:</span>
+            <span class="n">kti</span> <span class="o">=</span> <span class="n">_velocity_model_parameters</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">FV</span><span class="o">.</span><span class="n">KTI</span><span class="p">)</span>
+            <span class="n">kb</span> <span class="o">=</span> <span class="n">_velocity_model_parameters</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">FV</span><span class="o">.</span><span class="n">KB</span><span class="p">,</span> <span class="mf">0.</span><span class="p">)</span>
+            <span class="n">_velocity_model_parameters</span><span class="p">[</span><span class="s2">&quot;k&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="n">mbook</span><span class="o">.</span><span class="n">turbine_models</span><span class="p">[</span><span class="s2">&quot;kTI&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">kTI</span><span class="p">(</span><span class="n">kTI</span><span class="o">=</span><span class="n">kti</span><span class="p">,</span> <span class="n">kb</span><span class="o">=</span><span class="n">kb</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">farm</span><span class="o">.</span><span class="n">turbines</span><span class="p">:</span>
+                <span class="n">t</span><span class="o">.</span><span class="n">add_model</span><span class="p">(</span><span class="s2">&quot;kTI&quot;</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="n">wes_analysis</span><span class="p">[</span><span class="s2">&quot;wake_model&quot;</span><span class="p">][</span><span class="s2">&quot;deflection&quot;</span><span class="p">][</span><span class="s2">&quot;name&quot;</span><span class="p">]</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="c1"># NOTE: foxes supports only one deflection model, so there&#39;s no need to parse the</span>
@@ -703,24 +716,30 @@ document.write(`
             <span class="c1"># }</span>
             <span class="c1"># _deflection_model = _deflection_model(**_deflection_model_parameters)</span>
             <span class="n">mbook</span><span class="o">.</span><span class="n">turbine_models</span><span class="p">[</span><span class="s2">&quot;set_yawm&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">foxes</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">turbine_models</span><span class="o">.</span><span class="n">SetFarmVars</span><span class="p">()</span>
-            <span class="n">mbook</span><span class="o">.</span><span class="n">turbine_models</span><span class="p">[</span><span class="s2">&quot;set_yawm&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">add_var</span><span class="p">(</span><span class="n">FV</span><span class="o">.</span><span class="n">YAWM</span><span class="p">,</span> <span class="n">yaw_angles</span><span class="p">)</span>
+            <span class="n">mbook</span><span class="o">.</span><span class="n">turbine_models</span><span class="p">[</span><span class="s2">&quot;set_yawm&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">add_var</span><span class="p">(</span><span class="n">FV</span><span class="o">.</span><span class="n">YAWM</span><span class="p">,</span> <span class="o">-</span><span class="n">yaw_angles</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">farm</span><span class="o">.</span><span class="n">turbines</span><span class="p">:</span>
+                <span class="n">t</span><span class="o">.</span><span class="n">insert_model</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;set_yawm&quot;</span><span class="p">)</span>
+                <span class="n">t</span><span class="o">.</span><span class="n">insert_model</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;yawm2yaw&quot;</span><span class="p">)</span>
             <span class="n">wake_frame</span><span class="o">=</span><span class="s2">&quot;yawed&quot;</span>
+            <span class="c1"># TODO: How to set axial_induction=Betz for deflection</span>
+            <span class="c1"># Does it need to be set for deflection?</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">wake_frame</span><span class="o">=</span><span class="s2">&quot;rotor_wd&quot;</span>
 
-        <span class="n">temp_model_name</span> <span class="o">=</span> <span class="s2">&quot;this_model&quot;</span>
-        <span class="n">mbook</span><span class="o">.</span><span class="n">wake_models</span><span class="p">[</span><span class="n">temp_model_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">_velocity_model</span><span class="p">(</span>
+        <span class="n">mbook</span><span class="o">.</span><span class="n">wake_models</span><span class="p">[</span><span class="n">wake_model_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">_velocity_model</span><span class="p">(</span>
             <span class="o">**</span><span class="n">_velocity_model_parameters</span><span class="p">,</span>
             <span class="n">superposition</span><span class="o">=</span><span class="s2">&quot;ws_quadratic&quot;</span>
         <span class="p">)</span>
         <span class="c1"># mbook.print_toc(subset=&quot;wake_models&quot;)</span>
+
         <span class="k">return</span> <span class="n">Downwind</span><span class="p">(</span>
             <span class="n">mbook</span><span class="p">,</span>
             <span class="n">farm</span><span class="p">,</span>
             <span class="n">states</span><span class="p">,</span>
             <span class="n">verbosity</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
             <span class="n">rotor_model</span><span class="o">=</span><span class="s2">&quot;grid16&quot;</span><span class="p">,</span>
-            <span class="n">wake_models</span><span class="o">=</span><span class="p">[</span><span class="n">temp_model_name</span><span class="p">],</span>
+            <span class="n">partial_wakes_model</span><span class="o">=</span><span class="s2">&quot;rotor_points&quot;</span><span class="p">,</span>
+            <span class="n">wake_models</span><span class="o">=</span><span class="p">[</span><span class="n">wake_model_name</span><span class="p">],</span>
             <span class="n">wake_frame</span><span class="o">=</span><span class="n">wake_frame</span><span class="p">,</span>
             <span class="o">**</span><span class="n">algo_pars</span>
         <span class="p">)</span></div>
