@@ -11,8 +11,8 @@ from py_wake.wind_turbines.power_ct_functions import PowerCtFunctions
 
 from py_wake.literature.noj import Jensen_1983
 from py_wake.literature.gaussian_models import Bastankhah_PorteAgel_2014
-from py_wake.deflection_models import JimenezWakeDeflection
 from py_wake.literature.turbopark import Nygaard_2022
+from py_wake.deflection_models import JimenezWakeDeflection
 
 from windIO.utils.yml_utils import load_yaml
 
@@ -57,17 +57,15 @@ WAKE_MODEL_MAPPING = {
     },
 
     # Deflection model
-    # None: {
-    #     "model_ref": "none",
-    #     "parameters": {}
-    # },
     "jimenez": {
         "model_ref": JimenezWakeDeflection,
-        "parameters": {}    # No parameters
+        "parameters": {
+            "beta": "beta"
+        }
     },
     # "bastankhah2016_deflection": {
-    #     "model_ref": ,
-    #     "parameters": {}    # No parameters
+    #     "model_ref": ,     # NOT IMPLEMENTED
+    #     "parameters": {}
     # },
 }
 
@@ -92,17 +90,22 @@ class WCompPyWake(WCompBase):
             k: wes_analysis["wake_model"]["velocity"]["parameters"][v]
             for k, v in _velocity_model_mapping["parameters"].items()
         }
-
-        deflection_model = None
-
-        # added_args_velocity_deficit = {}
-        # if velocity_deficit 
+        if wes_analysis["wake_model"]["deflection"]["name"] is not None:
+            _deflection_model_mapping = WAKE_MODEL_MAPPING[wes_analysis["wake_model"]["deflection"]["name"]]
+            _deflection_model = _deflection_model_mapping["model_ref"]
+            _deflection_model_parameters = {
+                k: wes_analysis["wake_model"]["deflection"]["parameters"][v]
+                for k, v in _deflection_model_mapping["parameters"].items()
+            }
+            _deflection_model = _deflection_model(**_deflection_model_parameters)
+        else:
+            _deflection_model = None
 
         self.wfm = _velocity_model(
             site=self.site,
             windTurbines=self.wt,
             **_velocity_model_parameters,
-            deflectionModel=deflection_model,
+            deflectionModel=_deflection_model,
         )
         self.sim_res = self.wfm(
             self.x,

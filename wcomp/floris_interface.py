@@ -50,16 +50,10 @@ WAKE_MODEL_MAPPING = {
     },
 
     # Deflection model
-    None: {
-        "model_ref": "none",
-        "parameters": {}
-    },
     "jimenez": {
         "model_ref": "jimenez",
         "parameters": {
-            "ad": "ad",
-            "bd": "bd",
-            "kd": "kd",
+            "kd": "beta",
         }
     },
     "bastankhah2016_deflection": {
@@ -218,16 +212,17 @@ class WCompFloris(WCompBase):
             k: wes_analysis["wake_model"]["velocity"]["parameters"][v]
             for k, v in _velocity_model_mapping["parameters"].items()
         }
-
-        _deflection_model_mapping = WAKE_MODEL_MAPPING[wes_analysis["wake_model"]["deflection"]["name"]]
-        _deflection_model = _deflection_model_mapping["model_ref"]
-        if _deflection_model != "none":
+        if wes_analysis["wake_model"]["deflection"]["name"] is not None:
+            _deflection_model_mapping = WAKE_MODEL_MAPPING[wes_analysis["wake_model"]["deflection"]["name"]]
+            _deflection_model = _deflection_model_mapping["model_ref"]
             _deflection_model_parameters = {
                 k: wes_analysis["wake_model"]["deflection"]["parameters"][v]
                 for k, v in _deflection_model_mapping["parameters"].items()
             }
         else:
+            _deflection_model = "none"
             _deflection_model_parameters = {}
+
         new_dict['wake'] = {
             'model_strings': {
                 'combination_model': 'sosfs',

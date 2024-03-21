@@ -4,7 +4,7 @@ wind_farm: !include wind_farm.yaml
 attributes:
   analyses:
     yaw_angles:
-    - 12.0
+    - 10.0
     wake_model:
       velocity:
         name: jensen
@@ -13,6 +13,4 @@ attributes:
       deflection:
         name: jimenez
         parameters: 
-          kd: 0.05
-          ad: 0.0
-          bd: 0.0
+          beta: 0.1
