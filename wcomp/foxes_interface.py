@@ -190,7 +190,7 @@ class WCompFoxes(WCompBase):
         
         ovars = {v: v for v in data.columns if v != FV.WEIGHT}
         ovars.update({k: v for k, v in fixed_vars.items() if k not in data.columns})
-        
+
         return StatesTable(
             data,
             output_vars=ovars,
@@ -368,7 +368,7 @@ class WCompFoxes(WCompBase):
             superposition="ws_quadratic"
         )
         # mbook.print_toc(subset="wake_models")
-        
+
         return Downwind(
             mbook,
             farm,

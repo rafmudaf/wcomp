@@ -1,4 +1,4 @@
-G# python compiled files
+# python compiled files
 __pycache__/
 .cache
 *.ipynb_checkpoints
@@ -25,6 +25,5 @@ _site/
 _build
 _autosummary/
 
-
-
+# Test scripts
 test_foxes.py
