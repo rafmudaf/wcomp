@@ -11,7 +11,7 @@ attributes:
         parameters:
           alpha: 0.58
           beta: 0.077
-          k: 0.38
+          k: 0.022
       deflection:
         name:
         parameters: 

@@ -29,10 +29,10 @@ WAKE_MODEL_MAPPING = {
             "we": "alpha",
         }
     },
-    "bastankhah2014": {     # NOT IMPLEMENTED
-        "model_ref": None,
-        "parameters": {}
-    },
+    # "bastankhah2014": {     # NOT IMPLEMENTED
+    #     "model_ref": None,
+    #     "parameters": {}
+    # },
     "bastankhah2016": {
         "model_ref": "gauss",
         "parameters": {
@@ -74,10 +74,6 @@ WAKE_MODEL_MAPPING = {
         }
     },
 }
-
-# ASSUMPTION: FLORIS has a vertical and horizontal wake expansion rate for Bastankhah 2016, but foxes uses the same for both.
-# This is also mentioned in the paper in section 7 Model Predictions.
-# For simplicity in connecting the models, I'm setting FLORIS to use the same for both.
 
 basic_dict = {
     'name': 'Jensen-Jimenez',

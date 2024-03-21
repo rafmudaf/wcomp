@@ -6,14 +6,11 @@ import numpy as np
 import xarray as xr
 from py_wake import HorizontalGrid, XZGrid, YZGrid
 from py_wake.site.xrsite import XRSite
-from py_wake.wind_farm_models.engineering_models import EngineeringWindFarmModel
 from py_wake.wind_turbines import WindTurbine
 from py_wake.wind_turbines.power_ct_functions import PowerCtFunctions
 
-from py_wake.wind_farm_models.engineering_models import PropagateDownwind
 from py_wake.literature.noj import Jensen_1983
-from py_wake.literature.gaussian_models import Niayifar_PorteAgel_2016
-from py_wake.deficit_models.gaussian import BastankhahGaussianDeficit
+from py_wake.literature.gaussian_models import Bastankhah_PorteAgel_2014
 from py_wake.deflection_models import JimenezWakeDeflection
 from py_wake.literature.turbopark import Nygaard_2022
 
@@ -26,6 +23,12 @@ from .plotting import plot_plane, plot_profile
 # This dictionary maps generic model names in the windIO input file
 # to the tool's specific name. It also maps parameter names from the
 # referenced papers to the parameters in the implementation.
+# "windIO_model_name": {
+#   "model_ref": the current software's reference for this wake model,
+#   "parameters": {
+#       "model parameter": windIO parameter
+#   }
+# }
 WAKE_MODEL_MAPPING = {
 
     # Velocity models
@@ -35,20 +38,12 @@ WAKE_MODEL_MAPPING = {
             "k": "alpha",
         }
     },
-    # "niayifar-porteagel": {
-    #     "model_ref": Niayifar_PorteAgel_2016,
-    #     "parameters": {
-    #         "a1": "a0",
-    #         "a2": "a1",
-    #     }
-    # },
-    # "bastankhah2014": {
-    #     "model_ref": BastankhahGaussianDeficit,
-    #     "parameters": {
-    # #         "k": "a0",
-    # #         "a2": "a1",
-    #     }
-    # },
+    "bastankhah2014": {
+        "model_ref": Bastankhah_PorteAgel_2014,
+        "parameters": {
+            "k": "k_star",
+        }
+    },
     # "bastankhah2016": {     # NOT IMPLEMENTED
     #     "model_ref": None,
     #     "parameters": {

@@ -28,6 +28,12 @@ from .plotting import plot_plane, plot_profile
 # This dictionary maps generic model names in the windIO input file
 # to the tool's specific name. It also maps parameter names from the
 # referenced papers to the parameters in the implementation.
+# "windIO_model_name": {
+#   "model_ref": the current software's reference for this wake model,
+#   "parameters": {
+#       "model parameter": windIO parameter
+#   }
+# }
 WAKE_MODEL_MAPPING = {
 
     # Velocity models
@@ -37,12 +43,12 @@ WAKE_MODEL_MAPPING = {
             "k": "alpha",
         }
     },
-    # "bastankah2014": {
-    #     "model_ref": Bastankhah2014,
-    #     "parameters": {
-    #         "alpha": "k",
-    #     }
-    # },
+    "bastankhah2014": {
+        "model_ref": Bastankhah2014,
+        "parameters": {
+            "k": "k_star",
+        }
+    },
     "bastankhah2016": {
         "model_ref": Bastankhah2016,
         "parameters": {
