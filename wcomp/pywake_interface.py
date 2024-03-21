@@ -196,20 +196,13 @@ class WCompPyWake(WCompBase):
         y_coordinate: float,
         zmax: float
     ):
-        """
-        Args:
-            wind_direction (float): The wind direction to use for the visualization
-            resolution (tuple): The (x, y) resolution of the horizontal plane
-        """
         ax = plt.gca()
-
-        n_points = 20
 
         wake_data = self.sim_res.flow_map(
             XZGrid(
                 y=y_coordinate,
                 x=x_coordinate,
-                z=np.linspace(0, zmax, n_points),
+                z=np.linspace(0, zmax, self.N_POINTS_1D),
             ),
             wd=wind_direction,
             ws=None
@@ -238,23 +231,13 @@ class WCompPyWake(WCompBase):
         xmin: float,
         xmax: float
     ):
-        """
-        Args:
-            wind_direction (float): The wind direction to use for the visualization
-            resolution (tuple): The (x, y) resolution of the horizontal plane
-        """
         ax = plt.gca()
-
-        n_points_x = 50
-        # n_points_y = 50
 
         wake_data = self.sim_res.flow_map(
             XZGrid(
                 y=y_coordinate,
-                x=np.linspace(xmin, xmax, n_points_x),
+                x=np.linspace(xmin, xmax, self.N_POINTS_1D),
                 z=self.hub_height,
-                # resolution=100,  # Points in the x direction; z points are derived from this: z = np.arange(0, (1 + self.extend) * (h_i.max() + d_i.max() / 2), np.diff(x[:2])[0])
-                # resolution is not used in this case because I'm specifying x and z grids and the y location
                 # extend=1000
             ),
             wd=wind_direction,
@@ -289,11 +272,10 @@ class WCompPyWake(WCompBase):
     ):
         ax = plt.gca()
 
-        n_points = 20
         wake_data = self.sim_res.flow_map(
             YZGrid(
                 x=x_coordinate,
-                y=np.linspace(ymin, ymax, n_points),
+                y=np.linspace(ymin, ymax, self.N_POINTS_1D),
                 z=self.hub_height,
             ),
             wd=wind_direction,
@@ -320,21 +302,15 @@ class WCompPyWake(WCompBase):
 
     # 2D contour plots
 
-    def horizontal_contour(self, wind_direction: float, resolution: float) -> WakePlane:
-        """
-        Args:
-            wind_direction (float): The wind direction to use for the visualization
-            resolution (float): The spacial resolution of the horizontal plane
-        """
-
+    def horizontal_contour(self, wind_direction: float) -> WakePlane:
         x_min = np.min(self.sim_res.x) - 2 * self.rotor_diameter
         x_max = np.max(self.sim_res.x) + 10 * self.rotor_diameter
         y_min = np.min(self.sim_res.y) - 2 * self.rotor_diameter
         y_max = np.max(self.sim_res.y) + 2 * self.rotor_diameter
 
         grid = HorizontalGrid(
-            x=np.linspace(x_min, x_max, int((x_max - x_min) / resolution) + 1),
-            y=np.linspace(y_min, y_max, int((y_max - y_min) / resolution) + 1),
+            x=np.linspace(x_min, x_max, int((x_max - x_min) / self.RESOLUTION_2D) + 1),
+            y=np.linspace(y_min, y_max, int((y_max - y_min) / self.RESOLUTION_2D) + 1),
             h=self.hub_height,
         )
         flow_map = self.sim_res.flow_map(wd=wind_direction, grid=grid)
@@ -343,7 +319,7 @@ class WCompPyWake(WCompBase):
         y = flow_map.Y.flatten()
         u = flow_map.WS_eff.to_numpy().flatten()
 
-        plane = WakePlane(x, y, u, "z", resolution)
+        plane = WakePlane(x, y, u, "z")
         plot_plane(
             plane,
             ax=plt.gca(),
@@ -353,13 +329,7 @@ class WCompPyWake(WCompBase):
         )
         return plane
 
-    def xsection_contour(
-        self,
-        wind_direction: float,
-        resolution: float,
-        x_coordinate: float
-    ) -> WakePlane:
-
+    def xsection_contour(self, wind_direction: float, x_coordinate: float) -> WakePlane:
         y_min = np.min(self.sim_res.y) - 2 * self.rotor_diameter
         y_max = np.max(self.sim_res.y) + 2 * self.rotor_diameter
         z_min = 0.001
@@ -367,8 +337,8 @@ class WCompPyWake(WCompBase):
 
         grid = YZGrid(
             x=x_coordinate,
-            y=np.linspace(y_min, y_max, int((y_max - y_min) / resolution) + 1),
-            z=np.linspace(z_min, z_max, int((z_max - z_min) / resolution) + 1),
+            y=np.linspace(y_min, y_max, int((y_max - y_min) / self.RESOLUTION_2D) + 1),
+            z=np.linspace(z_min, z_max, int((z_max - z_min) / self.RESOLUTION_2D) + 1),
         )
         flow_map = self.sim_res.flow_map(wd=wind_direction, grid=grid)
 
@@ -376,7 +346,7 @@ class WCompPyWake(WCompBase):
         z = flow_map.Z.flatten()
         u = flow_map.WS_eff.to_numpy().flatten()
 
-        plane = WakePlane(y, z, u, "x", resolution)
+        plane = WakePlane(y, z, u, "x")
         plot_plane(
             plane,
             ax=plt.gca(),
