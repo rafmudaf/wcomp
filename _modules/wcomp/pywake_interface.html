@@ -355,14 +355,11 @@ document.write(`
 <span class="kn">import</span> <span class="nn">xarray</span> <span class="k">as</span> <span class="nn">xr</span>
 <span class="kn">from</span> <span class="nn">py_wake</span> <span class="kn">import</span> <span class="n">HorizontalGrid</span><span class="p">,</span> <span class="n">XZGrid</span><span class="p">,</span> <span class="n">YZGrid</span>
 <span class="kn">from</span> <span class="nn">py_wake.site.xrsite</span> <span class="kn">import</span> <span class="n">XRSite</span>
-<span class="kn">from</span> <span class="nn">py_wake.wind_farm_models.engineering_models</span> <span class="kn">import</span> <span class="n">EngineeringWindFarmModel</span>
 <span class="kn">from</span> <span class="nn">py_wake.wind_turbines</span> <span class="kn">import</span> <span class="n">WindTurbine</span>
 <span class="kn">from</span> <span class="nn">py_wake.wind_turbines.power_ct_functions</span> <span class="kn">import</span> <span class="n">PowerCtFunctions</span>
 
-<span class="kn">from</span> <span class="nn">py_wake.wind_farm_models.engineering_models</span> <span class="kn">import</span> <span class="n">PropagateDownwind</span>
 <span class="kn">from</span> <span class="nn">py_wake.literature.noj</span> <span class="kn">import</span> <span class="n">Jensen_1983</span>
-<span class="kn">from</span> <span class="nn">py_wake.literature.gaussian_models</span> <span class="kn">import</span> <span class="n">Niayifar_PorteAgel_2016</span>
-<span class="kn">from</span> <span class="nn">py_wake.deficit_models.gaussian</span> <span class="kn">import</span> <span class="n">BastankhahGaussianDeficit</span>
+<span class="kn">from</span> <span class="nn">py_wake.literature.gaussian_models</span> <span class="kn">import</span> <span class="n">Bastankhah_PorteAgel_2014</span>
 <span class="kn">from</span> <span class="nn">py_wake.deflection_models</span> <span class="kn">import</span> <span class="n">JimenezWakeDeflection</span>
 <span class="kn">from</span> <span class="nn">py_wake.literature.turbopark</span> <span class="kn">import</span> <span class="n">Nygaard_2022</span>
 
@@ -375,6 +372,12 @@ document.write(`
 <span class="c1"># This dictionary maps generic model names in the windIO input file</span>
 <span class="c1"># to the tool&#39;s specific name. It also maps parameter names from the</span>
 <span class="c1"># referenced papers to the parameters in the implementation.</span>
+<span class="c1"># &quot;windIO_model_name&quot;: {</span>
+<span class="c1">#   &quot;model_ref&quot;: the current software&#39;s reference for this wake model,</span>
+<span class="c1">#   &quot;parameters&quot;: {</span>
+<span class="c1">#       &quot;model parameter&quot;: windIO parameter</span>
+<span class="c1">#   }</span>
+<span class="c1"># }</span>
 <span class="n">WAKE_MODEL_MAPPING</span> <span class="o">=</span> <span class="p">{</span>
 
     <span class="c1"># Velocity models</span>
@@ -384,20 +387,12 @@ document.write(`
             <span class="s2">&quot;k&quot;</span><span class="p">:</span> <span class="s2">&quot;alpha&quot;</span><span class="p">,</span>
         <span class="p">}</span>
     <span class="p">},</span>
-    <span class="c1"># &quot;niayifar-porteagel&quot;: {</span>
-    <span class="c1">#     &quot;model_ref&quot;: Niayifar_PorteAgel_2016,</span>
-    <span class="c1">#     &quot;parameters&quot;: {</span>
-    <span class="c1">#         &quot;a1&quot;: &quot;a0&quot;,</span>
-    <span class="c1">#         &quot;a2&quot;: &quot;a1&quot;,</span>
-    <span class="c1">#     }</span>
-    <span class="c1"># },</span>
-    <span class="c1"># &quot;bastankhah2014&quot;: {</span>
-    <span class="c1">#     &quot;model_ref&quot;: BastankhahGaussianDeficit,</span>
-    <span class="c1">#     &quot;parameters&quot;: {</span>
-    <span class="c1"># #         &quot;k&quot;: &quot;a0&quot;,</span>
-    <span class="c1"># #         &quot;a2&quot;: &quot;a1&quot;,</span>
-    <span class="c1">#     }</span>
-    <span class="c1"># },</span>
+    <span class="s2">&quot;bastankhah2014&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">&quot;model_ref&quot;</span><span class="p">:</span> <span class="n">Bastankhah_PorteAgel_2014</span><span class="p">,</span>
+        <span class="s2">&quot;parameters&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">&quot;k&quot;</span><span class="p">:</span> <span class="s2">&quot;k_star&quot;</span><span class="p">,</span>
+        <span class="p">}</span>
+    <span class="p">},</span>
     <span class="c1"># &quot;bastankhah2016&quot;: {     # NOT IMPLEMENTED</span>
     <span class="c1">#     &quot;model_ref&quot;: None,</span>
     <span class="c1">#     &quot;parameters&quot;: {</span>

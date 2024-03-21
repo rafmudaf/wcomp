@@ -378,10 +378,10 @@ document.write(`
             <span class="s2">&quot;we&quot;</span><span class="p">:</span> <span class="s2">&quot;alpha&quot;</span><span class="p">,</span>
         <span class="p">}</span>
     <span class="p">},</span>
-    <span class="s2">&quot;bastankhah2014&quot;</span><span class="p">:</span> <span class="p">{</span>     <span class="c1"># NOT IMPLEMENTED</span>
-        <span class="s2">&quot;model_ref&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
-        <span class="s2">&quot;parameters&quot;</span><span class="p">:</span> <span class="p">{}</span>
-    <span class="p">},</span>
+    <span class="c1"># &quot;bastankhah2014&quot;: {     # NOT IMPLEMENTED</span>
+    <span class="c1">#     &quot;model_ref&quot;: None,</span>
+    <span class="c1">#     &quot;parameters&quot;: {}</span>
+    <span class="c1"># },</span>
     <span class="s2">&quot;bastankhah2016&quot;</span><span class="p">:</span> <span class="p">{</span>
         <span class="s2">&quot;model_ref&quot;</span><span class="p">:</span> <span class="s2">&quot;gauss&quot;</span><span class="p">,</span>
         <span class="s2">&quot;parameters&quot;</span><span class="p">:</span> <span class="p">{</span>
@@ -423,10 +423,6 @@ document.write(`
         <span class="p">}</span>
     <span class="p">},</span>
 <span class="p">}</span>
-
-<span class="c1"># ASSUMPTION: FLORIS has a vertical and horizontal wake expansion rate for Bastankhah 2016, but foxes uses the same for both.</span>
-<span class="c1"># This is also mentioned in the paper in section 7 Model Predictions.</span>
-<span class="c1"># For simplicity in connecting the models, I&#39;m setting FLORIS to use the same for both.</span>
 
 <span class="n">basic_dict</span> <span class="o">=</span> <span class="p">{</span>
     <span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;Jensen-Jimenez&#39;</span><span class="p">,</span>
