@@ -355,7 +355,10 @@ class WCompFoxes(WCompBase):
             # }
             # _deflection_model = _deflection_model(**_deflection_model_parameters)
             mbook.turbine_models["set_yawm"] = foxes.models.turbine_models.SetFarmVars()
-            mbook.turbine_models["set_yawm"].add_var(FV.YAWM, yaw_angles)
+            mbook.turbine_models["set_yawm"].add_var(FV.YAWM, -yaw_angles)
+            for t in farm.turbines:
+                t.insert_model(0, "set_yawm")
+                t.insert_model(1, "yawm2yaw")
             wake_frame="yawed"
         else:
             wake_frame="rotor_wd"
