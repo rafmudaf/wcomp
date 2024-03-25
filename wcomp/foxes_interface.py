@@ -56,8 +56,8 @@ WAKE_MODEL_MAPPING = {
         "parameters": {
             "alpha": "alpha",
             "beta": "beta",
-            "kTI": "k",
-            "kb": "k",
+            "kTI": "ka",
+            "kb": "kb",
         }
     },
     "turbopark": {
@@ -81,8 +81,8 @@ WAKE_MODEL_MAPPING = {
         "parameters": {
             "alpha": "alpha",
             "beta": "beta",
-            "kTI": "k",
-            "kb": "k",
+            "kTI": "ka",
+            "kb": "kb",
         }
     },
 }
