@@ -88,9 +88,3 @@ graph TD
 
 See the [Architecture](https://rafmudaf.github.io/wcomp/architecture.html) and
 [API documentation](https://rafmudaf.github.io/wcomp/api_docs.html) for more information.
-
-
-# Limitations
-- Can only use 1 turbine type
-    - Foxes calls the windIO input by a hard coded name, so any additional turbine type will overwrite the previous definition
-- windIO doesn't have a schema for model inputs, so these are currently hard coded in the code interfaces (WindIOCode-classes)

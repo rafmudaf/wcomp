@@ -92,7 +92,7 @@ class WCompFoxes(WCompBase):
     LINE_PLOT_COLOR = "red"
     LINE_PLOT_MARKER = ""
     LINE_PLOT_LINESTYLE = "--"
-    LEGEND = "Foxes"
+    LEGEND = "foxes"
 
     def __init__(self, input_file: str | Path):
         input_dictionary = load_yaml(input_file)
