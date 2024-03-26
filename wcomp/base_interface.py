@@ -92,7 +92,7 @@ class WCompBase(ABC):
         x_coordinate: float,
         y_coordinate: float,
         zmax: float
-    ) -> None:
+    ) -> WakeProfile:
         """
         This function produces a 1D plot of the velocity profile in the z-x plane
         where z is normal to the ground and x is streamwise. A sample line is produced
@@ -137,6 +137,8 @@ class WCompBase(ABC):
                     linestyle=self.LINE_PLOT_LINESTYLE,
                     label=self.LEGEND
                 )
+
+                return profile
         """
         raise NotImplementedError("WCompBase.vertical_profile_plot")
 
@@ -146,7 +148,7 @@ class WCompBase(ABC):
         y_coordinate: float,
         xmin: float,
         xmax: float
-    ) -> None:
+    ) -> WakeProfile:
         """
         This function produces a 1D plot of the velocity profile in the z-x plane
         where z is normal to the ground and x is streamwise. A sample line is produced
@@ -189,6 +191,8 @@ class WCompBase(ABC):
                     linestyle=self.LINE_PLOT_LINESTYLE,
                     label=self.LEGEND
                 )
+
+                return profile
         """
         raise NotImplementedError("WCompBase.streamwise_profile_plot")
 
@@ -242,6 +246,8 @@ class WCompBase(ABC):
                     linestyle=self.LINE_PLOT_LINESTYLE,
                     label=self.LEGEND
                 )
+
+                return profile
         """
         raise NotImplementedError("WCompBase.xsection_profile_plot")
 

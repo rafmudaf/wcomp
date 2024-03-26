@@ -440,7 +440,7 @@ class WCompFoxes(WCompBase):
         x_coordinate: float,
         y_coordinate: float,
         zmax: float
-    ):
+    ) -> WakeProfile:
         ax = plt.gca()
 
         # create points of interest, shape (n_states, n_points, 3):
@@ -464,7 +464,7 @@ class WCompFoxes(WCompBase):
             linestyle=self.LINE_PLOT_LINESTYLE,
             label=self.LEGEND
         )
-
+        return profile
 
     def streamwise_profile_plot(
         self,
@@ -472,7 +472,7 @@ class WCompFoxes(WCompBase):
         y_coordinate: float,
         xmin: float,
         xmax: float
-    ):
+    ) -> WakeProfile:
         ax = plt.gca()
 
         # create points of interest, shape (n_states, n_points, 3):
@@ -497,6 +497,7 @@ class WCompFoxes(WCompBase):
             linestyle=self.LINE_PLOT_LINESTYLE,
             label=self.LEGEND
         )
+        return profile
 
     def xsection_profile_plot(
         self,
@@ -504,7 +505,7 @@ class WCompFoxes(WCompBase):
         x_coordinate: float,
         ymin: float,
         ymax: float
-    ):
+    ) -> WakeProfile:
         ax = plt.gca()
 
         # create points of interest, shape (n_states, n_points, 3):
@@ -531,6 +532,7 @@ class WCompFoxes(WCompBase):
             linestyle=self.LINE_PLOT_LINESTYLE,
             label=self.LEGEND
         )
+        return profile
 
     # 2D contour plots
 

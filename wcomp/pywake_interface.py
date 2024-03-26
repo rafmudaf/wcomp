@@ -198,7 +198,7 @@ class WCompPyWake(WCompBase):
         x_coordinate: float,
         y_coordinate: float,
         zmax: float
-    ):
+    ) -> WakeProfile:
         ax = plt.gca()
 
         wake_data = self.sim_res.flow_map(
@@ -226,6 +226,7 @@ class WCompPyWake(WCompBase):
             linestyle=self.LINE_PLOT_LINESTYLE,
             label=self.LEGEND
         )
+        return profile
 
     def streamwise_profile_plot(
         self,
@@ -233,7 +234,7 @@ class WCompPyWake(WCompBase):
         y_coordinate: float,
         xmin: float,
         xmax: float
-    ):
+    ) -> WakeProfile:
         ax = plt.gca()
 
         wake_data = self.sim_res.flow_map(
@@ -265,6 +266,7 @@ class WCompPyWake(WCompBase):
             linestyle=self.LINE_PLOT_LINESTYLE,
             label=self.LEGEND
         )
+        return profile
 
     def xsection_profile_plot(
         self,
@@ -272,7 +274,7 @@ class WCompPyWake(WCompBase):
         x_coordinate: float,
         ymin: float,
         ymax: float
-    ):
+    ) -> WakeProfile:
         ax = plt.gca()
 
         wake_data = self.sim_res.flow_map(
@@ -302,6 +304,7 @@ class WCompPyWake(WCompBase):
             linestyle=self.LINE_PLOT_LINESTYLE,
             label=self.LEGEND
         )
+        return profile
 
     # 2D contour plots
 
