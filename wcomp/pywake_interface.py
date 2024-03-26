@@ -8,18 +8,26 @@ from py_wake import HorizontalGrid, XZGrid, YZGrid
 from py_wake.site.xrsite import XRSite
 from py_wake.wind_turbines import WindTurbine
 from py_wake.wind_turbines.power_ct_functions import PowerCtFunctions
+from py_wake.literature.noj import Jensen_1983
+from py_wake.literature.gaussian_models import Bastankhah_PorteAgel_2014
+from py_wake.literature.turbopark import Nygaard_2022
+from py_wake.deflection_models import JimenezWakeDeflection
 from py_wake.deficit_models.utils import ct2a_mom1d
 from py_wake.deficit_models.gaussian import TurboGaussianDeficit, BastankhahGaussianDeficit
 from py_wake.deficit_models.noj import NOJDeficit
 from py_wake.wind_farm_models import PropagateDownwind
 from py_wake.superposition_models import LinearSum, SquaredSum
-from py_wake.rotor_avg_models import RotorCenter, GridRotorAvg, EqGridRotorAvg, GQGridRotorAvg, CGIRotorAvg, PolarGridRotorAvg, PolarRotorAvg, polar_gauss_quadrature, GaussianOverlapAvgModel
-
-
-from py_wake.literature.noj import Jensen_1983
-from py_wake.literature.gaussian_models import Bastankhah_PorteAgel_2014
-from py_wake.literature.turbopark import Nygaard_2022
-from py_wake.deflection_models import JimenezWakeDeflection
+from py_wake.rotor_avg_models import (
+    RotorCenter,
+    GridRotorAvg,
+    EqGridRotorAvg,
+    GQGridRotorAvg,
+    CGIRotorAvg,
+    PolarGridRotorAvg,
+    PolarRotorAvg,
+    polar_gauss_quadrature,
+    GaussianOverlapAvgModel,
+)
 
 from windIO.utils.yml_utils import load_yaml
 
@@ -112,7 +120,11 @@ class WCompPyWake(WCompBase):
             site=self.site,
             windTurbines=self.wt,
             deflectionModel=_deflection_model,
-            wake_deficitModel=_velocity_model(**_velocity_model_parameters, use_effective_ws=True, ct2a=ct2a_mom1d),
+            wake_deficitModel=_velocity_model(
+                **_velocity_model_parameters,
+                use_effective_ws=True,
+                ct2a=ct2a_mom1d
+            ),
             superpositionModel=SquaredSum(),
             rotorAvgModel=GridRotorAvg()
         )
