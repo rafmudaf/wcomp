@@ -4,8 +4,8 @@ wind_farm: !include wind_farm.yaml
 attributes:
   analyses:
     yaw_angles:
-    - 0.0
-    - 0.0
+    - 10.0
+    - 10.0
     - 0.0
     - 0.0
     wake_model:
