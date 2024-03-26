@@ -8,6 +8,13 @@ from py_wake import HorizontalGrid, XZGrid, YZGrid
 from py_wake.site.xrsite import XRSite
 from py_wake.wind_turbines import WindTurbine
 from py_wake.wind_turbines.power_ct_functions import PowerCtFunctions
+from py_wake.deficit_models.utils import ct2a_mom1d
+from py_wake.deficit_models.gaussian import TurboGaussianDeficit, BastankhahGaussianDeficit
+from py_wake.deficit_models.noj import NOJDeficit
+from py_wake.wind_farm_models import PropagateDownwind
+from py_wake.superposition_models import LinearSum, SquaredSum
+from py_wake.rotor_avg_models import RotorCenter, GridRotorAvg, EqGridRotorAvg, GQGridRotorAvg, CGIRotorAvg, PolarGridRotorAvg, PolarRotorAvg, polar_gauss_quadrature, GaussianOverlapAvgModel
+
 
 from py_wake.literature.noj import Jensen_1983
 from py_wake.literature.gaussian_models import Bastankhah_PorteAgel_2014
@@ -33,13 +40,13 @@ WAKE_MODEL_MAPPING = {
 
     # Velocity models
     "jensen": {
-        "model_ref": Jensen_1983,
+        "model_ref": NOJDeficit,
         "parameters": {
             "k": "alpha",
         }
     },
     "bastankhah2014": {
-        "model_ref": Bastankhah_PorteAgel_2014,
+        "model_ref": BastankhahGaussianDeficit,
         "parameters": {
             "k": "k_star",
         }
@@ -50,7 +57,7 @@ WAKE_MODEL_MAPPING = {
     #     }
     # },
     "turbopark": {
-        "model_ref": Nygaard_2022,
+        "model_ref": TurboGaussianDeficit,
         "parameters": {
             "A": "A",
         }
@@ -101,11 +108,13 @@ class WCompPyWake(WCompBase):
         else:
             _deflection_model = None
 
-        self.wfm = _velocity_model(
+        self.wfm = PropagateDownwind(
             site=self.site,
             windTurbines=self.wt,
-            **_velocity_model_parameters,
             deflectionModel=_deflection_model,
+            wake_deficitModel=_velocity_model(**_velocity_model_parameters, use_effective_ws=True, ct2a=ct2a_mom1d),
+            superpositionModel=SquaredSum(),
+            rotorAvgModel=GridRotorAvg()
         )
         self.sim_res = self.wfm(
             self.x,
