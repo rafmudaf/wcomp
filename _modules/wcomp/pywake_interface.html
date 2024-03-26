@@ -358,11 +358,26 @@ document.write(`
 <span class="kn">from</span> <span class="nn">py_wake.site.xrsite</span> <span class="kn">import</span> <span class="n">XRSite</span>
 <span class="kn">from</span> <span class="nn">py_wake.wind_turbines</span> <span class="kn">import</span> <span class="n">WindTurbine</span>
 <span class="kn">from</span> <span class="nn">py_wake.wind_turbines.power_ct_functions</span> <span class="kn">import</span> <span class="n">PowerCtFunctions</span>
-
 <span class="kn">from</span> <span class="nn">py_wake.literature.noj</span> <span class="kn">import</span> <span class="n">Jensen_1983</span>
 <span class="kn">from</span> <span class="nn">py_wake.literature.gaussian_models</span> <span class="kn">import</span> <span class="n">Bastankhah_PorteAgel_2014</span>
 <span class="kn">from</span> <span class="nn">py_wake.literature.turbopark</span> <span class="kn">import</span> <span class="n">Nygaard_2022</span>
 <span class="kn">from</span> <span class="nn">py_wake.deflection_models</span> <span class="kn">import</span> <span class="n">JimenezWakeDeflection</span>
+<span class="kn">from</span> <span class="nn">py_wake.deficit_models.utils</span> <span class="kn">import</span> <span class="n">ct2a_mom1d</span>
+<span class="kn">from</span> <span class="nn">py_wake.deficit_models.gaussian</span> <span class="kn">import</span> <span class="n">TurboGaussianDeficit</span><span class="p">,</span> <span class="n">BastankhahGaussianDeficit</span>
+<span class="kn">from</span> <span class="nn">py_wake.deficit_models.noj</span> <span class="kn">import</span> <span class="n">NOJDeficit</span>
+<span class="kn">from</span> <span class="nn">py_wake.wind_farm_models</span> <span class="kn">import</span> <span class="n">PropagateDownwind</span>
+<span class="kn">from</span> <span class="nn">py_wake.superposition_models</span> <span class="kn">import</span> <span class="n">LinearSum</span><span class="p">,</span> <span class="n">SquaredSum</span>
+<span class="kn">from</span> <span class="nn">py_wake.rotor_avg_models</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">RotorCenter</span><span class="p">,</span>
+    <span class="n">GridRotorAvg</span><span class="p">,</span>
+    <span class="n">EqGridRotorAvg</span><span class="p">,</span>
+    <span class="n">GQGridRotorAvg</span><span class="p">,</span>
+    <span class="n">CGIRotorAvg</span><span class="p">,</span>
+    <span class="n">PolarGridRotorAvg</span><span class="p">,</span>
+    <span class="n">PolarRotorAvg</span><span class="p">,</span>
+    <span class="n">polar_gauss_quadrature</span><span class="p">,</span>
+    <span class="n">GaussianOverlapAvgModel</span><span class="p">,</span>
+<span class="p">)</span>
 
 <span class="kn">from</span> <span class="nn">windIO.utils.yml_utils</span> <span class="kn">import</span> <span class="n">load_yaml</span>
 
@@ -383,13 +398,13 @@ document.write(`
 
     <span class="c1"># Velocity models</span>
     <span class="s2">&quot;jensen&quot;</span><span class="p">:</span> <span class="p">{</span>
-        <span class="s2">&quot;model_ref&quot;</span><span class="p">:</span> <span class="n">Jensen_1983</span><span class="p">,</span>
+        <span class="s2">&quot;model_ref&quot;</span><span class="p">:</span> <span class="n">NOJDeficit</span><span class="p">,</span>
         <span class="s2">&quot;parameters&quot;</span><span class="p">:</span> <span class="p">{</span>
             <span class="s2">&quot;k&quot;</span><span class="p">:</span> <span class="s2">&quot;alpha&quot;</span><span class="p">,</span>
         <span class="p">}</span>
     <span class="p">},</span>
     <span class="s2">&quot;bastankhah2014&quot;</span><span class="p">:</span> <span class="p">{</span>
-        <span class="s2">&quot;model_ref&quot;</span><span class="p">:</span> <span class="n">Bastankhah_PorteAgel_2014</span><span class="p">,</span>
+        <span class="s2">&quot;model_ref&quot;</span><span class="p">:</span> <span class="n">BastankhahGaussianDeficit</span><span class="p">,</span>
         <span class="s2">&quot;parameters&quot;</span><span class="p">:</span> <span class="p">{</span>
             <span class="s2">&quot;k&quot;</span><span class="p">:</span> <span class="s2">&quot;k_star&quot;</span><span class="p">,</span>
         <span class="p">}</span>
@@ -400,7 +415,7 @@ document.write(`
     <span class="c1">#     }</span>
     <span class="c1"># },</span>
     <span class="s2">&quot;turbopark&quot;</span><span class="p">:</span> <span class="p">{</span>
-        <span class="s2">&quot;model_ref&quot;</span><span class="p">:</span> <span class="n">Nygaard_2022</span><span class="p">,</span>
+        <span class="s2">&quot;model_ref&quot;</span><span class="p">:</span> <span class="n">TurboGaussianDeficit</span><span class="p">,</span>
         <span class="s2">&quot;parameters&quot;</span><span class="p">:</span> <span class="p">{</span>
             <span class="s2">&quot;A&quot;</span><span class="p">:</span> <span class="s2">&quot;A&quot;</span><span class="p">,</span>
         <span class="p">}</span>
@@ -453,11 +468,17 @@ document.write(`
         <span class="k">else</span><span class="p">:</span>
             <span class="n">_deflection_model</span> <span class="o">=</span> <span class="kc">None</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">wfm</span> <span class="o">=</span> <span class="n">_velocity_model</span><span class="p">(</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">wfm</span> <span class="o">=</span> <span class="n">PropagateDownwind</span><span class="p">(</span>
             <span class="n">site</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">site</span><span class="p">,</span>
             <span class="n">windTurbines</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">wt</span><span class="p">,</span>
-            <span class="o">**</span><span class="n">_velocity_model_parameters</span><span class="p">,</span>
             <span class="n">deflectionModel</span><span class="o">=</span><span class="n">_deflection_model</span><span class="p">,</span>
+            <span class="n">wake_deficitModel</span><span class="o">=</span><span class="n">_velocity_model</span><span class="p">(</span>
+                <span class="o">**</span><span class="n">_velocity_model_parameters</span><span class="p">,</span>
+                <span class="n">use_effective_ws</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                <span class="n">ct2a</span><span class="o">=</span><span class="n">ct2a_mom1d</span>
+            <span class="p">),</span>
+            <span class="n">superpositionModel</span><span class="o">=</span><span class="n">SquaredSum</span><span class="p">(),</span>
+            <span class="n">rotorAvgModel</span><span class="o">=</span><span class="n">GridRotorAvg</span><span class="p">()</span>
         <span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">sim_res</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">wfm</span><span class="p">(</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">x</span><span class="p">,</span>
