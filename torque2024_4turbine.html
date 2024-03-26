@@ -442,7 +442,7 @@ The layout is:</p>
 <li><p>x: [0.0, 1200.0, 2400.0, 3600.0]</p></li>
 <li><p>y: [0.0, 0.0, 0.0, 0.0]</p></li>
 </ul>
-<p>The wind speed is 8 m/s and the wind direction is 270 degrees.</p>
+<p>The wind speed is 9.8 m/s and the wind direction is 270 degrees.</p>
 <p>The following analytical wake models are included in FLORIS, foxes, and PyWake.</p>
 <p><strong>Velocity Models</strong></p>
 <table class="table">
@@ -559,7 +559,15 @@ The layout is:</p>
 <span class="kn">from</span> <span class="nn">wcomp</span> <span class="kn">import</span> <span class="n">WCompFloris</span><span class="p">,</span> <span class="n">WCompPyWake</span><span class="p">,</span> <span class="n">WCompFoxes</span>
 <span class="kn">from</span> <span class="nn">wcomp.plotting</span> <span class="kn">import</span> <span class="n">plot_plane</span>
 
+<span class="c1"># Constants for all cases. Copy to a particular code block to change, as needed.</span>
 <span class="n">CASE_DIR</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s1">&#39;cases_torque2024/four_turbine&#39;</span><span class="p">)</span>
+<span class="n">this_case</span> <span class="o">=</span> <span class="n">CASE_DIR</span> <span class="o">/</span> <span class="n">Path</span><span class="p">(</span><span class="s1">&#39;jensen/wind_energy_system.yaml&#39;</span><span class="p">)</span>
+<span class="n">floris_case</span> <span class="o">=</span> <span class="n">WCompFloris</span><span class="p">(</span><span class="n">this_case</span><span class="p">)</span>
+<span class="n">ROTOR_D</span> <span class="o">=</span> <span class="n">floris_case</span><span class="o">.</span><span class="n">rotor_diameter</span>
+<span class="n">XMIN</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span> <span class="o">*</span> <span class="n">ROTOR_D</span>
+<span class="n">XMAX</span> <span class="o">=</span> <span class="p">(</span><span class="mi">20</span><span class="o">+</span><span class="mi">15</span><span class="p">)</span> <span class="o">*</span> <span class="n">ROTOR_D</span>
+<span class="n">YMIN</span> <span class="o">=</span> <span class="o">-</span><span class="mi">2</span> <span class="o">*</span> <span class="n">ROTOR_D</span>
+<span class="n">YMAX</span> <span class="o">=</span>  <span class="mi">2</span> <span class="o">*</span> <span class="n">ROTOR_D</span>
 </pre></div>
 </div>
 </div>
@@ -568,18 +576,9 @@ The layout is:</p>
 <h2>Case Layout<a class="headerlink" href="#case-layout" title="Link to this heading">#</a></h2>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">this_case</span> <span class="o">=</span> <span class="n">CASE_DIR</span> <span class="o">/</span> <span class="n">Path</span><span class="p">(</span><span class="s1">&#39;jensen/wind_energy_system.yaml&#39;</span><span class="p">)</span>
-<span class="n">floris_1turbine</span> <span class="o">=</span> <span class="n">WCompFloris</span><span class="p">(</span><span class="n">this_case</span><span class="p">)</span>
-
-<span class="n">ROTOR_D</span> <span class="o">=</span> <span class="n">floris_1turbine</span><span class="o">.</span><span class="n">rotor_diameter</span>
-
-<span class="n">y_turbine</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="o">-</span><span class="n">ROTOR_D</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span> <span class="n">ROTOR_D</span><span class="o">/</span><span class="mi">2</span><span class="p">])</span>
-<span class="n">XMIN</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span> <span class="o">*</span> <span class="n">ROTOR_D</span>
-<span class="n">XMAX</span> <span class="o">=</span> <span class="p">(</span><span class="mi">20</span><span class="o">+</span><span class="mi">15</span><span class="p">)</span> <span class="o">*</span> <span class="n">ROTOR_D</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">y_turbine</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="o">-</span><span class="n">ROTOR_D</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span> <span class="n">ROTOR_D</span><span class="o">/</span><span class="mi">2</span><span class="p">])</span>
 <span class="n">x_streamwise</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">XMIN</span><span class="p">,</span> <span class="n">XMAX</span><span class="p">])</span>
 <span class="n">y_streamwise</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">])</span>
-<span class="n">YMIN</span> <span class="o">=</span> <span class="o">-</span><span class="mi">2</span> <span class="o">*</span> <span class="n">ROTOR_D</span>
-<span class="n">YMAX</span> <span class="o">=</span>  <span class="mi">2</span> <span class="o">*</span> <span class="n">ROTOR_D</span>
 <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
 <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">y_turbine</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;black&quot;</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;-&#39;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
 <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">([</span><span class="mi">5</span><span class="o">*</span><span class="n">ROTOR_D</span><span class="p">,</span> <span class="mi">5</span><span class="o">*</span><span class="n">ROTOR_D</span><span class="p">],</span> <span class="n">y_turbine</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;black&quot;</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;-&#39;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
@@ -596,7 +595,7 @@ The layout is:</p>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.legend.Legend at 0x7faaba9aefc0&gt;
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.legend.Legend at 0x7fb96945a810&gt;
 </pre></div>
 </div>
 <img alt="_images/f818f75084d2362b96a535b49f7eb0df03b958d08f1f3d508995c09f603907de.png" src="_images/f818f75084d2362b96a535b49f7eb0df03b958d08f1f3d508995c09f603907de.png" />
@@ -622,13 +621,7 @@ foxes has a set of predefined Jensen wake models available, but you are expected
 <span class="n">foxes_1turbine</span> <span class="o">=</span> <span class="n">WCompFoxes</span><span class="p">(</span><span class="n">this_case</span><span class="p">)</span>
 <span class="n">pywake_1turbine</span> <span class="o">=</span> <span class="n">WCompPyWake</span><span class="p">(</span><span class="n">this_case</span><span class="p">)</span>
 
-<span class="n">ROTOR_D</span> <span class="o">=</span> <span class="n">floris_1turbine</span><span class="o">.</span><span class="n">rotor_diameter</span>
-
-<span class="n">XMIN</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span> <span class="o">*</span> <span class="n">ROTOR_D</span>
-<span class="n">XMAX</span> <span class="o">=</span> <span class="p">(</span><span class="mi">20</span><span class="o">+</span><span class="mi">15</span><span class="p">)</span> <span class="o">*</span> <span class="n">ROTOR_D</span>
-
 <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mf">12.8</span><span class="p">,</span> <span class="mf">4.8</span><span class="p">))</span>
-
 <span class="n">floris_1turbine</span><span class="o">.</span><span class="n">streamwise_profile_plot</span><span class="p">(</span><span class="n">wind_direction</span><span class="o">=</span><span class="mi">270</span><span class="p">,</span> <span class="n">y_coordinate</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">xmin</span><span class="o">=</span><span class="n">XMIN</span><span class="p">,</span> <span class="n">xmax</span><span class="o">=</span><span class="n">XMAX</span><span class="p">)</span>
 <span class="n">foxes_1turbine</span><span class="o">.</span><span class="n">streamwise_profile_plot</span><span class="p">(</span><span class="n">wind_direction</span><span class="o">=</span><span class="mi">270</span><span class="p">,</span> <span class="n">y_coordinate</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">xmin</span><span class="o">=</span><span class="n">XMIN</span><span class="p">,</span> <span class="n">xmax</span><span class="o">=</span><span class="n">XMAX</span><span class="p">)</span>
 <span class="n">pywake_1turbine</span><span class="o">.</span><span class="n">streamwise_profile_plot</span><span class="p">(</span><span class="n">wind_direction</span><span class="o">=</span><span class="mi">270</span><span class="p">,</span> <span class="n">y_coordinate</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">xmin</span><span class="o">=</span><span class="n">XMIN</span><span class="p">,</span> <span class="n">xmax</span><span class="o">=</span><span class="n">XMAX</span><span class="p">)</span>
@@ -652,14 +645,13 @@ foxes has a set of predefined Jensen wake models available, but you are expected
 <span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
 <span class="n">ax</span><span class="o">.</span><span class="n">grid</span><span class="p">()</span>
 
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Error norm:&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">e1</span><span class="p">,</span> <span class="nb">ord</span><span class="o">=</span><span class="mi">2</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">e2</span><span class="p">,</span> <span class="nb">ord</span><span class="o">=</span><span class="mi">2</span><span class="p">))</span>
 
-
-<span class="c1"># YMIN = -2 * ROTOR_D</span>
-<span class="c1"># YMAX =  2 * ROTOR_D</span>
 
 <span class="c1"># fig, ax = plt.subplots(3, 1)</span>
 <span class="c1"># fig.suptitle(&quot;Cross section velocity profile&quot;)</span>
-
 <span class="c1"># X_D = [1, 5, 10]</span>
 <span class="c1"># for i, D_X in enumerate(X_D):</span>
 <span class="c1">#     plt.axes(ax[i])</span>
@@ -685,6 +677,11 @@ Turbine 2, T2: windio_turbine
 Turbine 3, T3: windio_turbine
 </pre></div>
 </div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Error norm:
+2.6329332064277464
+5.233499981568422
+</pre></div>
+</div>
 <img alt="_images/0493715666422feafecd56a76d4e4732db0593535f792a5b5b505ac617c1090b.png" src="_images/0493715666422feafecd56a76d4e4732db0593535f792a5b5b505ac617c1090b.png" />
 </div>
 </div>
@@ -702,13 +699,7 @@ Turbine 3, T3: windio_turbine
 <span class="n">foxes_1turbine</span> <span class="o">=</span> <span class="n">WCompFoxes</span><span class="p">(</span><span class="n">this_case</span><span class="p">)</span>
 <span class="n">pywake_1turbine</span> <span class="o">=</span> <span class="n">WCompPyWake</span><span class="p">(</span><span class="n">this_case</span><span class="p">)</span>
 
-<span class="n">ROTOR_D</span> <span class="o">=</span> <span class="n">floris_1turbine</span><span class="o">.</span><span class="n">rotor_diameter</span>
-
-<span class="n">XMIN</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span> <span class="o">*</span> <span class="n">ROTOR_D</span>
-<span class="n">XMAX</span> <span class="o">=</span> <span class="p">(</span><span class="mi">20</span><span class="o">+</span><span class="mi">15</span><span class="p">)</span> <span class="o">*</span> <span class="n">ROTOR_D</span>
-
 <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mf">12.8</span><span class="p">,</span> <span class="mf">4.8</span><span class="p">))</span>
-
 <span class="c1"># floris_1turbine.streamwise_profile_plot(wind_direction=270, y_coordinate=0.0, xmin=XMIN, xmax=XMAX)</span>
 <span class="n">foxes_1turbine</span><span class="o">.</span><span class="n">streamwise_profile_plot</span><span class="p">(</span><span class="n">wind_direction</span><span class="o">=</span><span class="mi">270</span><span class="p">,</span> <span class="n">y_coordinate</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">xmin</span><span class="o">=</span><span class="n">XMIN</span><span class="p">,</span> <span class="n">xmax</span><span class="o">=</span><span class="n">XMAX</span><span class="p">)</span>
 <span class="n">pywake_1turbine</span><span class="o">.</span><span class="n">streamwise_profile_plot</span><span class="p">(</span><span class="n">wind_direction</span><span class="o">=</span><span class="mi">270</span><span class="p">,</span> <span class="n">y_coordinate</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">xmin</span><span class="o">=</span><span class="n">XMIN</span><span class="p">,</span> <span class="n">xmax</span><span class="o">=</span><span class="n">XMAX</span><span class="p">)</span>
@@ -729,13 +720,12 @@ Turbine 3, T3: windio_turbine
 <span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
 <span class="n">ax</span><span class="o">.</span><span class="n">grid</span><span class="p">()</span>
 
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Error norm:&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">e1</span><span class="p">,</span> <span class="nb">ord</span><span class="o">=</span><span class="mi">2</span><span class="p">))</span>
 
-<span class="c1"># YMIN = -2 * ROTOR_D</span>
-<span class="c1"># YMAX =  2 * ROTOR_D</span>
 
 <span class="c1"># fig, ax = plt.subplots(3, 1)</span>
 <span class="c1"># fig.suptitle(&quot;Cross section velocity profile&quot;)</span>
-
 <span class="c1"># X_D = [1, 5, 10]</span>
 <span class="c1"># for i, D_X in enumerate(X_D):</span>
 <span class="c1">#     plt.axes(ax[i])</span>
@@ -759,6 +749,8 @@ Turbine 3, T3: windio_turbine
 Turbine 1, T1: windio_turbine
 Turbine 2, T2: windio_turbine
 Turbine 3, T3: windio_turbine
+Error norm:
+13.600099693265118
 </pre></div>
 </div>
 <img alt="_images/50f4a1ccbb8d556f66cbe3e9470c2ec75a91d01f09cf4fd906ad839f6221f058.png" src="_images/50f4a1ccbb8d556f66cbe3e9470c2ec75a91d01f09cf4fd906ad839f6221f058.png" />
@@ -795,13 +787,7 @@ Where as Bastankhah / Porte Agel 2016 sets ky and kz directly as in the velocity
 <span class="n">foxes_1turbine</span> <span class="o">=</span> <span class="n">WCompFoxes</span><span class="p">(</span><span class="n">this_case</span><span class="p">)</span>
 <span class="c1"># pywake_1turbine = WCompPyWake(this_case)</span>
 
-<span class="n">ROTOR_D</span> <span class="o">=</span> <span class="n">floris_1turbine</span><span class="o">.</span><span class="n">rotor_diameter</span>
-
-<span class="n">XMIN</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span> <span class="o">*</span> <span class="n">ROTOR_D</span>
-<span class="n">XMAX</span> <span class="o">=</span> <span class="p">(</span><span class="mi">20</span><span class="o">+</span><span class="mi">15</span><span class="p">)</span> <span class="o">*</span> <span class="n">ROTOR_D</span>
-
 <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mf">12.8</span><span class="p">,</span> <span class="mf">4.8</span><span class="p">))</span>
-
 <span class="n">floris_1turbine</span><span class="o">.</span><span class="n">streamwise_profile_plot</span><span class="p">(</span><span class="n">wind_direction</span><span class="o">=</span><span class="mi">270</span><span class="p">,</span> <span class="n">y_coordinate</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">xmin</span><span class="o">=</span><span class="n">XMIN</span><span class="p">,</span> <span class="n">xmax</span><span class="o">=</span><span class="n">XMAX</span><span class="p">)</span>
 <span class="n">foxes_1turbine</span><span class="o">.</span><span class="n">streamwise_profile_plot</span><span class="p">(</span><span class="n">wind_direction</span><span class="o">=</span><span class="mi">270</span><span class="p">,</span> <span class="n">y_coordinate</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">xmin</span><span class="o">=</span><span class="n">XMIN</span><span class="p">,</span> <span class="n">xmax</span><span class="o">=</span><span class="n">XMAX</span><span class="p">)</span>
 <span class="c1"># pywake_1turbine.streamwise_profile_plot(wind_direction=270, y_coordinate=0.0, xmin=XMIN, xmax=XMAX)</span>
@@ -822,13 +808,12 @@ Where as Bastankhah / Porte Agel 2016 sets ky and kz directly as in the velocity
 <span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
 <span class="n">ax</span><span class="o">.</span><span class="n">grid</span><span class="p">()</span>
 
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Error norm:&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">e1</span><span class="p">,</span> <span class="nb">ord</span><span class="o">=</span><span class="mi">2</span><span class="p">))</span>
 
-<span class="c1"># YMIN = -2 * ROTOR_D</span>
-<span class="c1"># YMAX =  2 * ROTOR_D</span>
 
 <span class="c1"># fig, ax = plt.subplots(3, 1)</span>
 <span class="c1"># fig.suptitle(&quot;Cross section velocity profile&quot;)</span>
-
 <span class="c1"># X_D = [1, 5, 10]</span>
 <span class="c1"># for i, D_X in enumerate(X_D):</span>
 <span class="c1">#     plt.axes(ax[i])</span>
@@ -854,6 +839,10 @@ Turbine 2, T2: windio_turbine
 Turbine 3, T3: windio_turbine
 </pre></div>
 </div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Error norm:
+13.013058028397586
+</pre></div>
+</div>
 <img alt="_images/8a61eb96db4b9fa5e22458e373234d0b63bde47ec001ccf824e262588c64aa42.png" src="_images/8a61eb96db4b9fa5e22458e373234d0b63bde47ec001ccf824e262588c64aa42.png" />
 </div>
 </div>
@@ -871,13 +860,7 @@ Turbine 3, T3: windio_turbine
 <span class="n">foxes_1turbine</span> <span class="o">=</span> <span class="n">WCompFoxes</span><span class="p">(</span><span class="n">this_case</span><span class="p">)</span>
 <span class="n">pywake_1turbine</span> <span class="o">=</span> <span class="n">WCompPyWake</span><span class="p">(</span><span class="n">this_case</span><span class="p">)</span>
 
-<span class="n">ROTOR_D</span> <span class="o">=</span> <span class="n">floris_1turbine</span><span class="o">.</span><span class="n">rotor_diameter</span>
-
-<span class="n">XMIN</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span> <span class="o">*</span> <span class="n">ROTOR_D</span>
-<span class="n">XMAX</span> <span class="o">=</span> <span class="p">(</span><span class="mi">20</span><span class="o">+</span><span class="mi">15</span><span class="p">)</span> <span class="o">*</span> <span class="n">ROTOR_D</span>
-
 <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mf">12.8</span><span class="p">,</span> <span class="mf">4.8</span><span class="p">))</span>
-
 <span class="c1"># floris_1turbine.streamwise_profile_plot(wind_direction=270, y_coordinate=0.0, xmin=XMIN, xmax=XMAX)</span>
 <span class="n">foxes_1turbine</span><span class="o">.</span><span class="n">streamwise_profile_plot</span><span class="p">(</span><span class="n">wind_direction</span><span class="o">=</span><span class="mi">270</span><span class="p">,</span> <span class="n">y_coordinate</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">xmin</span><span class="o">=</span><span class="n">XMIN</span><span class="p">,</span> <span class="n">xmax</span><span class="o">=</span><span class="n">XMAX</span><span class="p">)</span>
 <span class="n">pywake_1turbine</span><span class="o">.</span><span class="n">streamwise_profile_plot</span><span class="p">(</span><span class="n">wind_direction</span><span class="o">=</span><span class="mi">270</span><span class="p">,</span> <span class="n">y_coordinate</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">xmin</span><span class="o">=</span><span class="n">XMIN</span><span class="p">,</span> <span class="n">xmax</span><span class="o">=</span><span class="n">XMAX</span><span class="p">)</span>
@@ -898,13 +881,12 @@ Turbine 3, T3: windio_turbine
 <span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
 <span class="n">ax</span><span class="o">.</span><span class="n">grid</span><span class="p">()</span>
 
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Error norm:&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">e1</span><span class="p">,</span> <span class="nb">ord</span><span class="o">=</span><span class="mi">2</span><span class="p">))</span>
 
-<span class="n">YMIN</span> <span class="o">=</span> <span class="o">-</span><span class="mi">2</span> <span class="o">*</span> <span class="n">ROTOR_D</span>
-<span class="n">YMAX</span> <span class="o">=</span>  <span class="mi">2</span> <span class="o">*</span> <span class="n">ROTOR_D</span>
 
 <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
 <span class="n">fig</span><span class="o">.</span><span class="n">suptitle</span><span class="p">(</span><span class="s2">&quot;Cross section velocity profile&quot;</span><span class="p">)</span>
-
 <span class="n">X_D</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">10</span><span class="p">]</span>
 <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">D_X</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">X_D</span><span class="p">):</span>
     <span class="n">plt</span><span class="o">.</span><span class="n">axes</span><span class="p">(</span><span class="n">ax</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
@@ -928,6 +910,10 @@ Turbine 3, T3: windio_turbine
 Turbine 1, T1: windio_turbine
 Turbine 2, T2: windio_turbine
 Turbine 3, T3: windio_turbine
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Error norm:
+15.50117858732295
 </pre></div>
 </div>
 <img alt="_images/6057332274d6a0a286d1b1533345051ffe04e682ee65ef9cf69d7e6949b8ba8e.png" src="_images/6057332274d6a0a286d1b1533345051ffe04e682ee65ef9cf69d7e6949b8ba8e.png" />
@@ -956,13 +942,7 @@ I've set kd to beta.</p>
 <span class="c1"># foxes_1turbine = WCompFoxes(this_case)</span>
 <span class="n">pywake_1turbine</span> <span class="o">=</span> <span class="n">WCompPyWake</span><span class="p">(</span><span class="n">this_case</span><span class="p">)</span>
 
-<span class="n">ROTOR_D</span> <span class="o">=</span> <span class="n">floris_1turbine</span><span class="o">.</span><span class="n">rotor_diameter</span>
-
-<span class="n">XMIN</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span> <span class="o">*</span> <span class="n">ROTOR_D</span>
-<span class="n">XMAX</span> <span class="o">=</span> <span class="p">(</span><span class="mi">20</span><span class="o">+</span><span class="mi">15</span><span class="p">)</span> <span class="o">*</span> <span class="n">ROTOR_D</span>
-
 <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mf">12.8</span><span class="p">,</span> <span class="mf">4.8</span><span class="p">))</span>
-
 <span class="n">floris_1turbine</span><span class="o">.</span><span class="n">streamwise_profile_plot</span><span class="p">(</span><span class="n">wind_direction</span><span class="o">=</span><span class="mi">270</span><span class="p">,</span> <span class="n">y_coordinate</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">xmin</span><span class="o">=</span><span class="n">XMIN</span><span class="p">,</span> <span class="n">xmax</span><span class="o">=</span><span class="n">XMAX</span><span class="p">)</span>
 <span class="c1"># foxes_1turbine.streamwise_profile_plot(wind_direction=270, y_coordinate=0.0, xmin=XMIN, xmax=XMAX)</span>
 <span class="n">pywake_1turbine</span><span class="o">.</span><span class="n">streamwise_profile_plot</span><span class="p">(</span><span class="n">wind_direction</span><span class="o">=</span><span class="mi">270</span><span class="p">,</span> <span class="n">y_coordinate</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">xmin</span><span class="o">=</span><span class="n">XMIN</span><span class="p">,</span> <span class="n">xmax</span><span class="o">=</span><span class="n">XMAX</span><span class="p">)</span>
@@ -983,13 +963,12 @@ I've set kd to beta.</p>
 <span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
 <span class="n">ax</span><span class="o">.</span><span class="n">grid</span><span class="p">()</span>
 
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Error norm:&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">e1</span><span class="p">,</span> <span class="nb">ord</span><span class="o">=</span><span class="mi">2</span><span class="p">))</span>
 
-<span class="c1"># YMIN = -2 * ROTOR_D</span>
-<span class="c1"># YMAX =  2 * ROTOR_D</span>
 
 <span class="c1"># fig, ax = plt.subplots(3, 1)</span>
 <span class="c1"># fig.suptitle(&quot;Cross section velocity profile&quot;)</span>
-
 <span class="c1"># X_D = [1, 5, 10]</span>
 <span class="c1"># for i, D_X in enumerate(X_D):</span>
 <span class="c1">#     plt.axes(ax[i])</span>
@@ -1061,12 +1040,13 @@ I've set kd to beta.</p>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.tri._tricontour.TriContourSet at 0x7faab4dd2a80&gt;
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Error norm:
+4.210662583368069
 </pre></div>
 </div>
 <img alt="_images/05a9edd3773a0f5f8213cc400330587f1e3e05b8e7d749d6e4e5908400db4de2.png" src="_images/05a9edd3773a0f5f8213cc400330587f1e3e05b8e7d749d6e4e5908400db4de2.png" />
 <img alt="_images/351ce72bd21372723d951478c5f1ca99378cb2faee0f4e56d3e74d64896eafe6.png" src="_images/351ce72bd21372723d951478c5f1ca99378cb2faee0f4e56d3e74d64896eafe6.png" />
-<img alt="_images/7744f0bc11b7bc65919ef7d0a03a43d801e913ba72c810bfd9a6d0361510776d.png" src="_images/7744f0bc11b7bc65919ef7d0a03a43d801e913ba72c810bfd9a6d0361510776d.png" />
+<img alt="_images/2066172602fec8663eb5c5204797f2b49958bb633f409260d7d20a1d09834a39.png" src="_images/2066172602fec8663eb5c5204797f2b49958bb633f409260d7d20a1d09834a39.png" />
 </div>
 </div>
 </section>
@@ -1101,13 +1081,7 @@ Where as Bastankhah / Porte Agel 2016 sets ky and kz directly as in the velocity
 <span class="n">foxes_1turbine</span> <span class="o">=</span> <span class="n">WCompFoxes</span><span class="p">(</span><span class="n">this_case</span><span class="p">)</span>
 <span class="c1"># pywake_1turbine = WCompPyWake(this_case)</span>
 
-<span class="n">ROTOR_D</span> <span class="o">=</span> <span class="n">floris_1turbine</span><span class="o">.</span><span class="n">rotor_diameter</span>
-
-<span class="n">XMIN</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span> <span class="o">*</span> <span class="n">ROTOR_D</span>
-<span class="n">XMAX</span> <span class="o">=</span> <span class="p">(</span><span class="mi">20</span><span class="o">+</span><span class="mi">15</span><span class="p">)</span> <span class="o">*</span> <span class="n">ROTOR_D</span>
-
 <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mf">12.8</span><span class="p">,</span> <span class="mf">4.8</span><span class="p">))</span>
-
 <span class="n">floris_1turbine</span><span class="o">.</span><span class="n">streamwise_profile_plot</span><span class="p">(</span><span class="n">wind_direction</span><span class="o">=</span><span class="mi">270</span><span class="p">,</span> <span class="n">y_coordinate</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">xmin</span><span class="o">=</span><span class="n">XMIN</span><span class="p">,</span> <span class="n">xmax</span><span class="o">=</span><span class="n">XMAX</span><span class="p">)</span>
 <span class="n">foxes_1turbine</span><span class="o">.</span><span class="n">streamwise_profile_plot</span><span class="p">(</span><span class="n">wind_direction</span><span class="o">=</span><span class="mi">270</span><span class="p">,</span> <span class="n">y_coordinate</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">xmin</span><span class="o">=</span><span class="n">XMIN</span><span class="p">,</span> <span class="n">xmax</span><span class="o">=</span><span class="n">XMAX</span><span class="p">)</span>
 <span class="c1"># pywake_1turbine.streamwise_profile_plot(wind_direction=270, y_coordinate=0.0, xmin=XMIN, xmax=XMAX)</span>
@@ -1124,13 +1098,12 @@ Where as Bastankhah / Porte Agel 2016 sets ky and kz directly as in the velocity
 <span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
 <span class="n">ax</span><span class="o">.</span><span class="n">grid</span><span class="p">()</span>
 
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Error norm:&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">e1</span><span class="p">,</span> <span class="nb">ord</span><span class="o">=</span><span class="mi">2</span><span class="p">))</span>
 
-<span class="c1"># YMIN = -2 * ROTOR_D</span>
-<span class="c1"># YMAX =  2 * ROTOR_D</span>
 
 <span class="c1"># fig, ax = plt.subplots(3, 1)</span>
 <span class="c1"># fig.suptitle(&quot;Cross section velocity profile&quot;)</span>
-
 <span class="c1"># X_D = [1, 5, 10]</span>
 <span class="c1"># for i, D_X in enumerate(X_D):</span>
 <span class="c1">#     plt.axes(ax[i])</span>
@@ -1208,12 +1181,13 @@ Turbine 2, T2: windio_turbine
 Turbine 3, T3: windio_turbine
 </pre></div>
 </div>
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.tri._tricontour.TriContourSet at 0x7faab7f07c50&gt;
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Error norm:
+12.375514689019521
 </pre></div>
 </div>
 <img alt="_images/29c215aef0904700ca85c084979b761e87f1f922f6fb8957d3f01445c3757678.png" src="_images/29c215aef0904700ca85c084979b761e87f1f922f6fb8957d3f01445c3757678.png" />
 <img alt="_images/24543f40fca6885635ded3f6e77288071eae39bf00ee55ad42e96149387b3960.png" src="_images/24543f40fca6885635ded3f6e77288071eae39bf00ee55ad42e96149387b3960.png" />
-<img alt="_images/6d2ac7fe22f66f1a38bb508908dfa55416629c8228f93f683c98d3119f5ad0c4.png" src="_images/6d2ac7fe22f66f1a38bb508908dfa55416629c8228f93f683c98d3119f5ad0c4.png" />
+<img alt="_images/7f7bba67fbf158c275f86e4f45d1d801a97183c2222206e696f8c73ab230ed5d.png" src="_images/7f7bba67fbf158c275f86e4f45d1d801a97183c2222206e696f8c73ab230ed5d.png" />
 </div>
 </div>
 </section>

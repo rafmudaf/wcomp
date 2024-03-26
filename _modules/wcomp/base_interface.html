@@ -449,7 +449,7 @@ document.write(`
         <span class="n">x_coordinate</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
         <span class="n">y_coordinate</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
         <span class="n">zmax</span><span class="p">:</span> <span class="nb">float</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">WakeProfile</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        This function produces a 1D plot of the velocity profile in the z-x plane</span>
 <span class="sd">        where z is normal to the ground and x is streamwise. A sample line is produced</span>
@@ -494,6 +494,8 @@ document.write(`
 <span class="sd">                    linestyle=self.LINE_PLOT_LINESTYLE,</span>
 <span class="sd">                    label=self.LEGEND</span>
 <span class="sd">                )</span>
+
+<span class="sd">                return profile</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;WCompBase.vertical_profile_plot&quot;</span><span class="p">)</span></div>
 
@@ -506,7 +508,7 @@ document.write(`
         <span class="n">y_coordinate</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
         <span class="n">xmin</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
         <span class="n">xmax</span><span class="p">:</span> <span class="nb">float</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">WakeProfile</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        This function produces a 1D plot of the velocity profile in the z-x plane</span>
 <span class="sd">        where z is normal to the ground and x is streamwise. A sample line is produced</span>
@@ -549,6 +551,8 @@ document.write(`
 <span class="sd">                    linestyle=self.LINE_PLOT_LINESTYLE,</span>
 <span class="sd">                    label=self.LEGEND</span>
 <span class="sd">                )</span>
+
+<span class="sd">                return profile</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;WCompBase.streamwise_profile_plot&quot;</span><span class="p">)</span></div>
 
@@ -605,6 +609,8 @@ document.write(`
 <span class="sd">                    linestyle=self.LINE_PLOT_LINESTYLE,</span>
 <span class="sd">                    label=self.LEGEND</span>
 <span class="sd">                )</span>
+
+<span class="sd">                return profile</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;WCompBase.xsection_profile_plot&quot;</span><span class="p">)</span></div>
 
