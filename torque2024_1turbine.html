@@ -561,6 +561,11 @@ document.write(`
 <span class="n">XMAX</span> <span class="o">=</span> <span class="mi">20</span> <span class="o">*</span> <span class="n">ROTOR_D</span>
 <span class="n">YMIN</span> <span class="o">=</span> <span class="o">-</span><span class="mi">2</span> <span class="o">*</span> <span class="n">ROTOR_D</span>
 <span class="n">YMAX</span> <span class="o">=</span>  <span class="mi">2</span> <span class="o">*</span> <span class="n">ROTOR_D</span>
+
+<span class="n">SAVE_FIGS</span> <span class="o">=</span> <span class="kc">False</span>
+<span class="n">SAVE_PATH</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s1">&#39;figures&#39;</span><span class="p">)</span>
+<span class="k">if</span> <span class="n">SAVE_FIGS</span><span class="p">:</span>
+    <span class="n">SAVE_PATH</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -589,13 +594,12 @@ document.write(`
 <span class="n">ax</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s1">&#39;equal&#39;</span><span class="p">)</span>
 <span class="n">ax</span><span class="o">.</span><span class="n">grid</span><span class="p">()</span>
 <span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+
+<span class="k">if</span> <span class="n">SAVE_FIGS</span><span class="p">:</span> <span class="n">fig</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">SAVE_PATH</span> <span class="o">/</span> <span class="n">Path</span><span class="p">(</span><span class="s1">&#39;1t config.png&#39;</span><span class="p">))</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.legend.Legend at 0x7fddd13be930&gt;
-</pre></div>
-</div>
 <img alt="_images/9c9d4850ea3ec3714e608688480e37b4109c0c0a66c94eaf48a91202afdddbb6.png" src="_images/9c9d4850ea3ec3714e608688480e37b4109c0c0a66c94eaf48a91202afdddbb6.png" />
 </div>
 </div>
@@ -640,6 +644,7 @@ foxes has a set of predefined Jensen wake models available, but you are expected
 <span class="n">ax</span><span class="o">.</span><span class="n">set_ybound</span><span class="p">(</span><span class="n">lower</span><span class="o">=</span><span class="mf">0.0</span><span class="p">)</span>
 <span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
 <span class="n">ax</span><span class="o">.</span><span class="n">grid</span><span class="p">()</span>
+<span class="k">if</span> <span class="n">SAVE_FIGS</span><span class="p">:</span> <span class="n">fig</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">SAVE_PATH</span> <span class="o">/</span> <span class="n">Path</span><span class="p">(</span><span class="s1">&#39;jensen 1t x.png&#39;</span><span class="p">))</span>
 
 <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Error norm:&quot;</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">e1</span><span class="p">,</span> <span class="nb">ord</span><span class="o">=</span><span class="mi">2</span><span class="p">))</span>
@@ -664,6 +669,7 @@ foxes has a set of predefined Jensen wake models available, but you are expected
         <span class="n">ax</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;Y (m)&quot;</span><span class="p">)</span>
         <span class="n">ax</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
 <span class="n">fig</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+<span class="k">if</span> <span class="n">SAVE_FIGS</span><span class="p">:</span> <span class="n">fig</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">SAVE_PATH</span> <span class="o">/</span> <span class="n">Path</span><span class="p">(</span><span class="s1">&#39;jensen 1t y.png&#39;</span><span class="p">))</span>
 </pre></div>
 </div>
 </div>
@@ -712,6 +718,7 @@ foxes has a set of predefined Jensen wake models available, but you are expected
 <span class="n">ax</span><span class="o">.</span><span class="n">set_ybound</span><span class="p">(</span><span class="n">lower</span><span class="o">=</span><span class="mf">0.0</span><span class="p">)</span>
 <span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
 <span class="n">ax</span><span class="o">.</span><span class="n">grid</span><span class="p">()</span>
+<span class="k">if</span> <span class="n">SAVE_FIGS</span><span class="p">:</span> <span class="n">fig</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">SAVE_PATH</span> <span class="o">/</span> <span class="n">Path</span><span class="p">(</span><span class="s1">&#39;b2014 1t x.png&#39;</span><span class="p">))</span>
 
 <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Error norm:&quot;</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">e1</span><span class="p">,</span> <span class="nb">ord</span><span class="o">=</span><span class="mi">2</span><span class="p">))</span>
@@ -735,6 +742,7 @@ foxes has a set of predefined Jensen wake models available, but you are expected
         <span class="n">ax</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;Y (m)&quot;</span><span class="p">)</span>
         <span class="n">ax</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
 <span class="n">fig</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+<span class="k">if</span> <span class="n">SAVE_FIGS</span><span class="p">:</span> <span class="n">fig</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">SAVE_PATH</span> <span class="o">/</span> <span class="n">Path</span><span class="p">(</span><span class="s1">&#39;b2014 1t y.png&#39;</span><span class="p">))</span>
 </pre></div>
 </div>
 </div>
@@ -799,6 +807,7 @@ Where as Bastankhah / Porte Agel 2016 sets ky and kz directly as in the velocity
 <span class="n">ax</span><span class="o">.</span><span class="n">set_ybound</span><span class="p">(</span><span class="n">lower</span><span class="o">=</span><span class="mf">0.0</span><span class="p">)</span>
 <span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
 <span class="n">ax</span><span class="o">.</span><span class="n">grid</span><span class="p">()</span>
+<span class="k">if</span> <span class="n">SAVE_FIGS</span><span class="p">:</span> <span class="n">fig</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">SAVE_PATH</span> <span class="o">/</span> <span class="n">Path</span><span class="p">(</span><span class="s1">&#39;b2016 1t x.png&#39;</span><span class="p">))</span>
 
 <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Error norm:&quot;</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">e1</span><span class="p">,</span> <span class="nb">ord</span><span class="o">=</span><span class="mi">2</span><span class="p">))</span>
@@ -822,6 +831,7 @@ Where as Bastankhah / Porte Agel 2016 sets ky and kz directly as in the velocity
         <span class="n">ax</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;Y (m)&quot;</span><span class="p">)</span>
         <span class="n">ax</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
 <span class="n">fig</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+<span class="k">if</span> <span class="n">SAVE_FIGS</span><span class="p">:</span> <span class="n">fig</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">SAVE_PATH</span> <span class="o">/</span> <span class="n">Path</span><span class="p">(</span><span class="s1">&#39;b2016 1t y.png&#39;</span><span class="p">))</span>
 </pre></div>
 </div>
 </div>
@@ -869,6 +879,7 @@ Where as Bastankhah / Porte Agel 2016 sets ky and kz directly as in the velocity
 <span class="n">ax</span><span class="o">.</span><span class="n">set_ybound</span><span class="p">(</span><span class="n">lower</span><span class="o">=</span><span class="mf">0.0</span><span class="p">)</span>
 <span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
 <span class="n">ax</span><span class="o">.</span><span class="n">grid</span><span class="p">()</span>
+<span class="k">if</span> <span class="n">SAVE_FIGS</span><span class="p">:</span> <span class="n">fig</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">SAVE_PATH</span> <span class="o">/</span> <span class="n">Path</span><span class="p">(</span><span class="s1">&#39;turbopark 1t x.png&#39;</span><span class="p">))</span>
 
 <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Error norm:&quot;</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">e1</span><span class="p">,</span> <span class="nb">ord</span><span class="o">=</span><span class="mi">2</span><span class="p">))</span>
@@ -892,6 +903,7 @@ Where as Bastankhah / Porte Agel 2016 sets ky and kz directly as in the velocity
         <span class="n">ax</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;Y (m)&quot;</span><span class="p">)</span>
         <span class="n">ax</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
 <span class="n">fig</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+<span class="k">if</span> <span class="n">SAVE_FIGS</span><span class="p">:</span> <span class="n">fig</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">SAVE_PATH</span> <span class="o">/</span> <span class="n">Path</span><span class="p">(</span><span class="s1">&#39;turbopark 1t y.png&#39;</span><span class="p">))</span>
 </pre></div>
 </div>
 </div>
@@ -947,6 +959,7 @@ I've set kd to beta.</p>
 <span class="n">ax</span><span class="o">.</span><span class="n">set_ybound</span><span class="p">(</span><span class="n">lower</span><span class="o">=</span><span class="mf">0.0</span><span class="p">)</span>
 <span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
 <span class="n">ax</span><span class="o">.</span><span class="n">grid</span><span class="p">()</span>
+<span class="k">if</span> <span class="n">SAVE_FIGS</span><span class="p">:</span> <span class="n">fig</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">SAVE_PATH</span> <span class="o">/</span> <span class="n">Path</span><span class="p">(</span><span class="s1">&#39;jimenez 1t x.png&#39;</span><span class="p">))</span>
 
 <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Error norm:&quot;</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">e1</span><span class="p">,</span> <span class="nb">ord</span><span class="o">=</span><span class="mi">2</span><span class="p">))</span>
@@ -970,6 +983,7 @@ I've set kd to beta.</p>
         <span class="n">ax</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;Y (m)&quot;</span><span class="p">)</span>
         <span class="n">ax</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
 <span class="n">fig</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+<span class="k">if</span> <span class="n">SAVE_FIGS</span><span class="p">:</span> <span class="n">fig</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">SAVE_PATH</span> <span class="o">/</span> <span class="n">Path</span><span class="p">(</span><span class="s1">&#39;jimenez 1t y.png&#39;</span><span class="p">))</span>
 
 <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
 <span class="n">fig</span><span class="o">.</span><span class="n">suptitle</span><span class="p">(</span><span class="s2">&quot;Horizontal streamwise velocity contour&quot;</span><span class="p">)</span>
@@ -1085,6 +1099,7 @@ Where as Bastankhah / Porte Agel 2016 sets ky and kz directly as in the velocity
 <span class="n">ax</span><span class="o">.</span><span class="n">set_ybound</span><span class="p">(</span><span class="n">lower</span><span class="o">=</span><span class="mf">0.0</span><span class="p">)</span>
 <span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
 <span class="n">ax</span><span class="o">.</span><span class="n">grid</span><span class="p">()</span>
+<span class="k">if</span> <span class="n">SAVE_FIGS</span><span class="p">:</span> <span class="n">fig</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">SAVE_PATH</span> <span class="o">/</span> <span class="n">Path</span><span class="p">(</span><span class="s1">&#39;b2016 deflection 1t x.png&#39;</span><span class="p">))</span>
 
 <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Error norm:&quot;</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">e1</span><span class="p">,</span> <span class="nb">ord</span><span class="o">=</span><span class="mi">2</span><span class="p">))</span>
@@ -1108,6 +1123,7 @@ Where as Bastankhah / Porte Agel 2016 sets ky and kz directly as in the velocity
         <span class="n">ax</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;Y (m)&quot;</span><span class="p">)</span>
         <span class="n">ax</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
 <span class="n">fig</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+<span class="k">if</span> <span class="n">SAVE_FIGS</span><span class="p">:</span> <span class="n">fig</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">SAVE_PATH</span> <span class="o">/</span> <span class="n">Path</span><span class="p">(</span><span class="s1">&#39;b2016 deflection 1t y.png&#39;</span><span class="p">))</span>
 
 <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
 <span class="n">fig</span><span class="o">.</span><span class="n">suptitle</span><span class="p">(</span><span class="s2">&quot;Horizontal streamwise velocity contour&quot;</span><span class="p">)</span>
