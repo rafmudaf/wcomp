@@ -1,4 +1,5 @@
 
+import matplotlib
 import matplotlib.pyplot as plt
 
 from .output_struct import WakePlane, WakeProfile
@@ -26,50 +27,51 @@ def plot_profile(
 
 def plot_plane(
     wake_plane: WakePlane,
-    ax=None,
-    min_speed=None,
-    max_speed=None,
-    cmap="coolwarm",
-    levels=None,
-    clevels=None,
-    color_bar=False,
+    ax: matplotlib.axes.Axes = None,
+    min_speed: float = None,
+    max_speed: float = None,
+    cmap: str = "coolwarm",
+    clevels: int = None,
+    color_bar: bool = False,
+    title: str = None,
     **kwargs
-):
+) -> None:
     """
-    Generate pseudocolor mesh plot of the cut_plane.
+    Plot the data in a WakePlane object on a 2D contour plot.
 
     Args:
-        cut_plane (:py:class:`~.tools.cut_plane.CutPlane`): 2D
-            plane through wind plant.
-        ax (:py:class:`matplotlib.pyplot.axes`, optional): Figure axes. Defaults
-            to None.
-        vel_component (str, optional): The velocity component that the cut plane is
-            perpendicular to.
-        min_speed (float, optional): Minimum value of wind speed for
-            contours. Defaults to None.
-        max_speed (float, optional): Maximum value of wind speed for
-            contours. Defaults to None.
-        cmap (str, optional): Colormap specifier. Defaults to
-            'coolwarm'.
-        levels (np.array, optional): Contour levels for line contour plot.
+        wake_plane (WakePlane): Data structure containing the sample data on a plane.
+        ax (matplotlib.axes.Axes, optional): matplotlib Axes to place the plot. Defaults to None.
+            If None, a new figure and axes are created.
+        min_speed (float, optional): Minimum value of wind speed for the contour plot color range.
+            Defaults to None. If None, the minimum value in the data is used.
+        max_speed (float, optional): Maximum value of wind speed for the contour plot color range.
+            Defaults to None. If None, the maximum value in the data is used.
+        cmap (str, optional): Colormap name from
+            https://matplotlib.org/stable/users/explain/colors/colormaps.html.
+            Defaults to "coolwarm".
+        clevels (int or array-like, optional):
+            From the matplotlib documentation:
+            Determines the number and positions of the contour lines / regions.
+            If an int n, use MaxNLocator, which tries to automatically choose no more than n+1
+            "nice" contour levels between between minimum and maximum numeric values of Z.
+            If array-like, draw contour lines at the specified levels.
+            The values must be in increasing order.
+            Reference: https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.tricontourf.html.
             Defaults to None.
-        clevels (np.array, optional): Contour levels for tricontourf plot.
-            Defaults to None.
-        color_bar (Boolean, optional): Flag to include a color bar on the plot.
+        color_bar (bool, optional): Flag to enable displaying a color bar for this Axes.
             Defaults to False.
-        title (str, optional): User-supplied title for the plot. Defaults to "".
-        **kwargs: Additional parameters to pass to line contour plot.
-
-    Returns:
-        im (:py:class:`matplotlib.plt.pcolormesh`): Image handle.
+        title (str, optional): Title for this Axes. Defaults to None.
+        kwargs: Additional parameters passed to pyplot.tricontourf.
+            See https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.tricontourf.html
+            for available parameters.
     """
 
     if not ax:
         fig, ax = plt.subplots()
 
-    # Allow separate number of levels for tricontourf and for line_contour
-    if clevels is None:
-        clevels = levels
+    if title:
+        ax.set_title(title)
 
     im = ax.tricontourf(
         wake_plane.x1,
@@ -81,6 +83,7 @@ def plot_plane(
         cmap=cmap,
         extend="neither",
         # norm=colors.CenteredNorm()
+        **kwargs
     )
 
     if wake_plane.normal_vector == "x":
@@ -92,5 +95,3 @@ def plot_plane(
 
     # Make equal axis
     ax.set_aspect("equal")
-
-    return im
