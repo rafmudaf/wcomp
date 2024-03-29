@@ -16,7 +16,12 @@ class WCompBase(ABC):
     """
 
     LINE_PLOT_COLOR = "OVERWRITE"   # Color to use for all line plots; use matplotlib color codes
+    LINE_PLOT_MARKER = ""           # Marker to use for all line plots; use matplotlib marker codes
+    LINE_PLOT_LINESTYLE = "--"      # Line style to use for all line plots; use matplotlib line style codes
+    LINE_PLOT_LINEWIDTH = 2         # Line width to use for all line plots
     LEGEND = "OVERWRITE"            # Legend entry; typically should be the name of the corresponding software
+
+    # These generally do not need to be changed in the subclass
     N_POINTS_1D = 100               # Number of points to use for 1D line plots
     RESOLUTION_2D = 10              # Resolution for 2D contour plots in meters
 

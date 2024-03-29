@@ -133,6 +133,7 @@ class WCompFloris(WCompBase):
     LINE_PLOT_COLOR = "green"
     LINE_PLOT_MARKER = ""
     LINE_PLOT_LINESTYLE = "--"
+    LINE_PLOT_LINEWIDTH = 2
     LEGEND = "Floris"
 
     def __init__(self, input_file: str | Path):
@@ -282,6 +283,7 @@ class WCompFloris(WCompBase):
             color=self.LINE_PLOT_COLOR,
             marker=self.LINE_PLOT_MARKER,
             linestyle=self.LINE_PLOT_LINESTYLE,
+            linewidth=self.LINE_PLOT_LINEWIDTH,
             label=self.LEGEND
         )
         return profile
@@ -316,6 +318,7 @@ class WCompFloris(WCompBase):
             color=self.LINE_PLOT_COLOR,
             marker=self.LINE_PLOT_MARKER,
             linestyle=self.LINE_PLOT_LINESTYLE,
+            linewidth=self.LINE_PLOT_LINEWIDTH,
             label=self.LEGEND
         )
         return profile
@@ -350,6 +353,7 @@ class WCompFloris(WCompBase):
             color=self.LINE_PLOT_COLOR,
             marker=self.LINE_PLOT_MARKER,
             linestyle=self.LINE_PLOT_LINESTYLE,
+            linewidth=self.LINE_PLOT_LINEWIDTH,
             label=self.LEGEND
         )
         return profile
