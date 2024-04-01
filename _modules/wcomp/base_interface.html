@@ -368,7 +368,12 @@ document.write(`
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">LINE_PLOT_COLOR</span> <span class="o">=</span> <span class="s2">&quot;OVERWRITE&quot;</span>   <span class="c1"># Color to use for all line plots; use matplotlib color codes</span>
+    <span class="n">LINE_PLOT_MARKER</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>           <span class="c1"># Marker to use for all line plots; use matplotlib marker codes</span>
+    <span class="n">LINE_PLOT_LINESTYLE</span> <span class="o">=</span> <span class="s2">&quot;--&quot;</span>      <span class="c1"># Line style to use for all line plots; use matplotlib line style codes</span>
+    <span class="n">LINE_PLOT_LINEWIDTH</span> <span class="o">=</span> <span class="mi">2</span>         <span class="c1"># Line width to use for all line plots</span>
     <span class="n">LEGEND</span> <span class="o">=</span> <span class="s2">&quot;OVERWRITE&quot;</span>            <span class="c1"># Legend entry; typically should be the name of the corresponding software</span>
+
+    <span class="c1"># These generally do not need to be changed in the subclass</span>
     <span class="n">N_POINTS_1D</span> <span class="o">=</span> <span class="mi">100</span>               <span class="c1"># Number of points to use for 1D line plots</span>
     <span class="n">RESOLUTION_2D</span> <span class="o">=</span> <span class="mi">10</span>              <span class="c1"># Resolution for 2D contour plots in meters</span>
 

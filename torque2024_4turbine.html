@@ -559,6 +559,20 @@ The layout is:</p>
 <span class="kn">from</span> <span class="nn">wcomp</span> <span class="kn">import</span> <span class="n">WCompFloris</span><span class="p">,</span> <span class="n">WCompPyWake</span><span class="p">,</span> <span class="n">WCompFoxes</span>
 <span class="kn">from</span> <span class="nn">wcomp.plotting</span> <span class="kn">import</span> <span class="n">plot_plane</span>
 
+<span class="c1"># plot settings</span>
+<span class="n">ERROR_LINEWIDTH</span> <span class="o">=</span> <span class="mf">1.0</span>
+
+<span class="n">SMALL_SIZE</span> <span class="o">=</span> <span class="mi">10</span>
+<span class="n">MEDIUM_SIZE</span> <span class="o">=</span> <span class="mi">12</span>
+<span class="n">BIGGER_SIZE</span> <span class="o">=</span> <span class="mi">14</span>
+<span class="c1"># plt.rc(&#39;font&#39;, size=SMALL_SIZE)          # controls default text sizes</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">rc</span><span class="p">(</span><span class="s1">&#39;xtick&#39;</span><span class="p">,</span> <span class="n">labelsize</span><span class="o">=</span><span class="n">SMALL_SIZE</span><span class="p">)</span>    <span class="c1"># fontsize of the tick labels</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">rc</span><span class="p">(</span><span class="s1">&#39;ytick&#39;</span><span class="p">,</span> <span class="n">labelsize</span><span class="o">=</span><span class="n">SMALL_SIZE</span><span class="p">)</span>    <span class="c1"># fontsize of the tick labels</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">rc</span><span class="p">(</span><span class="s1">&#39;axes&#39;</span><span class="p">,</span> <span class="n">labelsize</span><span class="o">=</span><span class="n">MEDIUM_SIZE</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">rc</span><span class="p">(</span><span class="s1">&#39;axes&#39;</span><span class="p">,</span> <span class="n">titlesize</span><span class="o">=</span><span class="n">BIGGER_SIZE</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">rc</span><span class="p">(</span><span class="s1">&#39;legend&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="n">MEDIUM_SIZE</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">rc</span><span class="p">(</span><span class="s1">&#39;figure&#39;</span><span class="p">,</span> <span class="n">titlesize</span><span class="o">=</span><span class="n">BIGGER_SIZE</span><span class="p">)</span>
+
 <span class="c1"># Constants for all cases. Copy to a particular code block to change, as needed.</span>
 <span class="n">CASE_DIR</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s1">&#39;cases_torque2024/four_turbine&#39;</span><span class="p">)</span>
 <span class="n">this_case</span> <span class="o">=</span> <span class="n">CASE_DIR</span> <span class="o">/</span> <span class="n">Path</span><span class="p">(</span><span class="s1">&#39;jensen/wind_energy_system.yaml&#39;</span><span class="p">)</span>
@@ -569,7 +583,7 @@ The layout is:</p>
 <span class="n">YMIN</span> <span class="o">=</span> <span class="o">-</span><span class="mi">2</span> <span class="o">*</span> <span class="n">ROTOR_D</span>
 <span class="n">YMAX</span> <span class="o">=</span>  <span class="mi">2</span> <span class="o">*</span> <span class="n">ROTOR_D</span>
 
-<span class="n">SAVE_FIGS</span> <span class="o">=</span> <span class="kc">False</span>
+<span class="n">SAVE_FIGS</span> <span class="o">=</span> <span class="kc">True</span>
 <span class="n">SAVE_PATH</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s1">&#39;figures&#39;</span><span class="p">)</span>
 <span class="k">if</span> <span class="n">SAVE_FIGS</span><span class="p">:</span>
     <span class="n">SAVE_PATH</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
@@ -584,15 +598,16 @@ The layout is:</p>
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">y_turbine</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="o">-</span><span class="n">ROTOR_D</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span> <span class="n">ROTOR_D</span><span class="o">/</span><span class="mi">2</span><span class="p">])</span>
 <span class="n">x_streamwise</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">XMIN</span><span class="p">,</span> <span class="n">XMAX</span><span class="p">])</span>
 <span class="n">y_streamwise</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">])</span>
-<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">y_turbine</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;black&quot;</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;-&#39;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">([</span><span class="mi">5</span><span class="o">*</span><span class="n">ROTOR_D</span><span class="p">,</span> <span class="mi">5</span><span class="o">*</span><span class="n">ROTOR_D</span><span class="p">],</span> <span class="n">y_turbine</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;black&quot;</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;-&#39;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">([</span><span class="mi">10</span><span class="o">*</span><span class="n">ROTOR_D</span><span class="p">,</span> <span class="mi">10</span><span class="o">*</span><span class="n">ROTOR_D</span><span class="p">],</span> <span class="n">y_turbine</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;black&quot;</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;-&#39;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">([</span><span class="mi">15</span><span class="o">*</span><span class="n">ROTOR_D</span><span class="p">,</span> <span class="mi">15</span><span class="o">*</span><span class="n">ROTOR_D</span><span class="p">],</span> <span class="n">y_turbine</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;black&quot;</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;-&#39;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Turbine locations&quot;</span><span class="p">)</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x_streamwise</span><span class="p">,</span> <span class="n">y_streamwise</span><span class="p">,</span> <span class="s1">&#39;-.&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;black&#39;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Streamwise velocity profile&quot;</span><span class="p">)</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;4-turbine velocity profiles&quot;</span><span class="p">)</span>
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">y_turbine</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;black&quot;</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;-&#39;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">([</span><span class="mi">5</span><span class="o">*</span><span class="n">ROTOR_D</span><span class="p">,</span> <span class="mi">5</span><span class="o">*</span><span class="n">ROTOR_D</span><span class="p">],</span> <span class="n">y_turbine</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;black&quot;</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;-&#39;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">([</span><span class="mi">10</span><span class="o">*</span><span class="n">ROTOR_D</span><span class="p">,</span> <span class="mi">10</span><span class="o">*</span><span class="n">ROTOR_D</span><span class="p">],</span> <span class="n">y_turbine</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;black&quot;</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;-&#39;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">([</span><span class="mi">15</span><span class="o">*</span><span class="n">ROTOR_D</span><span class="p">,</span> <span class="mi">15</span><span class="o">*</span><span class="n">ROTOR_D</span><span class="p">],</span> <span class="n">y_turbine</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;black&quot;</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;-&#39;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Turbine locations&quot;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x_streamwise</span><span class="p">,</span> <span class="n">y_streamwise</span><span class="p">,</span> <span class="s1">&#39;-.&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;black&#39;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Streamwise velocity profile&quot;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;Four-turbine velocity profiles&quot;</span><span class="p">)</span>
 <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;X (m)&quot;</span><span class="p">)</span>
 <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;Y (m)&quot;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">([</span><span class="o">-</span><span class="mi">1000</span><span class="p">,</span> <span class="mi">1000</span><span class="p">])</span>
 <span class="n">ax</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s1">&#39;equal&#39;</span><span class="p">)</span>
 <span class="n">ax</span><span class="o">.</span><span class="n">grid</span><span class="p">()</span>
 <span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
@@ -602,7 +617,7 @@ The layout is:</p>
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="_images/f818f75084d2362b96a535b49f7eb0df03b958d08f1f3d508995c09f603907de.png" src="_images/f818f75084d2362b96a535b49f7eb0df03b958d08f1f3d508995c09f603907de.png" />
+<img alt="_images/e582a2cc76822317d2e562bfa2f13e6495dd6f246f2cf9662b359b2071dd635e.png" src="_images/e582a2cc76822317d2e562bfa2f13e6495dd6f246f2cf9662b359b2071dd635e.png" />
 </div>
 </div>
 </section>
@@ -640,9 +655,9 @@ foxes has a set of predefined Jensen wake models available, but you are expected
 <span class="n">e1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">y1</span> <span class="o">-</span> <span class="n">y2</span><span class="p">)</span>
 <span class="n">e2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">y2</span> <span class="o">-</span> <span class="n">y3</span><span class="p">)</span>
 <span class="n">emax</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">([</span><span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">e1</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">e2</span><span class="p">)])</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x1</span><span class="p">,</span> <span class="n">e1</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;black&quot;</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;-.&#39;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;|Floris - foxes|&quot;</span><span class="p">)</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x1</span><span class="p">,</span> <span class="n">e2</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;black&quot;</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;:&#39;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;|foxes - PyWake|&quot;</span><span class="p">)</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;4-turbine streamwise velocity profile&quot;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x1</span><span class="p">,</span> <span class="n">e1</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;black&quot;</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;-.&#39;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="n">ERROR_LINEWIDTH</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;|Floris - foxes|&quot;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x1</span><span class="p">,</span> <span class="n">e2</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;black&quot;</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;:&#39;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="n">ERROR_LINEWIDTH</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;|foxes - PyWake|&quot;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;Four-turbine streamwise velocity profile&quot;</span><span class="p">)</span>
 <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;X (m)&quot;</span><span class="p">)</span>
 <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;U (m/s)&#39;</span><span class="p">)</span>
 <span class="n">ax</span><span class="o">.</span><span class="n">set_ybound</span><span class="p">(</span><span class="n">lower</span><span class="o">=</span><span class="mf">0.0</span><span class="p">)</span>
@@ -687,7 +702,7 @@ Turbine 3, T3: windio_turbine
 3.5667386439657554
 </pre></div>
 </div>
-<img alt="_images/6b5ca1ce685a873c6056aaaf56c881e337f16d98797cda7ba348bb7d837a97b8.png" src="_images/6b5ca1ce685a873c6056aaaf56c881e337f16d98797cda7ba348bb7d837a97b8.png" />
+<img alt="_images/9b734ebe61cdfe9f60c46cb8b1575bcd548030aa4faed747fe2910c18d180c9a.png" src="_images/9b734ebe61cdfe9f60c46cb8b1575bcd548030aa4faed747fe2910c18d180c9a.png" />
 </div>
 </div>
 </section>
@@ -717,8 +732,8 @@ Turbine 3, T3: windio_turbine
 <span class="n">x2</span><span class="p">,</span> <span class="n">y2</span> <span class="o">=</span> <span class="n">lines</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">get_data</span><span class="p">()</span>
 <span class="n">e1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">y1</span> <span class="o">-</span> <span class="n">y2</span><span class="p">)</span>
 <span class="n">emax</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">([</span><span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">e1</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">e2</span><span class="p">)])</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x1</span><span class="p">,</span> <span class="n">e1</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;black&quot;</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;-.&#39;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;|foxes - PyWake|&quot;</span><span class="p">)</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;4-turbine streamwise velocity profile&quot;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x1</span><span class="p">,</span> <span class="n">e1</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;black&quot;</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;-.&#39;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="n">ERROR_LINEWIDTH</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;|foxes - PyWake|&quot;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;Four-turbine streamwise velocity profile&quot;</span><span class="p">)</span>
 <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;X (m)&quot;</span><span class="p">)</span>
 <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;U (m/s)&#39;</span><span class="p">)</span>
 <span class="n">ax</span><span class="o">.</span><span class="n">set_ybound</span><span class="p">(</span><span class="n">lower</span><span class="o">=</span><span class="mf">0.0</span><span class="p">)</span>
@@ -755,11 +770,13 @@ Turbine 3, T3: windio_turbine
 Turbine 1, T1: windio_turbine
 Turbine 2, T2: windio_turbine
 Turbine 3, T3: windio_turbine
-Error norm:
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Error norm:
 4.925589047967199
 </pre></div>
 </div>
-<img alt="_images/64b72cc14312a6df7274524e5b29543ea0ac8598310fb4ce2664e534f80c7f35.png" src="_images/64b72cc14312a6df7274524e5b29543ea0ac8598310fb4ce2664e534f80c7f35.png" />
+<img alt="_images/cbbb12929657e720b837c7d1fd8d7e5a9a1183271a04fefb179a1f228a6cc88f.png" src="_images/cbbb12929657e720b837c7d1fd8d7e5a9a1183271a04fefb179a1f228a6cc88f.png" />
 </div>
 </div>
 </section>
@@ -806,8 +823,8 @@ Where as Bastankhah / Porte Agel 2016 sets ky and kz directly as in the velocity
 <span class="n">x2</span><span class="p">,</span> <span class="n">y2</span> <span class="o">=</span> <span class="n">lines</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">get_data</span><span class="p">()</span>
 <span class="n">e1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">y1</span> <span class="o">-</span> <span class="n">y2</span><span class="p">)</span>
 <span class="n">emax</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">([</span><span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">e1</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">e2</span><span class="p">)])</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x1</span><span class="p">,</span> <span class="n">e1</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;black&quot;</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;-.&#39;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;|FLORIS - foxes|&quot;</span><span class="p">)</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;4-turbine streamwise velocity profile&quot;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x1</span><span class="p">,</span> <span class="n">e1</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;black&quot;</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;-.&#39;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="n">ERROR_LINEWIDTH</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;|FLORIS - foxes|&quot;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;Four-turbine streamwise velocity profile&quot;</span><span class="p">)</span>
 <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;X (m)&quot;</span><span class="p">)</span>
 <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;U (m/s)&#39;</span><span class="p">)</span>
 <span class="n">ax</span><span class="o">.</span><span class="n">set_ybound</span><span class="p">(</span><span class="n">lower</span><span class="o">=</span><span class="mf">0.0</span><span class="p">)</span>
@@ -850,7 +867,7 @@ Turbine 3, T3: windio_turbine
 13.013058028397586
 </pre></div>
 </div>
-<img alt="_images/8a61eb96db4b9fa5e22458e373234d0b63bde47ec001ccf824e262588c64aa42.png" src="_images/8a61eb96db4b9fa5e22458e373234d0b63bde47ec001ccf824e262588c64aa42.png" />
+<img alt="_images/53a15a362baf820a48f92981943197fdbb981cb4839549a1ec7b5e32238d49e5.png" src="_images/53a15a362baf820a48f92981943197fdbb981cb4839549a1ec7b5e32238d49e5.png" />
 </div>
 </div>
 </section>
@@ -880,8 +897,8 @@ Turbine 3, T3: windio_turbine
 <span class="n">x2</span><span class="p">,</span> <span class="n">y2</span> <span class="o">=</span> <span class="n">lines</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">get_data</span><span class="p">()</span>
 <span class="n">e1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">y1</span> <span class="o">-</span> <span class="n">y2</span><span class="p">)</span>
 <span class="n">emax</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">([</span><span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">e1</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">e2</span><span class="p">)])</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x1</span><span class="p">,</span> <span class="n">e1</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;black&quot;</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;-.&#39;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;|foxes - PyWake|&quot;</span><span class="p">)</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;4-turbine streamwise velocity profile&quot;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x1</span><span class="p">,</span> <span class="n">e1</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;black&quot;</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;-.&#39;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="n">ERROR_LINEWIDTH</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;|foxes - PyWake|&quot;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;Four-turbine streamwise velocity profile&quot;</span><span class="p">)</span>
 <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;X (m)&quot;</span><span class="p">)</span>
 <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;U (m/s)&#39;</span><span class="p">)</span>
 <span class="n">ax</span><span class="o">.</span><span class="n">set_ybound</span><span class="p">(</span><span class="n">lower</span><span class="o">=</span><span class="mf">0.0</span><span class="p">)</span>
@@ -918,12 +935,14 @@ Turbine 3, T3: windio_turbine
 Turbine 1, T1: windio_turbine
 Turbine 2, T2: windio_turbine
 Turbine 3, T3: windio_turbine
-Error norm:
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Error norm:
 3.3160717557378208
 </pre></div>
 </div>
-<img alt="_images/c3fbc39210c10d3f7e921c42534a77ef7147380884267a75f5ac34f013a16e1f.png" src="_images/c3fbc39210c10d3f7e921c42534a77ef7147380884267a75f5ac34f013a16e1f.png" />
-<img alt="_images/5c8fc18422270c414bb6d89383221352c6785c9c9dfebb1ddde902e50295097a.png" src="_images/5c8fc18422270c414bb6d89383221352c6785c9c9dfebb1ddde902e50295097a.png" />
+<img alt="_images/6dc99bcd45804c9493d71d187f2ec5899e23cbcda90608b53edf2ea32b456628.png" src="_images/6dc99bcd45804c9493d71d187f2ec5899e23cbcda90608b53edf2ea32b456628.png" />
+<img alt="_images/8fdb6248dad10327a1cd76e9f38a2ce05d5ad61e89b3e47af23926f5903ec9bf.png" src="_images/8fdb6248dad10327a1cd76e9f38a2ce05d5ad61e89b3e47af23926f5903ec9bf.png" />
 </div>
 </div>
 </section>
@@ -961,8 +980,8 @@ I've set kd to beta.</p>
 <span class="n">x2</span><span class="p">,</span> <span class="n">y2</span> <span class="o">=</span> <span class="n">lines</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">get_data</span><span class="p">()</span>
 <span class="n">e1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">y1</span> <span class="o">-</span> <span class="n">y2</span><span class="p">)</span>
 <span class="n">emax</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">([</span><span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">e1</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">e2</span><span class="p">)])</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x1</span><span class="p">,</span> <span class="n">e1</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;black&quot;</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;-.&#39;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;|FLORIS - PyWake|&quot;</span><span class="p">)</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;4-turbine streamwise velocity profile&quot;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x1</span><span class="p">,</span> <span class="n">e1</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;black&quot;</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;-.&#39;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="n">ERROR_LINEWIDTH</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;|FLORIS - PyWake|&quot;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;Four-turbine streamwise velocity profile&quot;</span><span class="p">)</span>
 <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;X (m)&quot;</span><span class="p">)</span>
 <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;U (m/s)&#39;</span><span class="p">)</span>
 <span class="n">ax</span><span class="o">.</span><span class="n">set_ybound</span><span class="p">(</span><span class="n">lower</span><span class="o">=</span><span class="mf">0.0</span><span class="p">)</span>
@@ -1051,9 +1070,9 @@ I've set kd to beta.</p>
 4.274196853600336
 </pre></div>
 </div>
-<img alt="_images/5ed3a4e00e01bef54401008cca2d674ac43eb339ab7d250eeb8c152ce888cda0.png" src="_images/5ed3a4e00e01bef54401008cca2d674ac43eb339ab7d250eeb8c152ce888cda0.png" />
-<img alt="_images/275c89393d75649a3247cb0e9ead0a5e575924eaf36eb73e9aa2e306decb6fd0.png" src="_images/275c89393d75649a3247cb0e9ead0a5e575924eaf36eb73e9aa2e306decb6fd0.png" />
-<img alt="_images/ca8b824fb41ac31871df559ece999bffa38d3c865ed4574bf11ac8b10a13d166.png" src="_images/ca8b824fb41ac31871df559ece999bffa38d3c865ed4574bf11ac8b10a13d166.png" />
+<img alt="_images/a66f847c6170187a57642ca2ebc2a3f98c7943171a743ba0021e724c44a3f8b6.png" src="_images/a66f847c6170187a57642ca2ebc2a3f98c7943171a743ba0021e724c44a3f8b6.png" />
+<img alt="_images/a8a6ec3076355c63b54ed2aa3cb32bf5bacdf8ce22c6d00c7cda72c993614f13.png" src="_images/a8a6ec3076355c63b54ed2aa3cb32bf5bacdf8ce22c6d00c7cda72c993614f13.png" />
+<img alt="_images/79e7afe68e169857a671fb1b770753df61fdce701558374e5ca04464c5b5a310.png" src="_images/79e7afe68e169857a671fb1b770753df61fdce701558374e5ca04464c5b5a310.png" />
 </div>
 </div>
 </section>
@@ -1097,8 +1116,8 @@ Where as Bastankhah / Porte Agel 2016 sets ky and kz directly as in the velocity
 <span class="n">x2</span><span class="p">,</span> <span class="n">y2</span> <span class="o">=</span> <span class="n">lines</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">get_data</span><span class="p">()</span>
 <span class="n">e1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">y1</span> <span class="o">-</span> <span class="n">y2</span><span class="p">)</span>
 <span class="n">emax</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">([</span><span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">e1</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">e2</span><span class="p">)])</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x1</span><span class="p">,</span> <span class="n">e1</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;black&quot;</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;-.&#39;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;|FLORIS - foxes|&quot;</span><span class="p">)</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;4-turbine streamwise velocity profile&quot;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x1</span><span class="p">,</span> <span class="n">e1</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;black&quot;</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;-.&#39;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="n">ERROR_LINEWIDTH</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;|FLORIS - foxes|&quot;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;Four-turbine streamwise velocity profile&quot;</span><span class="p">)</span>
 <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;X (m)&quot;</span><span class="p">)</span>
 <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;U (m/s)&#39;</span><span class="p">)</span>
 <span class="n">ax</span><span class="o">.</span><span class="n">set_ybound</span><span class="p">(</span><span class="n">lower</span><span class="o">=</span><span class="mf">0.0</span><span class="p">)</span>
@@ -1193,9 +1212,9 @@ Turbine 3, T3: windio_turbine
 12.375514689019521
 </pre></div>
 </div>
-<img alt="_images/29c215aef0904700ca85c084979b761e87f1f922f6fb8957d3f01445c3757678.png" src="_images/29c215aef0904700ca85c084979b761e87f1f922f6fb8957d3f01445c3757678.png" />
-<img alt="_images/24543f40fca6885635ded3f6e77288071eae39bf00ee55ad42e96149387b3960.png" src="_images/24543f40fca6885635ded3f6e77288071eae39bf00ee55ad42e96149387b3960.png" />
-<img alt="_images/7f7bba67fbf158c275f86e4f45d1d801a97183c2222206e696f8c73ab230ed5d.png" src="_images/7f7bba67fbf158c275f86e4f45d1d801a97183c2222206e696f8c73ab230ed5d.png" />
+<img alt="_images/b29274ce06161fdef90eaa5b30b90addf1700e2e687e69e5c04b1c03e2c6db54.png" src="_images/b29274ce06161fdef90eaa5b30b90addf1700e2e687e69e5c04b1c03e2c6db54.png" />
+<img alt="_images/3b87d38e969705d7f0c7148b74d068a5be8d8e40932ddc893c4d50da63c30080.png" src="_images/3b87d38e969705d7f0c7148b74d068a5be8d8e40932ddc893c4d50da63c30080.png" />
+<img alt="_images/e5945566b820365d6b2c12a5029e043d56eabbe7839513dc03b1c5bc390610d2.png" src="_images/e5945566b820365d6b2c12a5029e043d56eabbe7839513dc03b1c5bc390610d2.png" />
 </div>
 </div>
 </section>
