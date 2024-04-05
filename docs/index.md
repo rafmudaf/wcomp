@@ -21,8 +21,8 @@ Any wind farm wake modeling software that implements the `wcomp` interface can b
 in the comparison directly.
 
 The wake modeling software currently integrated to `wcomp` are:
-- [Floris](https://github.com/NREL/floris)
-- [foxes](https://github.com/FraunhoferIWES/foxes)
+- [FLORIS](https://github.com/NREL/floris)
+- [FOXES](https://github.com/FraunhoferIWES/foxes)
 - [PyWake](https://gitlab.windenergy.dtu.dk/TOPFARM/PyWake)
 
 The package diagram below shows the modules within `wcomp` and how each relates to the

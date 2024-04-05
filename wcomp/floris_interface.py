@@ -129,12 +129,29 @@ class WCompFloris(WCompBase):
 
     """
     `WCompFloris` implements the wcomp interface to the FLORIS software.
+    The connection points to FLORIS are shown in the diagram below.
+
+    .. mermaid::
+
+        classDiagram
+            class FlorisInterface
+            class WCompFloris {
+                fi : FlorisInterface
+                floris_dict : dict
+                hub_height
+                rotor_diameter
+                yaw_angles : ndarray
+                AEP()
+                _create_floris_dict(windIO_wes_dict: dict)
+            }
+
+            WCompFloris --* FlorisInterface
     """
     LINE_PLOT_COLOR = "green"
     LINE_PLOT_MARKER = ""
     LINE_PLOT_LINESTYLE = "--"
     LINE_PLOT_LINEWIDTH = 2
-    LEGEND = "Floris"
+    LEGEND = "FLORIS"
 
     def __init__(self, input_file: str | Path):
 

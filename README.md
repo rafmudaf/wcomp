@@ -69,7 +69,7 @@ The `windIO` package is used both to define the comparison cases and to load the
 ```mermaid
 graph TD
     L["FLORIS"]
-    M["foxes"]
+    M["FOXES"]
     N["PyWake"]
 
     A["windIO"]

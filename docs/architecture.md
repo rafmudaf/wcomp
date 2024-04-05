@@ -45,8 +45,8 @@ API documentation for their respective interface files, for reference.
 
 | Wake Model | Interface File |
 |------------|----------------|
-| [Floris](https://github.com/NREL/floris) | {py:class}`wcomp.floris_interface` |
-| [foxes](https://github.com/FraunhoferIWES/foxes) | {py:class}`wcomp.foxes_interface` |
+| [FLORIS](https://github.com/NREL/floris) | {py:class}`wcomp.floris_interface` |
+| [FOXES](https://github.com/FraunhoferIWES/foxes) | {py:class}`wcomp.foxes_interface` |
 | [PyWake](https://gitlab.windenergy.dtu.dk/TOPFARM/PyWake) | {py:class}`wcomp.pywake_interface` |
 
 <!-- ```{autoclasstree} wcomp.base_interface
