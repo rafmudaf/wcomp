@@ -481,12 +481,29 @@ document.write(`
 
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    `WCompFloris` implements the wcomp interface to the FLORIS software.</span>
+<span class="sd">    The connection points to FLORIS are shown in the diagram below.</span>
+
+<span class="sd">    .. mermaid::</span>
+
+<span class="sd">        classDiagram</span>
+<span class="sd">            class FlorisInterface</span>
+<span class="sd">            class WCompFloris {</span>
+<span class="sd">                fi : FlorisInterface</span>
+<span class="sd">                floris_dict : dict</span>
+<span class="sd">                hub_height</span>
+<span class="sd">                rotor_diameter</span>
+<span class="sd">                yaw_angles : ndarray</span>
+<span class="sd">                AEP()</span>
+<span class="sd">                _create_floris_dict(windIO_wes_dict: dict)</span>
+<span class="sd">            }</span>
+
+<span class="sd">            WCompFloris --* FlorisInterface</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">LINE_PLOT_COLOR</span> <span class="o">=</span> <span class="s2">&quot;green&quot;</span>
     <span class="n">LINE_PLOT_MARKER</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
     <span class="n">LINE_PLOT_LINESTYLE</span> <span class="o">=</span> <span class="s2">&quot;--&quot;</span>
     <span class="n">LINE_PLOT_LINEWIDTH</span> <span class="o">=</span> <span class="mi">2</span>
-    <span class="n">LEGEND</span> <span class="o">=</span> <span class="s2">&quot;Floris&quot;</span>
+    <span class="n">LEGEND</span> <span class="o">=</span> <span class="s2">&quot;FLORIS&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">input_file</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">Path</span><span class="p">):</span>
 

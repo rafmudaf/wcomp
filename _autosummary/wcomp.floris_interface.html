@@ -70,6 +70,8 @@
                 gtag('config', 'G-7LZJG24QM5');
             </script>
     <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script src="https://unpkg.com/mermaid@10.9.0/dist/mermaid.min.js"></script>
+    <script>mermaid.initialize({startOnLoad:true});</script>
     <script>DOCUMENTATION_OPTIONS.pagename = '_autosummary/wcomp.floris_interface';</script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -449,8 +451,23 @@ document.write(`
 <dl class="py class">
 <dt class="sig sig-object py" id="wcomp.floris_interface.WCompFloris">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">wcomp.floris_interface.</span></span><span class="sig-name descname"><span class="pre">WCompFloris</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_file</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Path</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/wcomp/floris_interface.html#WCompFloris"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#wcomp.floris_interface.WCompFloris" title="Link to this definition">#</a></dt>
-<dd><p><cite>WCompFloris</cite> implements the wcomp interface to the FLORIS software.</p>
-<dl class="field-list simple">
+<dd><p><cite>WCompFloris</cite> implements the wcomp interface to the FLORIS software.
+The connection points to FLORIS are shown in the diagram below.</p>
+<div class="mermaid">
+            classDiagram
+    class FlorisInterface
+    class WCompFloris {
+        fi : FlorisInterface
+        floris_dict : dict
+        hub_height
+        rotor_diameter
+        yaw_angles : ndarray
+        AEP()
+        _create_floris_dict(windIO_wes_dict: dict)
+    }
+
+    WCompFloris --* FlorisInterface
+        </div><dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>input_file</strong> (<em>str</em><em> | </em><em>Path</em>) -- </p>
 </dd>
@@ -477,7 +494,7 @@ document.write(`
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="wcomp.floris_interface.WCompFloris.LEGEND">
-<span class="sig-name descname"><span class="pre">LEGEND</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Floris'</span></em><a class="headerlink" href="#wcomp.floris_interface.WCompFloris.LEGEND" title="Link to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">LEGEND</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'FLORIS'</span></em><a class="headerlink" href="#wcomp.floris_interface.WCompFloris.LEGEND" title="Link to this definition">#</a></dt>
 <dd></dd></dl>
 
 <dl class="py property">
