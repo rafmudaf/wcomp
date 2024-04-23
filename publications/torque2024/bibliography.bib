@@ -1,0 +1,567 @@
+
+// Software
+@misc{floris36,
+  author       = {{National Renewable Energy Laboratory}},
+  title        = {{FLORIS Wake Modeling Framework}},
+  howpublished = {\url{https://github.com/NREL/floris}},
+  month        = {April},
+  year         = {2024},
+  note         = {v3.6},
+}
+
+@article{pywake25,
+    title={PyWake 2.5.0: An open-source wind farm simulation tool},
+    author={Mads M. Pedersen and Alexander Meyer Forsting and Paul van der Laan and Riccardo Riva and Leonardo A. Alcayaga Romàn and Javier Criado Risco and Mikkel Friis-Møller and Julian Quick and Jens Peter Schøler Christiansen and Rafael Valotta Rodrigues and Bjarke Tobias Olsen and Pierre-Elouan Réthoré},
+    url="https://gitlab.windenergy.dtu.dk/TOPFARM/PyWake",
+    publisher={DTU Wind, Technical University of Denmark},
+    year={2023},
+    month={2}
+}
+
+@article{foxes,
+    author = {Jonas Schmidt and Lukas Vollmer and Martin Dörenkämper and Bernhard Stoevesandt},
+    title = {FOXES: Farm Optimization and eXtended yield Evaluation Software},
+    doi = {10.21105/joss.05464},
+    url = {https://doi.org/10.21105/joss.05464},
+    year = {2023},
+    publisher = {The Open Journal},
+    volume = {8},
+    number = {86},
+    pages = {5464},
+    journal = {Journal of Open Source Software}
+}
+
+@misc{foxes062,
+  author       = "{Foxes development group}",
+  title        = "Foxes version 0.6.2",
+  howpublished = "https://github.com/FraunhoferIWES/foxes",
+  month        = "03",
+  year         = "2024",
+}
+
+@misc{wcomp01,
+  author       = {{National Renewable Energy Laboratory}},
+  title        = {{Wakes Compared (wcomp)}},
+  howpublished = {\url{https://github.com/NREL/wcomp}},
+  month        = {April},
+  year         = {2024},
+  note         = {v0.1},
+}
+
+// Model reference papers
+@techreport{jensen1983note,
+  author      = {Jensen, N. O.},
+  title       = {A note on wind generator interaction},
+  institution = {Risø National Laboratory},
+  year        = "1983",
+  type        = "",
+  number      = {Risø-M No. 2411},
+  address     = "",
+  month       = "",
+  note        = "",
+  annote      = ""
+}
+
+@techreport{larsen2009simple,
+  author      = "Larsen, G. C.",
+  title       = "A simple stationary semi-analytical wake model",
+  institution = {Risø National Laboratory for Sustainable Energy, Technical University of Denmark},
+  year        = "2009",
+  type        = "",
+  number      = "Risoe-R No. 1713(EN)",
+  address     = "",
+  month       = "",
+  note        = "",
+  annote      = ""
+}
+
+@article{bastankhah2014new,
+title = {A new analytical model for wind-turbine wakes},
+journal = {Renewable Energy},
+volume = {70},
+pages = {116-123},
+year = {2014},
+note = {Special issue on aerodynamics of offshore wind energy systems and wakes},
+issn = {0960-1481},
+doi = {https://doi.org/10.1016/j.renene.2014.01.002},
+author = {Majid Bastankhah and Fernando Porté-Agel},
+keywords = {Wind-turbine wakes, Analytical models, Gaussian model, Top-hat model, Velocity deficit},
+abstract = {A new analytical wake model is proposed and validated to predict the wind velocity distribution downwind of a wind turbine. The model is derived by applying conservation of mass and momentum and assuming a Gaussian distribution for the velocity deficit in the wake. This simple model only requires one parameter to determine the velocity distribution in the wake. The results are compared to high-resolution wind-tunnel measurements and large-eddy simulation (LES) data of miniature wind-turbine wakes, as well as LES data of real-scale wind-turbine wakes. In general, it is found that the velocity deficit in the wake predicted by the proposed analytical model is in good agreement with the experimental and LES data. The results also show that the new model predicts the power extracted by downwind wind turbines more accurately than other common analytical models, some of which are based on less accurate assumptions like considering a top-hat shape for the velocity deficit.}
+}
+url = {https://www.sciencedirect.com/science/article/pii/S0960148114000317},
+
+@article{bastankhah2016experimental,
+title={Experimental and theoretical study of wind turbine wakes in yawed conditions},
+volume={806},
+DOI={10.1017/jfm.2016.595},
+journal={Journal of Fluid Mechanics},
+author={Bastankhah, Majid and Porté-Agel, Fernando},
+year={2016},
+pages={506–541}
+}
+
+@Article{niayifar2016analytical,
+AUTHOR = {Niayifar, Amin and Porté-Agel, Fernando},
+TITLE = {Analytical Modeling of Wind Farms: A New Approach for Power Prediction},
+JOURNAL = {Energies},
+VOLUME = {9},
+YEAR = {2016},
+NUMBER = {9},
+ARTICLE-NUMBER = {741},
+ISSN = {1996-1073},
+ABSTRACT = {Wind farm power production is known to be strongly affected by turbine wake effects. The purpose of this study is to develop and test a new analytical model for the prediction of wind turbine wakes and the associated power losses in wind farms. The new model is an extension of the one recently proposed by Bastankhah and Porté-Agel for the wake of stand-alone wind turbines. It satisfies the conservation of mass and momentum and assumes a self-similar Gaussian shape of the velocity deficit. The local wake growth rate is estimated based on the local streamwise turbulence intensity. Superposition of velocity deficits is used to model the interaction of the multiple wakes. Furthermore, the power production from the wind turbines is calculated using the power curve. The performance of the new analytical wind farm model is validated against power measurements and large-eddy simulation (LES) data from the Horns Rev wind farm for a wide range of wind directions, corresponding to a variety of full-wake and partial-wake conditions. A reasonable agreement is found between the proposed analytical model, LES data, and power measurements. Compared with a commonly used wind farm wake model, the new model shows a significant improvement in the prediction of wind farm power.},
+DOI = {10.3390/en9090741}
+}
+URL = {https://www.mdpi.com/1996-1073/9/9/741},
+
+@misc{iea2018wake,
+  author       = {{IEA Wind Task 37}},
+  title        = {{Wake Model Description for Optimization Only Case Study}},
+  month        = "",
+  year         = "2018",
+  note         = "",
+  annote       = ""
+}
+  howpublished = "https://github.com/byuflowlab/iea37-wflo-casestudies/blob/master/cs1-2/iea37-wakemodel.pdf",
+
+@Article{fuertes2018wind,
+AUTHOR = {Carbajo Fuertes, Fernando and Markfort, Corey D. and Porté-Agel, Fernando},
+TITLE = {Wind Turbine Wake Characterization with Nacelle-Mounted Wind Lidars for Analytical Wake Model Validation},
+JOURNAL = {Remote Sensing},
+VOLUME = {10},
+YEAR = {2018},
+NUMBER = {5},
+ARTICLE-NUMBER = {668},
+ISSN = {2072-4292},
+ABSTRACT = {This study presents the setup, methodology and results from a measurement campaign dedicated to the characterization of full-scale wind turbine wakes under different inflow conditions. The measurements have been obtained from two pulsed scanning Doppler lidars mounted on the nacelle of a 2.5 MW wind turbine. The first lidar is upstream oriented and dedicated to the characterization of the inflow with a variety of scanning patterns, while the second one is downstream oriented and performs horizontal planar scans of the wake. The calculated velocity deficit profiles exhibit self-similarity in the far wake region and they can be fitted accurately to Gaussian functions. This allows for the study of the growth rate of the wake width and the recovery of the wind speed, as well as the extent of the near-wake region. The results show that a higher incoming turbulence intensity enhances the entrainment and flow mixing in the wake region, resulting in a shorter near-wake length, a faster growth rate of the wake width and a faster recovery of the velocity deficit. The relationships obtained are compared to analytical models for wind turbine wakes and allow to correct the parameters prescribed until now, which were obtained from wind-tunnel measurements and large-eddy simulations (LES), with new, more accurate values directly derived from full-scale experiments.},
+DOI = {10.3390/rs10050668}
+}
+URL = {https://www.mdpi.com/2072-4292/10/5/668},
+
+@Article{blondel2020alternative,
+AUTHOR = {Blondel, F. and Cathelain, M.},
+TITLE = {An alternative form of the super-Gaussian wind turbine wake model},
+JOURNAL = {Wind Energy Science},
+VOLUME = {5},
+YEAR = {2020},
+NUMBER = {3},
+PAGES = {1225--1236},
+DOI = {10.5194/wes-5-1225-2020}
+}
+URL = {https://wes.copernicus.org/articles/5/1225/2020/},
+
+@article{zong2020momentum,
+title={A momentum-conserving wake superposition method for wind farm power prediction},
+volume={889},
+journal={Journal of Fluid Mechanics},
+author={Zong, Haohua and Porté-Agel, Fernando},
+year={2020},
+DOI={10.1017/jfm.2020.77},
+pages={A8}
+}
+
+@Article{bay2023addressing,
+AUTHOR = {Bay, C. J. and Fleming, P. and Doekemeijer, B. and King, J. and Churchfield, M. and Mudafort, R.},
+TITLE = {Addressing deep array effects and impacts to wake steering with the 
+cumulative-curl wake model},
+JOURNAL = {Wind Energy Science},
+VOLUME = {8},
+YEAR = {2023},
+NUMBER = {3},
+PAGES = {401--419},
+DOI = {10.5194/wes-8-401-2023}
+}
+URL = {https://wes.copernicus.org/articles/8/401/2023/},
+
+@article{nygaard2020modelling,
+year = {2020},
+month = {sep},
+publisher = {IOP Publishing},
+volume = {1618},
+number = {6},
+pages = {062072},
+author = {Nicolai Gayle Nygaard and Søren Trads Steen and Lina Poulsen and Jesper Grønnegaard Pedersen},
+title = {Modelling cluster wakes and wind farm blockage},
+journal = {Journal of Physics: Conference Series},
+doi = {10.1088/1742-6596/1618/6/062072},
+abstract = {We present two new models for wind turbine interaction effects and a recipe for combining them. The first model is an extension of the Park model, which explicitly incorporates turbulence, both the ambient atmospheric turbulence and the turbulence generated in the wake itself. This Turbulence Optimized Park model is better equipped to describe wake recovery over long distances such as between wind farms, where the wake expansion slows down as the turbine-generated turbulence decays. The second model is a first version of a full engineering wind farm blockage model. In the same vein as the wake model it adds blockage contributions from the individual wind turbines to form an aggregated wind farm scale blockage effect that can be incorporated directly into the park power curve and annual energy calculations. The wake model and the blockage model describe downstream and upstream turbine interaction effects, respectively. They are coupled as the outputs of one model are the inputs to the other model and vice versa. We describe how this coupling is achieved through an iterative process. We give early stage examples of the validation of the two models and discuss how they might be further validated and improved in the future.}
+}
+url = {https://dx.doi.org/10.1088/1742-6596/1618/6/062072},
+
+// Empirical Gauss goes here
+// this paper is not yet published
+
+@article{jimenez2010application,
+author = {Jiménez, Ángel and Crespo, Antonio and Migoya, Emilio},
+title = {Application of a LES technique to characterize the wake deflection of a wind turbine in yaw},
+journal = {Wind Energy},
+volume = {13},
+number = {6},
+pages = {559-572},
+keywords = {wind turbine wake, wind turbine in yaw, large-eddy simulation, wake deflection, active control in wind farms},
+abstract = {Abstract When a wind turbine works in yaw, the wake intensity and the power production of the turbine become slightly smaller and a deflection of the wake is induced. Therefore, a good understanding of this effect would allow an active control of the yaw angle of upstream turbines to steer the wake away from downstream machines, reducing its effect on them. In wind farms where interaction between turbines is significant, it is of interest to maximize the power output from the wind farm as a whole and to reduce fatigue loads on downstream turbines due to the increase of turbulence intensity in wakes. A large eddy simulation model with particular wind boundary conditions has been used recently to simulate and characterize the turbulence generated by the presence of a wind turbine and its evolution downstream the machine. The simplified turbine is placed within an environment in which relevant flow properties like wind speed profile, turbulence intensity and the anisotropy of turbulence are found to be similar to the ones of the neutral atmosphere. In this work, the model is used to characterize the wake deflection for a range of yaw angles and thrust coefficients of the turbine. The results are compared with experimental data obtained by other authors with a particle image velocimetry technique from wind tunnel experiments. Also, a comparison with simple analytical correlations is carried out. Copyright © 2009 John Wiley \& Sons, Ltd.},
+year = {2010},
+doi = {https://doi.org/10.1002/we.380},
+}
+url = {https://onlinelibrary.wiley.com/doi/abs/10.1002/we.380},
+
+@article{larsen2020yaw,
+year = {2020},
+month = {sep},
+publisher = {IOP Publishing},
+volume = {1618},
+number = {6},
+pages = {062047},
+author = {G.C. Larsen and S. Ott and J. Liew and M.P. van der Laan and E. Simon and G.R. Thorsen and P. Jacobs},
+title = {Yaw induced wake deflection-a full-scale validation study},
+journal = {Journal of Physics: Conference Series},
+doi = {10.1088/1742-6596/1618/6/062047},
+abstract = {Aerodynamic wake interactions between turbines located in wind power plants cause both a loss in power production and an increase in fatigue loading of the wind farm turbines. Yaw induced active wake deflection is one possible wind farm control strategy, which can be applied to mitigate wake effects on nearby downstream located wind turbines. In the present study three flow models of different fidelities are applied to mimic a full-scale study of wake deflection recorded by an advanced synchronised setup of two long-range pulsed scanning lidars. The investigated case studies encompass a base case with (approximately) zero yaw setting supplemented by two non-zero yaw cases of 17.5° and -14.5°, respectively. The model results are compared mutually as well as with the result of the full-scale measurement campaign.}
+}
+url = {https://dx.doi.org/10.1088/1742-6596/1618/6/062047},
+
+// Other
+
+@article{ning2019systems,
+title = {Chapter 7: Systems Engineering and Optimization of Wind Turbines and Power Plants},
+author = {Ning, Andrew and Dykes, Katherine and Quick, Julian},
+abstractNote = {In this chapter, wind turbine optimization has been demonstrated as an effective approach to exploring complex design decisions. However, it is not a push-button solution and effective use requires a multidisciplinary design team and expertise in optimization algorithms. Common techniques include using reduced-order models for computationally intensive portions of the analysis, taking advantage of gradients to solve large problems, and more recently to include UQ to allow for robust design decisions. Current efforts continue to push for increased model fidelity, more comprehensive disciplinary coverage, and incorporation of uncertainty.},
+doi = {10.1049/PBPO125G_ch7},
+url = {https://www.osti.gov/biblio/1602663},
+journal = {},
+place = {United States},
+year = {2019},
+month = {11}
+}
+
+@article{bortolotti2022system,
+title = {System Modeling Frameworks for Wind Turbines and Plants: Review and Requirements Specifications},
+author = {Bortolotti, Pietro and Bay, Christopher and Barter, Garrett and Gaertner, Evan and Dykes, Katherine and McWilliam, Michael and Friis-Moller, Mikkel and Molgaard Pedersen, Mads and Zahle, Frederik},
+doi = {10.2172/1868328},
+place = {United States},
+year = {2022},
+month = {5}
+}
+
+@article{gaertner2020iea,
+title = {IEA Wind TCP Task 37: Definition of the IEA 15-Megawatt Offshore Reference Wind Turbine},
+author = {Gaertner, Evan and Rinker, Jennifer and Sethuraman, Latha and Zahle, Frederik and Anderson, Benjamin and Barter, Garrett E and Abbas, Nikhar J and Meng, Fanzhong and Bortolotti, Pietro and Skrzypinski, Witold and Scott, George N and Feil, Roland and Bredmose, Henrik and Dykes, Katherine and Shields, Matthew and Allen, Christopher and Viselli, Anthony},
+abstractNote = {This report describes a 15-megawatt offshore wind turbine with a fixed-bottom monopile support structure. This reference wind turbine is a Class IB direct-drive machine, with a rotor diameter of 240 meters and a hub height of 150 meters. An overview of the design is presented in Figure ES-1 and Table ES-1. The design reflects a joint effort between the National Renewable Energy Laboratory, sponsored by the U.S. Department of Energy, and the Technical University of Denmark, sponsored by the European Union's H2020 Program, through the second work package of International Energy Agency Wind Task 37 on Wind Energy Systems Engineering: Integrated RD&D. A forthcoming report will detail a semisubmersible floating support structure developed by the University of Maine.},
+doi = {10.2172/1603478},
+url = {https://www.osti.gov/biblio/1603478},
+place = {United States},
+year = {2020},
+month = {3}
+}
+
+@Article{meyers2022wind,
+    AUTHOR = {Meyers, J. and Bottasso, C. and Dykes, K. and Fleming, P. and Gebraad, P. and Giebel, G. and G\"o\c{c}men, T. and van Wingerden, J.-W.},
+    TITLE = {Wind farm flow control: prospects and challenges},
+    JOURNAL = {Wind Energy Science},
+    VOLUME = {7},
+    YEAR = {2022},
+    NUMBER = {6},
+    PAGES = {2271--2306},
+    DOI = {10.5194/wes-7-2271-2022}
+}
+    URL = {https://wes.copernicus.org/articles/7/2271/2022/},
+
+@Article{porteagel2020wind,
+    AUTHOR = {Porté-Agel, F. and Bastankhah, M. and Shamsoddin, S.},
+    TITLE = {Wind-Turbine and Wind-Farm Flows: A Review},
+    JOURNAL = {Boundary-Layer Meteorology},
+    VOLUME = {174},
+    YEAR = {2020},
+    PAGES = {1–59 },
+    DOI = {10.1007/s10546-019-00473-0}
+}
+    URL = {https://link.springer.com/article/10.1007/s10546-019-00473-0},
+
+@techreport{boccolini2021wind,
+AUTHOR = {Mattia Boccolini and Ervin Bossanyi and Stefanie Bourne and Axel Dombrowski and Giuseppe Ferraro and Keir Harman and Matthew Harrison and Nikolai Hille and Lars Landberg (editor) and Tom Levick and Andreas Manjock and Tony Mercer and Anja Neubert and Renzo Ruisi and Nicholas Skeen},
+TITLE = {Wind Farm Control: The Route to Bankability},
+INSTITUTION = {DNV},
+YEAR  = {2021},
+TYPE = {{Position paper}}
+}
+
+@book{william2009software,
+  title     = "Software Testing and Continuous Quality Improvement",
+  author    = "William E. Lewis",
+  year      = 2009,
+  publisher = "Auerbach Publications",
+  doi       = "https://doi.org/10.1201/9781439834367",
+}
+
+
+
+
+
+
+
+
+@techreport{iec_61400_ed4,
+type = {{E}dition 4.0},
+author = {{IEC 61400-1}},
+year = {2019},
+title = {Wind energy generation systems – {P}art 1: {D}esign requirements},
+institution = {International Electrotechnical Comission}
+}
+
+@article{veers2019grand,
+  title={Grand challenges in the science of wind energy},
+  author={Veers, Paul and Dykes, Katherine and Lantz, Eric and Barth, Stephan and Bottasso, Carlo L and Carlson, Ola and Clifton, Andrew and Green, Johney and Green, Peter and Holttinen, Hannele and others},
+  journal={Science},
+  volume={366},
+  number={6464},
+  pages={eaau2027},
+  year={2019},
+  publisher={American Association for the Advancement of Science}
+}
+
+@article{doekemeijer2020closed,
+  title={Closed-loop model-based wind farm control using {FLORIS} under time-varying inflow conditions},
+  author={Doekemeijer, Bart M and van der Hoek, Daan and van Wingerden, Jan-Willem},
+  journal={Renewable Energy},
+  volume={156},
+  pages={719--730},
+  year={2020},
+  publisher={Elsevier}
+}
+
+@article{damiani2018assessment,
+  title={Assessment of wind turbine component loads under yaw-offset conditions},
+  author={Damiani, Rick and Dana, Scott and Annoni, Jennifer and Fleming, Paul and Roadman, Jason and van Dam, Jeroen and Dykes, Katherine},
+  journal={Wind Energy Science},
+  volume={3},
+  number={1},
+  pages={173--189},
+  year={2018},
+  publisher={Copernicus GmbH}
+}
+
+@article{shaler2022loads,
+  title={Loads assessment of a fixed-bottom offshore wind farm with wake steering},
+  author={Shaler, Kelsey and Jonkman, Jason and Barter, Garrett E and Kreeft, Jasper J and Muller, Jelle P},
+  journal={Wind Energy},
+  volume={25},
+  number={9},
+  pages={1530--1554},
+  year={2022},
+  publisher={Wiley Online Library}
+}
+
+@article{fleming2019initial,
+  title={Initial results from a field campaign of wake steering applied at a commercial wind farm--Part 1},
+  author={Fleming, Paul and King, Jennifer and Dykes, Katherine and Simley, Eric and Roadman, Jason and Scholbrock, Andrew and Murphy, Patrick and Lundquist, Julie K and Moriarty, Patrick and Fleming, Katherine and others},
+  journal={Wind Energy Science},
+  volume={4},
+  number={2},
+  pages={273--285},
+  year={2019},
+  publisher={Copernicus GmbH}
+}
+
+@article{simley2021results,
+  title={Results from a wake-steering experiment at a commercial wind plant: investigating the wind speed dependence of wake-steering performance},
+  author={Simley, Eric and Fleming, Paul and Girard, Nicolas and Alloin, Lucas and Godefroy, Emma and Duc, Thomas},
+  journal={Wind Energy Science},
+  volume={6},
+  number={6},
+  pages={1427--1453},
+  year={2021},
+  publisher={Copernicus GmbH}
+}
+
+@article{martinez2021curled,
+  title={The curled wake model: a three-dimensional and extremely fast steady-state wake solver for wind plant flows},
+  author={Mart{\'\i}nez-Tossas, Luis A and King, Jennifer and Quon, Eliot and Bay, Christopher J and Mudafort, Rafael and Hamilton, Nicholas and Howland, Michael F and Fleming, Paul A},
+  journal={Wind Energy Science},
+  volume={6},
+  number={2},
+  pages={555--570},
+  year={2021},
+  publisher={Copernicus GmbH}
+}
+
+@inproceedings{moriarty2023overview,
+  title={Overview of recent observations and simulations from the American WAKE experimeNt (AWAKEN) field campaign},
+  author={Moriarty, Patrick and Bodini, Nicola and Cheung, Lawrence and Hamilton, Nicholas and Herges, Thomas and Kaul, Colleen and Letizia, Stefano and Pekour, Mikhail and Simley, Eric},
+  booktitle={Journal of Physics: Conference Series},
+  volume={2505},
+  number={1},
+  pages={012049},
+  year={2023},
+  organization={IOP Publishing}
+}
+
+@article{liu2020numerical,
+  title={Numerical simulations of fatigue loads on wind turbines operating in wakes},
+  author={Liu, Zhenqing and Li, Qiuming and Ishihara, Takeshi and Peng, Jie},
+  journal={Wind Energy},
+  volume={23},
+  number={5},
+  pages={1301--1316},
+  year={2020},
+  publisher={Wiley Online Library}
+}
+
+@article{simley2023value,
+  title={The value of wake steering wind farm control in US energy markets},
+  author={Simley, Eric and Millstein, Dev and Jeong, Seongeun and Fleming, Paul},
+  journal={Wind Energy Science Discussions},
+  volume={2023},
+  pages={1--26},
+  year={2023},
+  publisher={G{\"o}ttingen, Germany}
+}
+
+@article{abbas2022reference,
+  title={A reference open-source controller for fixed and floating offshore wind turbines},
+  author={Abbas, Nikhar J and Zalkind, Daniel S and Pao, Lucy and Wright, Alan},
+  journal={Wind Energy Science},
+  volume={7},
+  number={1},
+  pages={53--73},
+  year={2022},
+  publisher={Copernicus GmbH}
+}
+
+@inproceedings{zalkind2016fatigue,
+  title={The fatigue loading effects of yaw control for wind plants},
+  author={Zalkind, Daniel S and Pao, Lucy Y},
+  booktitle={2016 American Control Conference (ACC)},
+  pages={537--542},
+  year={2016},
+  organization={IEEE}
+}
+
+@inproceedings{quon2020comparison,
+  title={Comparison of rotor wake identification and characterization methods for the analysis of wake dynamics and evolution},
+  author={Quon, EW and Doubrawa, P and Debnath, M},
+  booktitle={Journal of Physics: Conference Series},
+  volume={1452},
+  pages={012070},
+  year={2020},
+  organization={IOP Publishing}
+}
+
+@article{hulsman2022curled,
+AUTHOR = {Hulsman, P. and Wosnik, M. and Petrovi\'c, V. and H\"olling, M. and K\"uhn, M.},
+TITLE = {Development of a curled wake of a yawed wind turbine under turbulent and sheared inflow},
+JOURNAL = {Wind Energy Science},
+VOLUME = {7},
+YEAR = {2022},
+NUMBER = {1},
+PAGES = {237--257},
+DOI = {10.5194/wes-7-237-2022}
+}
+
+@article{Gebraad2016,
+author = {Gebraad, P. M. O. and Teeuwisse, F. W. and van Wingerden, J. W. and Fleming, P. A. and Ruben, S. D. and Marden, J. R. and Pao, L. Y.},
+title = {Wind plant power optimization through yaw control using a parametric model for wake effects—a {CFD} simulation study},
+journal = {Wind Energy},
+volume = {19},
+number = {1},
+pages = {95-114},
+doi = {10.1002/we.1822},
+year = {2016}
+}
+
+@Article{Fleming2017,
+AUTHOR = {Fleming, P. and Annoni, J. and Shah, J. J. and Wang, L. and Ananthan, S. and Zhang, Z. and Hutchings, K. and Wang, P. and Chen, W. and Chen, L.},
+TITLE = {Field test of wake steering at an offshore wind farm},
+JOURNAL = {Wind Energy Science},
+VOLUME = {2},
+YEAR = {2017},
+NUMBER = {1},
+PAGES = {229--239},
+DOI = {10.5194/wes-2-229-2017}
+}
+
+@Article{Fleming2020,
+AUTHOR = {Fleming, P. and King, J. and Simley, E. and Roadman, J. and Scholbrock, A. and Murphy, P. and Lundquist, J. K. and Moriarty, P. and Fleming, K. and van Dam, J. and Bay, C. and Mudafort, R. and Jager, D. and Skopek, J. and Scott, M. and Ryan, B. and Guernsey, C. and Brake, D.},
+TITLE = {Continued results from a field campaign of wake steering applied at a commercial wind farm -- Part 2},
+JOURNAL = {Wind Energy Science},
+VOLUME = {5},
+YEAR = {2020},
+NUMBER = {3},
+PAGES = {945--958},
+DOI = {10.5194/wes-5-945-2020}
+}
+
+@Article{Doekemeijer2020,
+AUTHOR = {Doekemeijer, B. M. and Kern, S. and Maturu, S. and Kanev, S. and Salbert, B. and Schreiber, J. and Campagnolo, F. and Bottasso, C. L. and Schuler, S. and Wilts, F. and Neumann, T. and Potenza, G. and Calabretta, F. and Fioretti, F. and van Wingerden, J.-W.},
+TITLE = {Field experiment for open-loop yaw-based wake steering at a commercial onshore wind farm in Italy},
+JOURNAL = {Wind Energy Science Discussions},
+VOLUME = {2020},
+YEAR = {2020},
+PAGES = {1--22},
+DOI = {10.5194/wes-2020-80}
+}
+
+@article{Houk,
+author = {Houck, Daniel R.},
+title = {Review of wake management techniques for wind turbines},
+journal = {Wind Energy},
+volume = {n/a},
+number = {n/a},
+pages = {},
+doi = {10.1002/we.2668},
+year = 2021
+}
+
+@Article{Kanev,
+AUTHOR = {Kanev, Stoyan and Bot, Edwin and Giles, Jack},
+TITLE = {Wind Farm Loads under Wake Redirection Control},
+JOURNAL = {Energies},
+VOLUME = {13},
+YEAR = {2020},
+NUMBER = {16},
+ARTICLE-NUMBER = {4088},
+DOI = {10.3390/en13164088}
+}
+
+@inproceedings{Ennis2018,
+  title={Wind turbine blade load characterization under yaw offset at the SWiFT facility},
+  author={Ennis, Brandon L and White, Jonathan R and Paquette, Joshua A},
+  booktitle={Journal of Physics: Conference Series},
+  volume={1037},
+  number={5},
+  pages={052001},
+  year={2018},
+  organization={IOP Publishing}
+}
+
+@article{Ciri2018,
+author = {Ciri, Umberto and Rotea, Mario A. and Leonardi, Stefano},
+title = {Effect of the turbine scale on yaw control},
+journal = {Wind Energy},
+volume = {21},
+number = {12},
+pages = {1395-1405},
+keywords = {actuator disk, large-eddy simulation, yaw control},
+doi = {10.1002/we.2262},
+year = {2018}
+}
+
+@Article{pj2020,
+AUTHOR = {Stanley, A. P. J. and King, J. and Bay, C. and Ning, A.},
+TITLE = {A Model to Calculate Fatigue Damage Caused by Partial Waking
+during Wind Farm Optimization},
+JOURNAL = {Wind Energy Science Discussions},
+VOLUME = {2020},
+YEAR = {2020},
+PAGES = {1--34},
+DOI = {10.5194/wes-2020-117}
+}
+
+@article{bastankhah2019wind,
+  title={Wind farm power optimization via yaw angle control: A wind tunnel study},
+  author={Bastankhah, Majid and Port{\'e}-Agel, Fernando},
+  journal={Journal of Renewable and Sustainable Energy},
+  volume={11},
+  number={2},
+  year={2019},
+  publisher={AIP Publishing}
+}
