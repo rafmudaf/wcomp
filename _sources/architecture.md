@@ -13,10 +13,21 @@ others as dependencies (which modules import which other modules).
 
 ```{mermaid}
 classDiagram
-  wcomp --> floris_interface
-  wcomp --> foxes_interface
-  wcomp --> pywake_interface
-  base_interface --> output_struct
+  class FLORIS
+  class FOXES
+  class PyWake
+  namespace wcomp {
+      class base_interface
+      class floris_interface
+      class foxes_interface
+      class pywake_interface
+      class plotting
+      class output_struct
+  }
+
+  FLORIS --> floris_interface
+  FOXES --> foxes_interface
+  PyWake --> pywake_interface
   floris_interface --> base_interface
   floris_interface --> output_struct
   floris_interface --> plotting

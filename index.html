@@ -42,7 +42,7 @@
   <script src="_static/vendor/fontawesome/6.5.1/js/all.min.js?digest=8d27b9dea8ad943066ae"></script>
 
     <script src="_static/documentation_options.js?v=30a733bc"></script>
-    <script src="_static/doctools.js?v=888ff710"></script>
+    <script src="_static/doctools.js?v=9a2dae69"></script>
     <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="_static/clipboard.min.js?v=a7894cd8"></script>
     <script src="_static/copybutton.js?v=f281be69"></script>
@@ -70,12 +70,10 @@
                 gtag('config', 'G-7LZJG24QM5');
             </script>
     <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
-    <script src="https://unpkg.com/mermaid@10.9.0/dist/mermaid.min.js"></script>
-    <script>mermaid.initialize({startOnLoad:true});</script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'index';</script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="WESC 2023 - Simple Demo" href="wesc2023_demo.html" />
+    <link rel="next" title="Dashboard" href="dashboard.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="python"/>
   </head>
@@ -187,6 +185,7 @@
             </li>
         </ul>
         <ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="dashboard.html">Dashboard</a></li>
 <li class="toctree-l1"><a class="reference internal" href="wesc2023_demo.html">WESC 2023 - Simple Demo</a></li>
 <li class="toctree-l1"><a class="reference internal" href="torque2024_1turbine.html">Torque 2024 - 1 turbine cases</a></li>
 <li class="toctree-l1"><a class="reference internal" href="torque2024_4turbine.html">Torque 2024 - 4 turbine cases</a></li>
@@ -412,10 +411,10 @@ document.write(`
             </div>
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
-<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#">Wakes Compared (wcomp)</a></li>
-<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#installation">Installation</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#integrated-software">Integrated software</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#installation">Installation</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#getting-started">Getting started</a></li>
 </ul>
-
             </nav>
         </div>
     </div>
@@ -447,37 +446,46 @@ At its core, <code class="docutils literal notranslate"><span class="pre">wcomp<
 wind farm wake model simulation and a set of plotting functions to inspect these data structures.
 Any wind farm wake modeling software that implements the <code class="docutils literal notranslate"><span class="pre">wcomp</span></code> interface can be included
 in the comparison directly.</p>
-<p>The wake modeling software currently integrated to <code class="docutils literal notranslate"><span class="pre">wcomp</span></code> are:</p>
-<ul class="simple">
-<li><p><a class="reference external" href="https://github.com/NREL/floris">FLORIS</a></p></li>
-<li><p><a class="reference external" href="https://github.com/FraunhoferIWES/foxes">FOXES</a></p></li>
-<li><p><a class="reference external" href="https://gitlab.windenergy.dtu.dk/TOPFARM/PyWake">PyWake</a></p></li>
-</ul>
-<p>The package diagram below shows the modules within <code class="docutils literal notranslate"><span class="pre">wcomp</span></code> and how each relates to the
-others as dependencies (in other words, which modules import which other modules).</p>
-<div class="mermaid">
-            classDiagram
-  wcomp --&gt; floris_interface
-  wcomp --&gt; foxes_interface
-  wcomp --&gt; pywake_interface
-  base_interface --&gt; output_struct
-  floris_interface --&gt; base_interface
-  floris_interface --&gt; output_struct
-  floris_interface --&gt; plotting
-  foxes_interface --&gt; base_interface
-  foxes_interface --&gt; output_struct
-  foxes_interface --&gt; plotting
-  plotting --&gt; output_struct
-  pywake_interface --&gt; base_interface
-  pywake_interface --&gt; output_struct
-  pywake_interface --&gt; plotting
-        </div></section>
-<section class="tex2jax_ignore mathjax_ignore" id="installation">
-<h1>Installation<a class="headerlink" href="#installation" title="Link to this heading">#</a></h1>
+<section id="integrated-software">
+<h2>Integrated software<a class="headerlink" href="#integrated-software" title="Link to this heading">#</a></h2>
+<div class="sd-container-fluid sd-sphinx-override sd-mb-4 docutils">
+<div class="sd-row sd-g-3 sd-g-xs-3 sd-g-sm-3 sd-g-md-3 sd-g-lg-3 docutils">
+<div class="sd-col sd-d-flex-row docutils">
+<div class="sd-card sd-sphinx-override sd-w-100 sd-shadow-sm docutils">
+<div class="sd-card-body docutils">
+<div class="sd-card-title sd-font-weight-bold docutils">
+<a class="reference external" href="https://github.com/NREL/floris">FLORIS</a></div>
+<p class="sd-card-text">Here's the first card.</p>
+</div>
+</div>
+</div>
+<div class="sd-col sd-d-flex-row docutils">
+<div class="sd-card sd-sphinx-override sd-w-100 sd-shadow-sm docutils">
+<div class="sd-card-body docutils">
+<div class="sd-card-title sd-font-weight-bold docutils">
+<a class="reference external" href="https://github.com/FraunhoferIWES/foxes">FOXES</a></div>
+<p class="sd-card-text">Here's the second card.</p>
+</div>
+</div>
+</div>
+<div class="sd-col sd-d-flex-row docutils">
+<div class="sd-card sd-sphinx-override sd-w-100 sd-shadow-sm docutils">
+<div class="sd-card-body docutils">
+<div class="sd-card-title sd-font-weight-bold docutils">
+<a class="reference external" href="https://gitlab.windenergy.dtu.dk/TOPFARM/PyWake">PyWake</a></div>
+<p class="sd-card-text">Here's the third card.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="installation">
+<h2>Installation<a class="headerlink" href="#installation" title="Link to this heading">#</a></h2>
 <p>Currently, <code class="docutils literal notranslate"><span class="pre">wcomp</span></code> must be installed manually with <code class="docutils literal notranslate"><span class="pre">pip</span></code>. The dependencies are:</p>
 <ul class="simple">
 <li><p>windIO v1.0, can be installed directly from PyPI</p></li>
-<li><p>FLORIS v3.6 (current develop branch), not yet released so must be installed from locally from <a class="github reference external" href="https://github.com/nrel/floris">nrel/floris</a></p></li>
+<li><p>FLORIS v3.6, can be installed directly from PyPI</p></li>
 <li><p>foxes v0.6.2, can be installed directly from PyPI</p></li>
 <li><p>PyWake v2.5.0 plus three additional commits, must be installed from <a class="github reference external" href="https://github.com/rafmudaf/PyWake">rafmudaf/PyWake</a> at master branch</p></li>
 </ul>
@@ -498,6 +506,11 @@ git<span class="w"> </span>clone<span class="w"> </span>https://github.com/rafmu
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </span>wcomp
 </pre></div>
 </div>
+</section>
+<section id="getting-started">
+<h2>Getting started<a class="headerlink" href="#getting-started" title="Link to this heading">#</a></h2>
+<p>See <a class="reference internal" href="wesc2023_demo.html#wesc2023"><span class="std std-ref">WESC 2023 - Simple Demo</span></a>, <a class="reference internal" href="torque2024_1turbine.html#torque1turbine"><span class="std std-ref">Torque 2024 - 1 turbine cases</span></a>, and <a class="reference internal" href="torque2024_4turbine.html#torque4turbine"><span class="std std-ref">Torque 2024 - 4 turbine cases</span></a>.</p>
+</section>
 <div class="toctree-wrapper compound">
 </div>
 </section>
@@ -533,11 +546,11 @@ git<span class="w"> </span>clone<span class="w"> </span>https://github.com/rafmu
                   
 <div class="prev-next-area">
     <a class="right-next"
-       href="wesc2023_demo.html"
+       href="dashboard.html"
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">WESC 2023 - Simple Demo</p>
+        <p class="prev-next-title">Dashboard</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
@@ -557,10 +570,10 @@ git<span class="w"> </span>clone<span class="w"> </span>https://github.com/rafmu
   </div>
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
-<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#">Wakes Compared (wcomp)</a></li>
-<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#installation">Installation</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#integrated-software">Integrated software</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#installation">Installation</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#getting-started">Getting started</a></li>
 </ul>
-
   </nav></div>
 
 </div></div>
