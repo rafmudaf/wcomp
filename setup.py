@@ -14,7 +14,7 @@ REQUIRES_PYTHON = ">=3.10"
 
 # What packages are required for this module to be executed?
 REQUIRED = [
-    "floris",   # At develop, latest hash is c7f8f36
+    "floris==v3.6",
     "foxes==v0.6.2",
     "py-wake",  # At master with two additional commits on rafmudaf/PyWake, latest hash is 35e63b7
     "numpy>=1.20",

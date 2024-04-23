@@ -24,8 +24,6 @@ jobs:
       run: |
         git clone https://github.com/rafmudaf/PyWake
         pip install -e PyWake
-        git clone https://github.com/NREL/floris -b develop
-        pip install -e floris
         pip install -e ".[docs]"
 
     # Generate any required diagrams
