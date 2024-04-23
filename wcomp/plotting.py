@@ -1,22 +1,20 @@
 
-import matplotlib
 import matplotlib.pyplot as plt
 
 from .output_struct import WakePlane, WakeProfile
 
-# Method to add plots to an axis
-# plot_1d(ax, series)
 
 def plot_profile(
     wake_profile: WakeProfile,
-    ax=None,
     # direction='x',
     # component='u',
     title="",
     **kwargs
 ):
-    if not ax:
+    if len(plt.get_fignums()) == 0:
         fig, ax = plt.subplots()
+    else:
+        ax = plt.gca()
 
     ax.plot(
         wake_profile.x1,
@@ -27,7 +25,6 @@ def plot_profile(
 
 def plot_plane(
     wake_plane: WakePlane,
-    ax: matplotlib.axes.Axes = None,
     min_speed: float = None,
     max_speed: float = None,
     cmap: str = "coolwarm",
@@ -66,9 +63,10 @@ def plot_plane(
             See https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.tricontourf.html
             for available parameters.
     """
-
-    if not ax:
+    if len(plt.get_fignums()) == 0:
         fig, ax = plt.subplots()
+    else:
+        ax = plt.gca()
 
     if title:
         ax.set_title(title)

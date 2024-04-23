@@ -1,10 +1,8 @@
 
 from pathlib import Path
 
-import matplotlib.pyplot as plt
 import foxes.constants as FC
 import foxes.variables as FV
-import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 import foxes
@@ -442,7 +440,6 @@ class WCompFoxes(WCompBase):
         y_coordinate: float,
         zmax: float
     ) -> WakeProfile:
-        ax = plt.gca()
 
         # create points of interest, shape (n_states, n_points, 3):
         points = np.zeros((1, self.N_POINTS_1D, 3))
@@ -457,7 +454,6 @@ class WCompFoxes(WCompBase):
         )
         plot_profile(
             profile,
-            ax=ax,
             # direction='x',
             # component='u',
             color=self.LINE_PLOT_COLOR,
@@ -475,7 +471,6 @@ class WCompFoxes(WCompBase):
         xmin: float,
         xmax: float
     ) -> WakeProfile:
-        ax = plt.gca()
 
         # create points of interest, shape (n_states, n_points, 3):
         points = np.zeros((1, self.N_POINTS_1D, 3))
@@ -491,7 +486,6 @@ class WCompFoxes(WCompBase):
         )
         plot_profile(
             profile,
-            ax=ax,
             # direction='x',
             # component='u',
             color=self.LINE_PLOT_COLOR,
@@ -509,7 +503,6 @@ class WCompFoxes(WCompBase):
         ymin: float,
         ymax: float
     ) -> WakeProfile:
-        ax = plt.gca()
 
         # create points of interest, shape (n_states, n_points, 3):
         points = np.zeros((1, self.N_POINTS_1D, 3))
@@ -527,7 +520,6 @@ class WCompFoxes(WCompBase):
         )
         plot_profile(
             profile,
-            ax=ax,
             # direction='y',
             # component='u',
             color=self.LINE_PLOT_COLOR,
@@ -568,7 +560,6 @@ class WCompFoxes(WCompBase):
         plane = WakePlane(x, y, u, "z")
         plot_plane(
             plane,
-            ax=plt.gca(),
             # cmap='Blues_r',
             # color_bar=True,
             clevels=100
@@ -602,7 +593,6 @@ class WCompFoxes(WCompBase):
         plane = WakePlane(y, z, u, "x")
         plot_plane(
             plane,
-            ax=plt.gca(),
             # cmap='Blues_r',
             # color_bar=True,
             clevels=100

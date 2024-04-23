@@ -1,7 +1,6 @@
 
 from pathlib import Path
 
-import matplotlib.pyplot as plt
 import numpy as np
 import xarray as xr
 from py_wake import HorizontalGrid, XZGrid, YZGrid
@@ -221,7 +220,6 @@ class WCompPyWake(WCompBase):
         y_coordinate: float,
         zmax: float
     ) -> WakeProfile:
-        ax = plt.gca()
 
         wake_data = self.sim_res.flow_map(
             XZGrid(
@@ -242,7 +240,6 @@ class WCompPyWake(WCompBase):
         )
         plot_profile(
             profile,
-            ax=ax,
             color=self.LINE_PLOT_COLOR,
             marker=self.LINE_PLOT_MARKER,
             linestyle=self.LINE_PLOT_LINESTYLE,
@@ -258,7 +255,6 @@ class WCompPyWake(WCompBase):
         xmin: float,
         xmax: float
     ) -> WakeProfile:
-        ax = plt.gca()
 
         wake_data = self.sim_res.flow_map(
             XZGrid(
@@ -281,7 +277,6 @@ class WCompPyWake(WCompBase):
         )
         plot_profile(
             profile,
-            ax=ax,
             # direction='x',
             # component='u',
             color=self.LINE_PLOT_COLOR,
@@ -299,7 +294,6 @@ class WCompPyWake(WCompBase):
         ymin: float,
         ymax: float
     ) -> WakeProfile:
-        ax = plt.gca()
 
         wake_data = self.sim_res.flow_map(
             YZGrid(
@@ -320,7 +314,6 @@ class WCompPyWake(WCompBase):
         )
         plot_profile(
             profile,
-            ax=ax,
             # direction='x',
             # component='u',
             color=self.LINE_PLOT_COLOR,
@@ -353,7 +346,6 @@ class WCompPyWake(WCompBase):
         plane = WakePlane(x, y, u, "z")
         plot_plane(
             plane,
-            ax=plt.gca(),
             # cmap='Blues_r',
             # color_bar=True,
             clevels=100
@@ -380,7 +372,6 @@ class WCompPyWake(WCompBase):
         plane = WakePlane(y, z, u, "x")
         plot_plane(
             plane,
-            ax=plt.gca(),
             # cmap='Blues_r',
             # color_bar=True,
             clevels=100

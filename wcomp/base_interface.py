@@ -133,10 +133,8 @@ class WCompBase(ABC):
                 profile = WakeProfile(z, u)
 
                 # Plot the profile
-                ax = plt.gca()      # Get the current pyplot axis to place the plot
                 plot_profile(
                     profile,
-                    ax=ax,
                     color=self.LINE_PLOT_COLOR,
                     marker=self.LINE_PLOT_MARKER,
                     linestyle=self.LINE_PLOT_LINESTYLE,
@@ -187,10 +185,8 @@ class WCompBase(ABC):
                 profile = WakeProfile(x, u)
 
                 # Plot the profile
-                ax = plt.gca()      # Get the current pyplot axis to place the plot
                 plot_profile(
                     profile,
-                    ax=ax,
                     color=self.LINE_PLOT_COLOR,
                     marker=self.LINE_PLOT_MARKER,
                     linestyle=self.LINE_PLOT_LINESTYLE,
@@ -242,10 +238,8 @@ class WCompBase(ABC):
                 profile = WakeProfile(y, u)
 
                 # Plot the profile
-                ax = plt.gca()      # Get the current pyplot axis to place the plot
                 plot_profile(
                     profile,
-                    ax=ax,
                     color=self.LINE_PLOT_COLOR,
                     marker=self.LINE_PLOT_MARKER,
                     linestyle=self.LINE_PLOT_LINESTYLE,
@@ -298,10 +292,8 @@ class WCompBase(ABC):
                 )
 
                 # Plot the plane
-                ax = plt.gca()      # Get the current pyplot axis to place the plot
                 plot_plane(
                     plane,
-                    ax=ax,
                     color=self.LINE_PLOT_COLOR,
                     marker=self.LINE_PLOT_MARKER,
                     linestyle=self.LINE_PLOT_LINESTYLE,
@@ -354,10 +346,8 @@ class WCompBase(ABC):
                 )
 
                 # Plot the plane
-                ax = plt.gca()      # Get the current pyplot axis to place the plot
                 plot_plane(
                     plane,
-                    ax=ax,
                     color=self.LINE_PLOT_COLOR,
                     marker=self.LINE_PLOT_MARKER,
                     linestyle=self.LINE_PLOT_LINESTYLE,

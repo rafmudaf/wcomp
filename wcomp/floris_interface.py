@@ -2,7 +2,6 @@
 import copy
 from pathlib import Path
 
-import matplotlib.pyplot as plt
 import numpy as np
 from floris.tools import FlorisInterface
 from windIO.utils.yml_utils import load_yaml
@@ -277,7 +276,6 @@ class WCompFloris(WCompBase):
         y_coordinate: float,
         zmax: float
     ) -> WakeProfile:
-        ax = plt.gca()
 
         cut_plane = self.fi.calculate_y_plane(
             crossstream_dist=y_coordinate,
@@ -294,7 +292,6 @@ class WCompFloris(WCompBase):
         )
         plot_profile(
             profile,
-            ax=ax,
             # direction='x',
             # component='u',
             color=self.LINE_PLOT_COLOR,
@@ -312,7 +309,6 @@ class WCompFloris(WCompBase):
         xmin: float,
         xmax: float
     ) -> WakeProfile:
-        ax = plt.gca()
 
         cut_plane = self.fi.calculate_y_plane(
             crossstream_dist=y_coordinate,
@@ -329,7 +325,6 @@ class WCompFloris(WCompBase):
         )
         plot_profile(
             profile,
-            ax=ax,
             # direction='x',
             # component='u',
             color=self.LINE_PLOT_COLOR,
@@ -347,7 +342,6 @@ class WCompFloris(WCompBase):
         ymin: float,
         ymax: float
     ) -> WakeProfile:
-        ax = plt.gca()
 
         cut_plane = self.fi.calculate_horizontal_plane(
             height=self.hub_height,
@@ -364,7 +358,6 @@ class WCompFloris(WCompBase):
         )
         plot_profile(
             profile,
-            ax=ax,
             # direction='y',
             # component='u',
             color=self.LINE_PLOT_COLOR,
@@ -401,7 +394,6 @@ class WCompFloris(WCompBase):
         plane = WakePlane(x, y, u, "z")
         plot_plane(
             plane,
-            ax=plt.gca(),
             # cmap='Blues_r',
             # color_bar=True,
             clevels=100
@@ -432,7 +424,6 @@ class WCompFloris(WCompBase):
         plane = WakePlane(y, z, u, "x")
         plot_plane(
             plane,
-            ax=plt.gca(),
             # cmap='Blues_r',
             # color_bar=True,
             clevels=100
