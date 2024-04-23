@@ -48,7 +48,7 @@ sphinx:
     # suppress_warnings:
     # - etoc.toctree                      # autodoc output contains toctrees, so suppress this warning. See https://github.com/executablebooks/sphinx-external-toc/issues/36
     # autoyaml_level: 3
-    autosummary_generate: true
+    autosummary_generate: true          # autosummary generates files that contain autodoc directives to automatically create the api docs pages
 
     # Autodoc config reference
     # https://www.sphinx-doc.org/en/master/usage/extensions/autodoc.html#configuration
