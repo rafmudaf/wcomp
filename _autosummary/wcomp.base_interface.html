@@ -594,10 +594,8 @@ The line starts at the ground.</p></li>
 <span class="n">profile</span> <span class="o">=</span> <span class="n">WakeProfile</span><span class="p">(</span><span class="n">z</span><span class="p">,</span> <span class="n">u</span><span class="p">)</span>
 
 <span class="c1"># Plot the profile</span>
-<span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">()</span>      <span class="c1"># Get the current pyplot axis to place the plot</span>
 <span class="n">plot_profile</span><span class="p">(</span>
     <span class="n">profile</span><span class="p">,</span>
-    <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span>
     <span class="n">color</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">LINE_PLOT_COLOR</span><span class="p">,</span>
     <span class="n">marker</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">LINE_PLOT_MARKER</span><span class="p">,</span>
     <span class="n">linestyle</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">LINE_PLOT_LINESTYLE</span><span class="p">,</span>
@@ -647,10 +645,8 @@ function should be used to produce the plot. A sample implementation is shown be
 <span class="n">profile</span> <span class="o">=</span> <span class="n">WakeProfile</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">u</span><span class="p">)</span>
 
 <span class="c1"># Plot the profile</span>
-<span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">()</span>      <span class="c1"># Get the current pyplot axis to place the plot</span>
 <span class="n">plot_profile</span><span class="p">(</span>
     <span class="n">profile</span><span class="p">,</span>
-    <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span>
     <span class="n">color</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">LINE_PLOT_COLOR</span><span class="p">,</span>
     <span class="n">marker</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">LINE_PLOT_MARKER</span><span class="p">,</span>
     <span class="n">linestyle</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">LINE_PLOT_LINESTYLE</span><span class="p">,</span>
@@ -701,10 +697,8 @@ function should be used to produce the plot. A sample implementation is shown be
 <span class="n">profile</span> <span class="o">=</span> <span class="n">WakeProfile</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">u</span><span class="p">)</span>
 
 <span class="c1"># Plot the profile</span>
-<span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">()</span>      <span class="c1"># Get the current pyplot axis to place the plot</span>
 <span class="n">plot_profile</span><span class="p">(</span>
     <span class="n">profile</span><span class="p">,</span>
-    <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span>
     <span class="n">color</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">LINE_PLOT_COLOR</span><span class="p">,</span>
     <span class="n">marker</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">LINE_PLOT_MARKER</span><span class="p">,</span>
     <span class="n">linestyle</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">LINE_PLOT_LINESTYLE</span><span class="p">,</span>
@@ -759,10 +753,8 @@ function should be used to produce the plot. A sample implementation is shown be
 <span class="p">)</span>
 
 <span class="c1"># Plot the plane</span>
-<span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">()</span>      <span class="c1"># Get the current pyplot axis to place the plot</span>
 <span class="n">plot_plane</span><span class="p">(</span>
     <span class="n">plane</span><span class="p">,</span>
-    <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span>
     <span class="n">color</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">LINE_PLOT_COLOR</span><span class="p">,</span>
     <span class="n">marker</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">LINE_PLOT_MARKER</span><span class="p">,</span>
     <span class="n">linestyle</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">LINE_PLOT_LINESTYLE</span><span class="p">,</span>
@@ -821,10 +813,8 @@ degrees with West being 270 degrees and North being 0 degrees</p></li>
 <span class="p">)</span>
 
 <span class="c1"># Plot the plane</span>
-<span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">()</span>      <span class="c1"># Get the current pyplot axis to place the plot</span>
 <span class="n">plot_plane</span><span class="p">(</span>
     <span class="n">plane</span><span class="p">,</span>
-    <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span>
     <span class="n">color</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">LINE_PLOT_COLOR</span><span class="p">,</span>
     <span class="n">marker</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">LINE_PLOT_MARKER</span><span class="p">,</span>
     <span class="n">linestyle</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">LINE_PLOT_LINESTYLE</span><span class="p">,</span>
