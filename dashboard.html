@@ -70,6 +70,8 @@
                 gtag('config', 'G-7LZJG24QM5');
             </script>
     <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script src="https://unpkg.com/mermaid@10.9.0/dist/mermaid.min.js"></script>
+    <script>mermaid.initialize({startOnLoad:true});</script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'dashboard';</script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
@@ -185,6 +187,7 @@
         </ul>
         <ul class="current nav bd-sidenav">
 <li class="toctree-l1 current active"><a class="current reference internal" href="#">Dashboard</a></li>
+
 <li class="toctree-l1"><a class="reference internal" href="wesc2023_demo.html">WESC 2023 - Simple Demo</a></li>
 <li class="toctree-l1"><a class="reference internal" href="torque2024_1turbine.html">Torque 2024 - 1 turbine cases</a></li>
 <li class="toctree-l1"><a class="reference internal" href="torque2024_4turbine.html">Torque 2024 - 4 turbine cases</a></li>
@@ -410,6 +413,7 @@ document.write(`
             </div>
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#">Dashboard</a><ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#wake-model-implementations">Wake model implementations</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#dimension-wake-profiles">1-dimension wake profiles</a><ul class="nav section-nav flex-column">
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#jensen">Jensen</a></li>
@@ -427,6 +431,10 @@ document.write(`
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#overlapping-wakes">Overlapping wakes</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#wind-shear-and-veer">Wind shear and veer</a></li>
 </ul>
+</li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#software-projects-described">Software projects described</a></li>
+</ul>
+
             </nav>
         </div>
     </div>
@@ -633,7 +641,7 @@ The models available in each software are shown in the tables below.</p>
 </div>
 </details>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.legend.Legend at 0x7fa9e55439b0&gt;
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.legend.Legend at 0x7fa9dc4d4710&gt;
 </pre></div>
 </div>
 <img alt="_images/5a9b9dad77471f0756a21d89a18ebca8d038571fd26abb0a9a2a9296ab27613d.png" src="_images/5a9b9dad77471f0756a21d89a18ebca8d038571fd26abb0a9a2a9296ab27613d.png" />
@@ -776,6 +784,57 @@ The models available in each software are shown in the tables below.</p>
 <p>Compare how the software model wind shear and wind veer</p>
 </section>
 </section>
+<section class="tex2jax_ignore mathjax_ignore" id="software-projects-described">
+<h1>Software projects described<a class="headerlink" href="#software-projects-described" title="Link to this heading">#</a></h1>
+<figure class="align-default" id="id3">
+<div class="mermaid">
+            gantt
+    dateFormat  YYYY-MM-DD
+    axisFormat  %Y
+    todayMarker off
+
+    section FLORIS
+    0.1 :2018-01-16, 2019-05-07
+    1.0 :2019-05-07, 2020-04-27
+    2.0 :2020-04-27, 2020-06-23
+    2.1 :2020-06-23, 2020-09-25
+    2.2 :2020-09-25, 2021-05-01
+    2.3 :2021-05-01, 2021-10-02
+    2.4 :2021-10-02, 2022-02-25
+    2.5 :2022-02-25, 2022-03-01
+    3.0 :2022-03-01, 2022-04-06
+    3.1 :2022-04-06, 2022-09-16
+    3.2 :2022-09-16, 2023-03-07
+    3.3 :2023-03-07, 2023-05-16
+    3.4 :2023-05-16, 2023-10-26
+    3.5 :2023-10-26, 2024-03-15
+    3.6 :2024-04-05, 2024-04-09
+    4.0 :2024-04-09, 2024-06-01
+
+    section FOXES
+    0.1 (alpha) :2022-07-01, 2022-10-22
+    0.2 (alpha) :2022-10-22, 2023-01-27
+    0.3 (alpha) :2023-01-27, 2023-06-12
+    0.4 :2023-06-12, 2023-12-13
+    0.5 :2023-12-13, 2024-02-12
+    0.6 :2024-02-12, 2024-05-08
+    0.7 :2024-05-08, 2024-06-01
+
+    section PyWake
+    0.1 :2018-12-03, 2019-01-10
+    1.0 :2019-01-10, 2020-04-14
+    1.1 :2020-04-14, 2020-04-17
+    2.0 :2020-04-17, 2020-09-15
+    2.1 :2020-09-15, 2021-03-26
+    2.2 :2021-03-26, 2022-03-18
+    2.3 :2022-03-18, 2022-07-06
+    2.4 :2022-07-06, 2023-02-15
+    2.5 :2023-02-15, 2024-06-01
+        </div><figcaption>
+<p><span class="caption-number">Fig. 1 </span><span class="caption-text">Timeline of software releases</span><a class="headerlink" href="#id3" title="Link to this image">#</a></p>
+</figcaption>
+</figure>
+</section>
 
     <script type="text/x-thebe-config">
     {
@@ -841,6 +900,7 @@ The models available in each software are shown in the tables below.</p>
   </div>
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#">Dashboard</a><ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#wake-model-implementations">Wake model implementations</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#dimension-wake-profiles">1-dimension wake profiles</a><ul class="nav section-nav flex-column">
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#jensen">Jensen</a></li>
@@ -858,6 +918,10 @@ The models available in each software are shown in the tables below.</p>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#overlapping-wakes">Overlapping wakes</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#wind-shear-and-veer">Wind shear and veer</a></li>
 </ul>
+</li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#software-projects-described">Software projects described</a></li>
+</ul>
+
   </nav></div>
 
 </div></div>

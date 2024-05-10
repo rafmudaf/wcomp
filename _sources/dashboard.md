@@ -232,3 +232,63 @@ The models available in each software are shown in the tables below.
 ## Wind shear and veer
 
 Compare how the software model wind shear and wind veer
+
+# Software projects described
+
+```{mermaid}
+---
+title: Timeline of software releases
+config:
+  theme: base
+  themeVariables:
+    sectionBkgColor: green
+    altSectionBkgColor: red
+    sectionBkgColor2: blue
+    taskBkgColor: lightgrey
+    taskBorderColor: black
+    taskTextColor: black
+caption: Timeline of software releases
+---
+gantt
+    dateFormat  YYYY-MM-DD
+    axisFormat  %Y
+    todayMarker off
+
+    section FLORIS
+    0.1 :2018-01-16, 2019-05-07
+    1.0 :2019-05-07, 2020-04-27
+    2.0 :2020-04-27, 2020-06-23
+    2.1 :2020-06-23, 2020-09-25
+    2.2 :2020-09-25, 2021-05-01
+    2.3 :2021-05-01, 2021-10-02
+    2.4 :2021-10-02, 2022-02-25
+    2.5 :2022-02-25, 2022-03-01
+    3.0 :2022-03-01, 2022-04-06
+    3.1 :2022-04-06, 2022-09-16
+    3.2 :2022-09-16, 2023-03-07
+    3.3 :2023-03-07, 2023-05-16
+    3.4 :2023-05-16, 2023-10-26
+    3.5 :2023-10-26, 2024-03-15
+    3.6 :2024-04-05, 2024-04-09
+    4.0 :2024-04-09, 2024-06-01
+
+    section FOXES
+    0.1 (alpha) :2022-07-01, 2022-10-22
+    0.2 (alpha) :2022-10-22, 2023-01-27
+    0.3 (alpha) :2023-01-27, 2023-06-12
+    0.4 :2023-06-12, 2023-12-13
+    0.5 :2023-12-13, 2024-02-12
+    0.6 :2024-02-12, 2024-05-08
+    0.7 :2024-05-08, 2024-06-01
+
+    section PyWake
+    0.1 :2018-12-03, 2019-01-10
+    1.0 :2019-01-10, 2020-04-14
+    1.1 :2020-04-14, 2020-04-17
+    2.0 :2020-04-17, 2020-09-15
+    2.1 :2020-09-15, 2021-03-26
+    2.2 :2021-03-26, 2022-03-18
+    2.3 :2022-03-18, 2022-07-06
+    2.4 :2022-07-06, 2023-02-15
+    2.5 :2023-02-15, 2024-06-01
+```
