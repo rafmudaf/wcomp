@@ -26,15 +26,15 @@ in the comparison directly.
 :gutter: 3
 
 :::{grid-item-card} [FLORIS](https://github.com/NREL/floris)
-Here's the first card.
+![floris](_static/logo_floris.png)
 :::
 
 :::{grid-item-card} [FOXES](https://github.com/FraunhoferIWES/foxes)
-Here's the second card.
+![foxes](_static/logo_foxes.svg)
 :::
 
 :::{grid-item-card} [PyWake](https://gitlab.windenergy.dtu.dk/TOPFARM/PyWake)
-Here's the third card.
+![pywake](_static/logo_pywake.svg)
 :::
 ::::
 
