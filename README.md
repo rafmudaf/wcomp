@@ -21,6 +21,11 @@ Documentation for `wcomp` is available at https://rafmudaf.github.io/wcomp/.
 
 **DOI: 10.11578/dc.20231113.4**
 
+## Publications
+
+- [TORQUE 2024 Paper](./publications/torque2024/Torque_2024.pdf)
+- [TORQUE 2024 Poster](./publications/torque2024/TORQUE24_poster_RMudafort.pdf)
+
 # Installation
 
 Currently, `wcomp` must be installed manually `pip`. The dependencies are:
