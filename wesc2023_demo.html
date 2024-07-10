@@ -14,22 +14,22 @@
   
   <script data-cfasync="false">
     document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
-    document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
   </script>
   
   <!-- Loaded before other Sphinx assets -->
-  <link href="_static/styles/theme.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
-<link href="_static/styles/bootstrap.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
-<link href="_static/styles/pydata-sphinx-theme.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+  <link href="_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
 
   
-  <link href="_static/vendor/fontawesome/6.5.1/css/all.min.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
-  <link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.1/webfonts/fa-solid-900.woff2" />
-<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.1/webfonts/fa-brands-400.woff2" />
-<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.1/webfonts/fa-regular-400.woff2" />
+  <link href="_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
 
     <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=fa44fd50" />
-    <link rel="stylesheet" type="text/css" href="_static/styles/sphinx-book-theme.css?v=384b581d" />
+    <link rel="stylesheet" type="text/css" href="_static/styles/sphinx-book-theme.css?v=a3416100" />
     <link rel="stylesheet" type="text/css" href="_static/togglebutton.css?v=13237357" />
     <link rel="stylesheet" type="text/css" href="_static/copybutton.css?v=76b2166b" />
     <link rel="stylesheet" type="text/css" href="_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
@@ -37,16 +37,16 @@
     <link rel="stylesheet" type="text/css" href="_static/sphinx-design.min.css?v=87e54e7c" />
   
   <!-- Pre-loaded scripts that we'll load fully later -->
-  <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=8d27b9dea8ad943066ae" />
-<link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=8d27b9dea8ad943066ae" />
-  <script src="_static/vendor/fontawesome/6.5.1/js/all.min.js?digest=8d27b9dea8ad943066ae"></script>
+  <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
 
     <script src="_static/documentation_options.js?v=30a733bc"></script>
     <script src="_static/doctools.js?v=9a2dae69"></script>
     <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="_static/clipboard.min.js?v=a7894cd8"></script>
     <script src="_static/copybutton.js?v=f281be69"></script>
-    <script src="_static/scripts/sphinx-book-theme.js?v=efea14e4"></script>
+    <script src="_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
     <script>let toggleHintShow = 'Click to show';</script>
     <script>let toggleHintHide = 'Click to hide';</script>
     <script>let toggleOpenOnPrint = 'true';</script>
@@ -84,27 +84,23 @@
 
   
   
-  <a id="pst-skip-link" class="skip-link" href="#main-content">Skip to main content</a>
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
   
   <div id="pst-scroll-pixel-helper"></div>
   
   <button type="button" class="btn rounded-pill" id="pst-back-to-top">
-    <i class="fa-solid fa-arrow-up"></i>
-    Back to top
-  </button>
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
 
   
   <input type="checkbox"
           class="sidebar-toggle"
-          name="__primary"
-          id="__primary"/>
-  <label class="overlay overlay-primary" for="__primary"></label>
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
   
   <input type="checkbox"
           class="sidebar-toggle"
-          name="__secondary"
-          id="__secondary"/>
-  <label class="overlay overlay-secondary" for="__secondary"></label>
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
   
   <div class="search-button__wrapper">
     <div class="search-button__overlay"></div>
@@ -126,8 +122,13 @@
   <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
 </form></div>
   </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
   
-    <header class="bd-header navbar navbar-expand-lg bd-navbar">
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
     </header>
   
 
@@ -151,6 +152,8 @@
         <div class="sidebar-primary-item">
 
   
+    
+  
 
 <a class="navbar-brand logo" href="index.html">
   
@@ -166,7 +169,7 @@
 
  <script>
  document.write(`
-   <button class="btn navbar-btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
     <i class="fa-solid fa-magnifying-glass"></i>
     <span class="search-button__default-text">Search</span>
     <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
@@ -190,7 +193,7 @@
 <li class="toctree-l1"><a class="reference internal" href="torque2024_1turbine.html">Torque 2024 - 1 turbine cases</a></li>
 <li class="toctree-l1"><a class="reference internal" href="torque2024_4turbine.html">Torque 2024 - 4 turbine cases</a></li>
 <li class="toctree-l1"><a class="reference internal" href="architecture.html">Architecture and Design</a></li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="api_docs.html">API Documentation</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-1"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l1 has-children"><a class="reference internal" href="api_docs.html">API Documentation</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l2"><a class="reference internal" href="_autosummary/wcomp.base_interface.html">wcomp.base_interface</a></li>
 <li class="toctree-l2"><a class="reference internal" href="_autosummary/wcomp.floris_interface.html">wcomp.floris_interface</a></li>
 <li class="toctree-l2"><a class="reference internal" href="_autosummary/wcomp.foxes_interface.html">wcomp.foxes_interface</a></li>
@@ -198,7 +201,7 @@
 <li class="toctree-l2"><a class="reference internal" href="_autosummary/wcomp.output_struct.html">wcomp.output_struct</a></li>
 <li class="toctree-l2"><a class="reference internal" href="_autosummary/wcomp.plotting.html">wcomp.plotting</a></li>
 </ul>
-</li>
+</details></li>
 </ul>
 
     </div>
@@ -214,7 +217,7 @@
 
       </div>
       
-      <main id="main-content" class="bd-main">
+      <main id="main-content" class="bd-main" role="main">
         
         
 
@@ -223,14 +226,14 @@
           <div class="bd-content">
             <div class="bd-article-container">
               
-              <div class="bd-header-article">
+              <div class="bd-header-article d-print-none">
 <div class="header-article-items header-article__inner">
   
     <div class="header-article-items__start">
       
-        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
   <span class="fa-solid fa-bars"></span>
-</label></div>
+</button></div>
       
     </div>
   
@@ -372,10 +375,10 @@
 
 <script>
 document.write(`
-  <button class="btn btn-sm navbar-btn theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
-    <span class="theme-switch nav-link" data-mode="light"><i class="fa-solid fa-sun fa-lg"></i></span>
-    <span class="theme-switch nav-link" data-mode="dark"><i class="fa-solid fa-moon fa-lg"></i></span>
-    <span class="theme-switch nav-link" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg"></i></span>
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
   </button>
 `);
 </script>
@@ -383,14 +386,14 @@ document.write(`
 
 <script>
 document.write(`
-  <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
     <i class="fa-solid fa-magnifying-glass fa-lg"></i>
   </button>
 `);
 </script>
-<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
     <span class="fa-solid fa-list"></span>
-</label>
+</button>
 </div></div>
       
     </div>
@@ -500,7 +503,7 @@ document.write(`
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="_images/cf41786bbf8b2deda4120e9162c3d8e7944f5b2b9da639e710e8e7950d641331.png" src="_images/cf41786bbf8b2deda4120e9162c3d8e7944f5b2b9da639e710e8e7950d641331.png" />
+<img alt="_images/123bcd40a351b73f7817368d2a8fb7771cabfcfc898493452e9fb23ef6c131de.png" src="_images/123bcd40a351b73f7817368d2a8fb7771cabfcfc898493452e9fb23ef6c131de.png" />
 </div>
 </div>
 </section>
@@ -533,7 +536,7 @@ document.write(`
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="_images/1c422efbc49bf4f90dd866def2af002e014391fa293914cbedca7cf60754d746.png" src="_images/1c422efbc49bf4f90dd866def2af002e014391fa293914cbedca7cf60754d746.png" />
+<img alt="_images/8701e4faeff219e58b43e7902e7937ff7e8cf760633e90ad36355da1af18398e.png" src="_images/8701e4faeff219e58b43e7902e7937ff7e8cf760633e90ad36355da1af18398e.png" />
 </div>
 </div>
 </section>
@@ -593,8 +596,8 @@ document.write(`
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="_images/ba61576c3cf4f2119b1e0307e0865aeca76dfa06feaaf5de81cf3f993de73ce6.png" src="_images/ba61576c3cf4f2119b1e0307e0865aeca76dfa06feaaf5de81cf3f993de73ce6.png" />
-<img alt="_images/eaa2428718a9a6fa0f79dd484b404e54f2ffa167e504f8c870153be343c31398.png" src="_images/eaa2428718a9a6fa0f79dd484b404e54f2ffa167e504f8c870153be343c31398.png" />
+<img alt="_images/92da29c42d2d1699a12895c34b1e530c2a91263ca60c2b7e19e34cee235958f1.png" src="_images/92da29c42d2d1699a12895c34b1e530c2a91263ca60c2b7e19e34cee235958f1.png" />
+<img alt="_images/82edd3ad337674f21e6d943923aac8b8feaa6e2f5d927f2f099422dea0570bdf.png" src="_images/82edd3ad337674f21e6d943923aac8b8feaa6e2f5d927f2f099422dea0570bdf.png" />
 </div>
 </div>
 </section>
@@ -702,13 +705,13 @@ Turbine 15, T15: windio_turbine
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="_images/ea724128dc6d12e8b0d5c7b51fefb1bb5e06487501b75e2403e87a25c5c5a851.png" src="_images/ea724128dc6d12e8b0d5c7b51fefb1bb5e06487501b75e2403e87a25c5c5a851.png" />
-<img alt="_images/a299c9dc03ce25be68c8cfc2106ad5ea577604af38a817a46c9e7d7fa9bf03c8.png" src="_images/a299c9dc03ce25be68c8cfc2106ad5ea577604af38a817a46c9e7d7fa9bf03c8.png" />
-<img alt="_images/53c4f4a43d2410ea83af356c0566b1874cf15c49446511ae4515c0c78a1b3639.png" src="_images/53c4f4a43d2410ea83af356c0566b1874cf15c49446511ae4515c0c78a1b3639.png" />
-<img alt="_images/2dd544946331a19ff6e0e80e1b3474c6759243358a702dce167beebb975586bf.png" src="_images/2dd544946331a19ff6e0e80e1b3474c6759243358a702dce167beebb975586bf.png" />
-<img alt="_images/d2d618f64f8f66708ccecd0a269abadaf3a8f88d6cf7cf762e5821ca901dd01b.png" src="_images/d2d618f64f8f66708ccecd0a269abadaf3a8f88d6cf7cf762e5821ca901dd01b.png" />
-<img alt="_images/f3850003ba10e5e667c8c472b0e3b678a0ac52351041d120a0a6a7b3c2cb6514.png" src="_images/f3850003ba10e5e667c8c472b0e3b678a0ac52351041d120a0a6a7b3c2cb6514.png" />
-<img alt="_images/e7f77d85e7ea23a367d0917de20cc856419ea9082da32d3a607a33f1c6232505.png" src="_images/e7f77d85e7ea23a367d0917de20cc856419ea9082da32d3a607a33f1c6232505.png" />
+<img alt="_images/ec3cd9a9e132e7c082d20d0e552a0ba17b5bb56cc57edcc40971ad43b01e5719.png" src="_images/ec3cd9a9e132e7c082d20d0e552a0ba17b5bb56cc57edcc40971ad43b01e5719.png" />
+<img alt="_images/94d44b58de053bbd28380f7fdadcff33e6293a3a8b67528678783856a265a062.png" src="_images/94d44b58de053bbd28380f7fdadcff33e6293a3a8b67528678783856a265a062.png" />
+<img alt="_images/a72a83972f35fab5d138177a9c5d5e0cecd00d3026db4b33ca20a30222427089.png" src="_images/a72a83972f35fab5d138177a9c5d5e0cecd00d3026db4b33ca20a30222427089.png" />
+<img alt="_images/33f72c7b9b099b45ef5c38a3e2765f683a69ec0d6f42540b2bfc42515b5014cf.png" src="_images/33f72c7b9b099b45ef5c38a3e2765f683a69ec0d6f42540b2bfc42515b5014cf.png" />
+<img alt="_images/d3157729374d015f213e206442a06e0fd02caf6c54e8bcd3947894a98a7c02eb.png" src="_images/d3157729374d015f213e206442a06e0fd02caf6c54e8bcd3947894a98a7c02eb.png" />
+<img alt="_images/d51c392860ac79d1e729f08f78e2862407a8788546aa3cfa87a5e1995ac5023f.png" src="_images/d51c392860ac79d1e729f08f78e2862407a8788546aa3cfa87a5e1995ac5023f.png" />
+<img alt="_images/66dba766ceb70509267a2d3710f4651e78a56692628cfc660695fe94863b034a.png" src="_images/66dba766ceb70509267a2d3710f4651e78a56692628cfc660695fe94863b034a.png" />
 </div>
 </div>
 </section>
@@ -781,9 +784,9 @@ Turbine 14, T14: windio_turbine
 Turbine 15, T15: windio_turbine
 </pre></div>
 </div>
-<img alt="_images/9716561c26cae790cc665a5750c34823efb05ad19a44bd080bb9a7b691c7e25f.png" src="_images/9716561c26cae790cc665a5750c34823efb05ad19a44bd080bb9a7b691c7e25f.png" />
-<img alt="_images/3245a765e5be2baf1546093d44863754a65fe34ca41ad3cc00e2fe564c6e4d09.png" src="_images/3245a765e5be2baf1546093d44863754a65fe34ca41ad3cc00e2fe564c6e4d09.png" />
-<img alt="_images/3f0d08acd85afa998390737b972eb2914282a727d8f752f34b8d3e3653d06012.png" src="_images/3f0d08acd85afa998390737b972eb2914282a727d8f752f34b8d3e3653d06012.png" />
+<img alt="_images/224ee9646e506a54f94d6cc86349f721202358a73afceb8d0c917482ec49f9d9.png" src="_images/224ee9646e506a54f94d6cc86349f721202358a73afceb8d0c917482ec49f9d9.png" />
+<img alt="_images/3c16b27714780454296f5e6a6e1046f18d6e908d367c5dca3edf7026e42f644d.png" src="_images/3c16b27714780454296f5e6a6e1046f18d6e908d367c5dca3edf7026e42f644d.png" />
+<img alt="_images/21fcdf47e4bfd8f329fbedc123997e3438e167f1d4bed1fbfa5279a890c19fb8.png" src="_images/21fcdf47e4bfd8f329fbedc123997e3438e167f1d4bed1fbfa5279a890c19fb8.png" />
 </div>
 </div>
 </section>
@@ -816,7 +819,7 @@ Turbine 15, T15: windio_turbine
               
               
               
-                <footer class="prev-next-footer">
+                <footer class="prev-next-footer d-print-none">
                   
 <div class="prev-next-area">
     <a class="left-prev"
@@ -912,8 +915,8 @@ By Rafael Mudafort
   </div>
   
   <!-- Scripts loaded after <body> so the DOM is not blocked -->
-  <script src="_static/scripts/bootstrap.js?digest=8d27b9dea8ad943066ae"></script>
-<script src="_static/scripts/pydata-sphinx-theme.js?digest=8d27b9dea8ad943066ae"></script>
+  <script src="_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
 
   <footer class="bd-footer">
   </footer>

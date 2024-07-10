@@ -38,6 +38,11 @@ in the comparison directly.
 :::
 ::::
 
+## Publications
+
+- [TORQUE 2024 Paper](../publications/torque2024/Torque_2024.pdf)
+- [TORQUE 2024 Poster](../publications/torque2024/TORQUE24_poster_RMudafort.pdf)
+
 ## Installation
 
 Currently, `wcomp` must be installed manually with `pip`. The dependencies are:

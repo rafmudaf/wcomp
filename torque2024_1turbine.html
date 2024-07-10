@@ -14,22 +14,22 @@
   
   <script data-cfasync="false">
     document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
-    document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
   </script>
   
   <!-- Loaded before other Sphinx assets -->
-  <link href="_static/styles/theme.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
-<link href="_static/styles/bootstrap.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
-<link href="_static/styles/pydata-sphinx-theme.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+  <link href="_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
 
   
-  <link href="_static/vendor/fontawesome/6.5.1/css/all.min.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
-  <link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.1/webfonts/fa-solid-900.woff2" />
-<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.1/webfonts/fa-brands-400.woff2" />
-<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.1/webfonts/fa-regular-400.woff2" />
+  <link href="_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
 
     <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=fa44fd50" />
-    <link rel="stylesheet" type="text/css" href="_static/styles/sphinx-book-theme.css?v=384b581d" />
+    <link rel="stylesheet" type="text/css" href="_static/styles/sphinx-book-theme.css?v=a3416100" />
     <link rel="stylesheet" type="text/css" href="_static/togglebutton.css?v=13237357" />
     <link rel="stylesheet" type="text/css" href="_static/copybutton.css?v=76b2166b" />
     <link rel="stylesheet" type="text/css" href="_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
@@ -37,16 +37,16 @@
     <link rel="stylesheet" type="text/css" href="_static/sphinx-design.min.css?v=87e54e7c" />
   
   <!-- Pre-loaded scripts that we'll load fully later -->
-  <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=8d27b9dea8ad943066ae" />
-<link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=8d27b9dea8ad943066ae" />
-  <script src="_static/vendor/fontawesome/6.5.1/js/all.min.js?digest=8d27b9dea8ad943066ae"></script>
+  <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
 
     <script src="_static/documentation_options.js?v=30a733bc"></script>
     <script src="_static/doctools.js?v=9a2dae69"></script>
     <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="_static/clipboard.min.js?v=a7894cd8"></script>
     <script src="_static/copybutton.js?v=f281be69"></script>
-    <script src="_static/scripts/sphinx-book-theme.js?v=efea14e4"></script>
+    <script src="_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
     <script>let toggleHintShow = 'Click to show';</script>
     <script>let toggleHintHide = 'Click to hide';</script>
     <script>let toggleOpenOnPrint = 'true';</script>
@@ -84,27 +84,23 @@
 
   
   
-  <a id="pst-skip-link" class="skip-link" href="#main-content">Skip to main content</a>
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
   
   <div id="pst-scroll-pixel-helper"></div>
   
   <button type="button" class="btn rounded-pill" id="pst-back-to-top">
-    <i class="fa-solid fa-arrow-up"></i>
-    Back to top
-  </button>
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
 
   
   <input type="checkbox"
           class="sidebar-toggle"
-          name="__primary"
-          id="__primary"/>
-  <label class="overlay overlay-primary" for="__primary"></label>
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
   
   <input type="checkbox"
           class="sidebar-toggle"
-          name="__secondary"
-          id="__secondary"/>
-  <label class="overlay overlay-secondary" for="__secondary"></label>
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
   
   <div class="search-button__wrapper">
     <div class="search-button__overlay"></div>
@@ -126,8 +122,13 @@
   <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
 </form></div>
   </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
   
-    <header class="bd-header navbar navbar-expand-lg bd-navbar">
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
     </header>
   
 
@@ -151,6 +152,8 @@
         <div class="sidebar-primary-item">
 
   
+    
+  
 
 <a class="navbar-brand logo" href="index.html">
   
@@ -166,7 +169,7 @@
 
  <script>
  document.write(`
-   <button class="btn navbar-btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
     <i class="fa-solid fa-magnifying-glass"></i>
     <span class="search-button__default-text">Search</span>
     <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
@@ -190,7 +193,7 @@
 <li class="toctree-l1 current active"><a class="current reference internal" href="#">Torque 2024 - 1 turbine cases</a></li>
 <li class="toctree-l1"><a class="reference internal" href="torque2024_4turbine.html">Torque 2024 - 4 turbine cases</a></li>
 <li class="toctree-l1"><a class="reference internal" href="architecture.html">Architecture and Design</a></li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="api_docs.html">API Documentation</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-1"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l1 has-children"><a class="reference internal" href="api_docs.html">API Documentation</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l2"><a class="reference internal" href="_autosummary/wcomp.base_interface.html">wcomp.base_interface</a></li>
 <li class="toctree-l2"><a class="reference internal" href="_autosummary/wcomp.floris_interface.html">wcomp.floris_interface</a></li>
 <li class="toctree-l2"><a class="reference internal" href="_autosummary/wcomp.foxes_interface.html">wcomp.foxes_interface</a></li>
@@ -198,7 +201,7 @@
 <li class="toctree-l2"><a class="reference internal" href="_autosummary/wcomp.output_struct.html">wcomp.output_struct</a></li>
 <li class="toctree-l2"><a class="reference internal" href="_autosummary/wcomp.plotting.html">wcomp.plotting</a></li>
 </ul>
-</li>
+</details></li>
 </ul>
 
     </div>
@@ -214,7 +217,7 @@
 
       </div>
       
-      <main id="main-content" class="bd-main">
+      <main id="main-content" class="bd-main" role="main">
         
         
 
@@ -223,14 +226,14 @@
           <div class="bd-content">
             <div class="bd-article-container">
               
-              <div class="bd-header-article">
+              <div class="bd-header-article d-print-none">
 <div class="header-article-items header-article__inner">
   
     <div class="header-article-items__start">
       
-        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
   <span class="fa-solid fa-bars"></span>
-</label></div>
+</button></div>
       
     </div>
   
@@ -372,10 +375,10 @@
 
 <script>
 document.write(`
-  <button class="btn btn-sm navbar-btn theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
-    <span class="theme-switch nav-link" data-mode="light"><i class="fa-solid fa-sun fa-lg"></i></span>
-    <span class="theme-switch nav-link" data-mode="dark"><i class="fa-solid fa-moon fa-lg"></i></span>
-    <span class="theme-switch nav-link" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg"></i></span>
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
   </button>
 `);
 </script>
@@ -383,14 +386,14 @@ document.write(`
 
 <script>
 document.write(`
-  <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
     <i class="fa-solid fa-magnifying-glass fa-lg"></i>
   </button>
 `);
 </script>
-<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
     <span class="fa-solid fa-list"></span>
-</label>
+</button>
 </div></div>
       
     </div>
@@ -440,7 +443,7 @@ document.write(`
 <span id="torque1turbine"></span><h1>Torque 2024 - 1 turbine cases<a class="headerlink" href="#torque-2024-1-turbine-cases" title="Link to this heading">#</a></h1>
 <p>The following analytical wake models are included in FLORIS, FOXES, and PyWake.</p>
 <p><strong>Velocity Models</strong></p>
-<table class="table">
+<div class="pst-scrollable-table-container"><table class="table">
 <thead>
 <tr class="row-odd"><th class="head"><p>Wake Model</p></th>
 <th class="head"><p>FLORIS</p></th>
@@ -511,8 +514,9 @@ document.write(`
 </tr>
 </tbody>
 </table>
+</div>
 <p><strong>Deflection Models</strong></p>
-<table class="table">
+<div class="pst-scrollable-table-container"><table class="table">
 <thead>
 <tr class="row-odd"><th class="head"><p>Wake Model</p></th>
 <th class="head"><p>FLORIS</p></th>
@@ -543,6 +547,7 @@ document.write(`
 </tr>
 </tbody>
 </table>
+</div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># stdlib</span>
@@ -618,7 +623,7 @@ document.write(`
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="_images/0864432f7c23559f1b2a7fbcff900e47bef2e6207c31e9b3b59c3d4c87aaa1c3.png" src="_images/0864432f7c23559f1b2a7fbcff900e47bef2e6207c31e9b3b59c3d4c87aaa1c3.png" />
+<img alt="_images/0acaf6a45638db4e3e36e8f2d4d872090e069b2ecf3241a1bf68dd75e3c64a6e.png" src="_images/0acaf6a45638db4e3e36e8f2d4d872090e069b2ecf3241a1bf68dd75e3c64a6e.png" />
 </div>
 </div>
 </section>
@@ -700,8 +705,8 @@ FOXES has a set of predefined Jensen wake models available, but you are expected
 7.049697655142648e-15
 </pre></div>
 </div>
-<img alt="_images/a44440e72a03cb8543871a06a282a656677e263689f5f7596b59d4c98802478f.png" src="_images/a44440e72a03cb8543871a06a282a656677e263689f5f7596b59d4c98802478f.png" />
-<img alt="_images/c7902603c58829d0ec7dace18b1d9e8b9689a89046c2c9f86f1ca0cfb0a6aa29.png" src="_images/c7902603c58829d0ec7dace18b1d9e8b9689a89046c2c9f86f1ca0cfb0a6aa29.png" />
+<img alt="_images/0def30a11ca81534400153c48d8284a0091ad2b1c325d946d30b530743a7dc34.png" src="_images/0def30a11ca81534400153c48d8284a0091ad2b1c325d946d30b530743a7dc34.png" />
+<img alt="_images/15a37a4ec8d63846debd9a92d0d7e650bccbea586a7a58cf2589e5c37261db05.png" src="_images/15a37a4ec8d63846debd9a92d0d7e650bccbea586a7a58cf2589e5c37261db05.png" />
 </div>
 </div>
 </section>
@@ -766,14 +771,12 @@ FOXES has a set of predefined Jensen wake models available, but you are expected
 </div>
 <div class="cell_output docutils container">
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Turbine 0, T0: windio_turbine
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Error norm:
+Error norm:
 2.560358201968351e-14
 </pre></div>
 </div>
-<img alt="_images/832752eaee6a5f2cdab990a50cc9de18277a0bca8a7f7652d33659103dd77c6e.png" src="_images/832752eaee6a5f2cdab990a50cc9de18277a0bca8a7f7652d33659103dd77c6e.png" />
-<img alt="_images/5b7962617aaa9883d61e6206e33f4f1ab8462d9b72b8862b61a5d66934135257.png" src="_images/5b7962617aaa9883d61e6206e33f4f1ab8462d9b72b8862b61a5d66934135257.png" />
+<img alt="_images/3f3b4fa37c2b13b57443424cd7719868cb4e798b808fb5018993dea36583c152.png" src="_images/3f3b4fa37c2b13b57443424cd7719868cb4e798b808fb5018993dea36583c152.png" />
+<img alt="_images/09ba57f24202cac30831750a0e75874c00252480847df01bc50f2dc47d1d3e28.png" src="_images/09ba57f24202cac30831750a0e75874c00252480847df01bc50f2dc47d1d3e28.png" />
 </div>
 </div>
 </section>
@@ -861,8 +864,8 @@ Where as Bastankhah / Porte Agel 2016 sets ky and kz directly as in the velocity
 7.706554870684573
 </pre></div>
 </div>
-<img alt="_images/5caa766cbc70c041efd9b601ebdfcbb784f53a77aabeb7198e04cba42043b73a.png" src="_images/5caa766cbc70c041efd9b601ebdfcbb784f53a77aabeb7198e04cba42043b73a.png" />
-<img alt="_images/f19b743da040b8b94873b68cdf43087aec467c23db644502771f44a5de3a4c5b.png" src="_images/f19b743da040b8b94873b68cdf43087aec467c23db644502771f44a5de3a4c5b.png" />
+<img alt="_images/572693f02baf0e65020722ea24726b219ffdbe89da6153de7739180193f3c76e.png" src="_images/572693f02baf0e65020722ea24726b219ffdbe89da6153de7739180193f3c76e.png" />
+<img alt="_images/bf93242d344ea48f9347b19465d16ec5e6596cffb4c05af477f709f92aa00a47.png" src="_images/bf93242d344ea48f9347b19465d16ec5e6596cffb4c05af477f709f92aa00a47.png" />
 </div>
 </div>
 </section>
@@ -931,8 +934,8 @@ Error norm:
 0.00305260291072107
 </pre></div>
 </div>
-<img alt="_images/76359a76432f2dd617733e99808e7a8d59477316ca4f651542722feca3887a00.png" src="_images/76359a76432f2dd617733e99808e7a8d59477316ca4f651542722feca3887a00.png" />
-<img alt="_images/8e396ff342ee345b2c8e18c4d6ca1fd6145cf49962de3857405920106b0af807.png" src="_images/8e396ff342ee345b2c8e18c4d6ca1fd6145cf49962de3857405920106b0af807.png" />
+<img alt="_images/eda7d939cccdd4a544f591168ab57a7624c7fd11ea88d3504e7d1dcc6fc3dfc7.png" src="_images/eda7d939cccdd4a544f591168ab57a7624c7fd11ea88d3504e7d1dcc6fc3dfc7.png" />
+<img alt="_images/2510177318b87460738ba6292f17139a69dbc960adea9cd63ec95ee764995bd2.png" src="_images/2510177318b87460738ba6292f17139a69dbc960adea9cd63ec95ee764995bd2.png" />
 </div>
 </div>
 </section>
@@ -1062,9 +1065,9 @@ I've set kd to beta.</p>
 0.22507915331221032
 </pre></div>
 </div>
-<img alt="_images/21081c46b54411fa76b9543f92bb877f774252a1ba61c1e210c71f56355a53aa.png" src="_images/21081c46b54411fa76b9543f92bb877f774252a1ba61c1e210c71f56355a53aa.png" />
-<img alt="_images/7f69c4b4c0566b52f60d2553c98524a2911ffb73f718ea6f15abd6ed3442a451.png" src="_images/7f69c4b4c0566b52f60d2553c98524a2911ffb73f718ea6f15abd6ed3442a451.png" />
-<img alt="_images/efdacabe3a05d2b1d5814c8eb7a89142f94c7154bf1bfb8f5029db108a7a8ed3.png" src="_images/efdacabe3a05d2b1d5814c8eb7a89142f94c7154bf1bfb8f5029db108a7a8ed3.png" />
+<img alt="_images/4708dcb6f184f1b918e7f16f78112b81053be422c562fe785e78018fa68e3d27.png" src="_images/4708dcb6f184f1b918e7f16f78112b81053be422c562fe785e78018fa68e3d27.png" />
+<img alt="_images/21812810fb8dac9654bb41a59ace3f83275b35828d4b67c1f0415f2f4d3c380a.png" src="_images/21812810fb8dac9654bb41a59ace3f83275b35828d4b67c1f0415f2f4d3c380a.png" />
+<img alt="_images/00759390968031403c46024c617587528314d9db495c84da949f9c5788e0cf00.png" src="_images/00759390968031403c46024c617587528314d9db495c84da949f9c5788e0cf00.png" />
 </div>
 </div>
 </section>
@@ -1200,10 +1203,10 @@ Where as Bastankhah / Porte Agel 2016 sets ky and kz directly as in the velocity
 6.442284281720596
 </pre></div>
 </div>
-<img alt="_images/a6d1788408c14d6fd8313c103680532e6a976974d24e21ebc85e9c2ea4e260eb.png" src="_images/a6d1788408c14d6fd8313c103680532e6a976974d24e21ebc85e9c2ea4e260eb.png" />
-<img alt="_images/4e0c4638ee6094a0217a33286458f23f7f468b02bb9bc1d964da6abda7458904.png" src="_images/4e0c4638ee6094a0217a33286458f23f7f468b02bb9bc1d964da6abda7458904.png" />
-<img alt="_images/5866547df8c80d0ea7e4a160791782ba0c044e968f71202055892a2ee3ebbf21.png" src="_images/5866547df8c80d0ea7e4a160791782ba0c044e968f71202055892a2ee3ebbf21.png" />
-<img alt="_images/32af4b5f7bb72b7f214307779d8a94164d73eda2c2de10b3dd3b246aa696abee.png" src="_images/32af4b5f7bb72b7f214307779d8a94164d73eda2c2de10b3dd3b246aa696abee.png" />
+<img alt="_images/3ac75bc956c05afa4cb25d302533c2da3101771af4a4cc7acd82db3263c7ad54.png" src="_images/3ac75bc956c05afa4cb25d302533c2da3101771af4a4cc7acd82db3263c7ad54.png" />
+<img alt="_images/c5dba9dd943ba96267906e9881cee75029eb6d1be0f09ddd8dd445b8decbab28.png" src="_images/c5dba9dd943ba96267906e9881cee75029eb6d1be0f09ddd8dd445b8decbab28.png" />
+<img alt="_images/412a1f16bbdde1cda1807639729882e20dfe14931339d1731c3493a67948dd32.png" src="_images/412a1f16bbdde1cda1807639729882e20dfe14931339d1731c3493a67948dd32.png" />
+<img alt="_images/4ee46d69afceefa2eb39263c515f8c87ce3d4f173a309c4de1cc4da0d27b1a7f.png" src="_images/4ee46d69afceefa2eb39263c515f8c87ce3d4f173a309c4de1cc4da0d27b1a7f.png" />
 </div>
 </div>
 </section>
@@ -1262,8 +1265,8 @@ Where as Bastankhah / Porte Agel 2016 sets ky and kz directly as in the velocity
 Turbine 0, T0: windio_turbine
 </pre></div>
 </div>
-<img alt="_images/a45dc0845748153b1689a6bc492900188d5143f437ac5b3f03126d49c6eec31d.png" src="_images/a45dc0845748153b1689a6bc492900188d5143f437ac5b3f03126d49c6eec31d.png" />
-<img alt="_images/db6ab009d8accc16ecbe269f6ead22d1250c2cf1aac3845b0d38f3cdf44ba99e.png" src="_images/db6ab009d8accc16ecbe269f6ead22d1250c2cf1aac3845b0d38f3cdf44ba99e.png" />
+<img alt="_images/1f531de863b96dc6c90a60899bebed5060f95f3970172b119d204ffdf2040d93.png" src="_images/1f531de863b96dc6c90a60899bebed5060f95f3970172b119d204ffdf2040d93.png" />
+<img alt="_images/218dc61cf417b1b8be970e8f1eb3841326e33fafe8ad005c868e03db0020fad3.png" src="_images/218dc61cf417b1b8be970e8f1eb3841326e33fafe8ad005c868e03db0020fad3.png" />
 </div>
 </div>
 </section>
@@ -1296,7 +1299,7 @@ Turbine 0, T0: windio_turbine
               
               
               
-                <footer class="prev-next-footer">
+                <footer class="prev-next-footer d-print-none">
                   
 <div class="prev-next-area">
     <a class="left-prev"
@@ -1395,8 +1398,8 @@ By Rafael Mudafort
   </div>
   
   <!-- Scripts loaded after <body> so the DOM is not blocked -->
-  <script src="_static/scripts/bootstrap.js?digest=8d27b9dea8ad943066ae"></script>
-<script src="_static/scripts/pydata-sphinx-theme.js?digest=8d27b9dea8ad943066ae"></script>
+  <script src="_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
 
   <footer class="bd-footer">
   </footer>

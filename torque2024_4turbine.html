@@ -14,22 +14,22 @@
   
   <script data-cfasync="false">
     document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
-    document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
   </script>
   
   <!-- Loaded before other Sphinx assets -->
-  <link href="_static/styles/theme.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
-<link href="_static/styles/bootstrap.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
-<link href="_static/styles/pydata-sphinx-theme.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+  <link href="_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
 
   
-  <link href="_static/vendor/fontawesome/6.5.1/css/all.min.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
-  <link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.1/webfonts/fa-solid-900.woff2" />
-<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.1/webfonts/fa-brands-400.woff2" />
-<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.1/webfonts/fa-regular-400.woff2" />
+  <link href="_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
 
     <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=fa44fd50" />
-    <link rel="stylesheet" type="text/css" href="_static/styles/sphinx-book-theme.css?v=384b581d" />
+    <link rel="stylesheet" type="text/css" href="_static/styles/sphinx-book-theme.css?v=a3416100" />
     <link rel="stylesheet" type="text/css" href="_static/togglebutton.css?v=13237357" />
     <link rel="stylesheet" type="text/css" href="_static/copybutton.css?v=76b2166b" />
     <link rel="stylesheet" type="text/css" href="_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
@@ -37,16 +37,16 @@
     <link rel="stylesheet" type="text/css" href="_static/sphinx-design.min.css?v=87e54e7c" />
   
   <!-- Pre-loaded scripts that we'll load fully later -->
-  <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=8d27b9dea8ad943066ae" />
-<link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=8d27b9dea8ad943066ae" />
-  <script src="_static/vendor/fontawesome/6.5.1/js/all.min.js?digest=8d27b9dea8ad943066ae"></script>
+  <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
 
     <script src="_static/documentation_options.js?v=30a733bc"></script>
     <script src="_static/doctools.js?v=9a2dae69"></script>
     <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="_static/clipboard.min.js?v=a7894cd8"></script>
     <script src="_static/copybutton.js?v=f281be69"></script>
-    <script src="_static/scripts/sphinx-book-theme.js?v=efea14e4"></script>
+    <script src="_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
     <script>let toggleHintShow = 'Click to show';</script>
     <script>let toggleHintHide = 'Click to hide';</script>
     <script>let toggleOpenOnPrint = 'true';</script>
@@ -84,27 +84,23 @@
 
   
   
-  <a id="pst-skip-link" class="skip-link" href="#main-content">Skip to main content</a>
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
   
   <div id="pst-scroll-pixel-helper"></div>
   
   <button type="button" class="btn rounded-pill" id="pst-back-to-top">
-    <i class="fa-solid fa-arrow-up"></i>
-    Back to top
-  </button>
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
 
   
   <input type="checkbox"
           class="sidebar-toggle"
-          name="__primary"
-          id="__primary"/>
-  <label class="overlay overlay-primary" for="__primary"></label>
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
   
   <input type="checkbox"
           class="sidebar-toggle"
-          name="__secondary"
-          id="__secondary"/>
-  <label class="overlay overlay-secondary" for="__secondary"></label>
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
   
   <div class="search-button__wrapper">
     <div class="search-button__overlay"></div>
@@ -126,8 +122,13 @@
   <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
 </form></div>
   </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
   
-    <header class="bd-header navbar navbar-expand-lg bd-navbar">
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
     </header>
   
 
@@ -151,6 +152,8 @@
         <div class="sidebar-primary-item">
 
   
+    
+  
 
 <a class="navbar-brand logo" href="index.html">
   
@@ -166,7 +169,7 @@
 
  <script>
  document.write(`
-   <button class="btn navbar-btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
     <i class="fa-solid fa-magnifying-glass"></i>
     <span class="search-button__default-text">Search</span>
     <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
@@ -190,7 +193,7 @@
 <li class="toctree-l1"><a class="reference internal" href="torque2024_1turbine.html">Torque 2024 - 1 turbine cases</a></li>
 <li class="toctree-l1 current active"><a class="current reference internal" href="#">Torque 2024 - 4 turbine cases</a></li>
 <li class="toctree-l1"><a class="reference internal" href="architecture.html">Architecture and Design</a></li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="api_docs.html">API Documentation</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-1"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l1 has-children"><a class="reference internal" href="api_docs.html">API Documentation</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l2"><a class="reference internal" href="_autosummary/wcomp.base_interface.html">wcomp.base_interface</a></li>
 <li class="toctree-l2"><a class="reference internal" href="_autosummary/wcomp.floris_interface.html">wcomp.floris_interface</a></li>
 <li class="toctree-l2"><a class="reference internal" href="_autosummary/wcomp.foxes_interface.html">wcomp.foxes_interface</a></li>
@@ -198,7 +201,7 @@
 <li class="toctree-l2"><a class="reference internal" href="_autosummary/wcomp.output_struct.html">wcomp.output_struct</a></li>
 <li class="toctree-l2"><a class="reference internal" href="_autosummary/wcomp.plotting.html">wcomp.plotting</a></li>
 </ul>
-</li>
+</details></li>
 </ul>
 
     </div>
@@ -214,7 +217,7 @@
 
       </div>
       
-      <main id="main-content" class="bd-main">
+      <main id="main-content" class="bd-main" role="main">
         
         
 
@@ -223,14 +226,14 @@
           <div class="bd-content">
             <div class="bd-article-container">
               
-              <div class="bd-header-article">
+              <div class="bd-header-article d-print-none">
 <div class="header-article-items header-article__inner">
   
     <div class="header-article-items__start">
       
-        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
   <span class="fa-solid fa-bars"></span>
-</label></div>
+</button></div>
       
     </div>
   
@@ -372,10 +375,10 @@
 
 <script>
 document.write(`
-  <button class="btn btn-sm navbar-btn theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
-    <span class="theme-switch nav-link" data-mode="light"><i class="fa-solid fa-sun fa-lg"></i></span>
-    <span class="theme-switch nav-link" data-mode="dark"><i class="fa-solid fa-moon fa-lg"></i></span>
-    <span class="theme-switch nav-link" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg"></i></span>
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
   </button>
 `);
 </script>
@@ -383,14 +386,14 @@ document.write(`
 
 <script>
 document.write(`
-  <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
     <i class="fa-solid fa-magnifying-glass fa-lg"></i>
   </button>
 `);
 </script>
-<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
     <span class="fa-solid fa-list"></span>
-</label>
+</button>
 </div></div>
       
     </div>
@@ -447,7 +450,7 @@ The layout is:</p>
 <p>The wind speed is 9.8 m/s and the wind direction is 270 degrees.</p>
 <p>The following analytical wake models are included in FLORIS, FOXES, and PyWake.</p>
 <p><strong>Velocity Models</strong></p>
-<table class="table">
+<div class="pst-scrollable-table-container"><table class="table">
 <thead>
 <tr class="row-odd"><th class="head"><p>Wake Model</p></th>
 <th class="head"><p>FLORIS</p></th>
@@ -518,8 +521,9 @@ The layout is:</p>
 </tr>
 </tbody>
 </table>
+</div>
 <p><strong>Deflection Models</strong></p>
-<table class="table">
+<div class="pst-scrollable-table-container"><table class="table">
 <thead>
 <tr class="row-odd"><th class="head"><p>Wake Model</p></th>
 <th class="head"><p>FLORIS</p></th>
@@ -550,6 +554,7 @@ The layout is:</p>
 </tr>
 </tbody>
 </table>
+</div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># stdlib</span>
@@ -620,7 +625,7 @@ The layout is:</p>
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="_images/e172f87ca3b3f60388bdf0173b95b02ded578a3c5803cbd1b736f1bb084ddd1a.png" src="_images/e172f87ca3b3f60388bdf0173b95b02ded578a3c5803cbd1b736f1bb084ddd1a.png" />
+<img alt="_images/ae11cd05ce62a3ba3e4f32c603afa9c0be69236beadb70e9a58946403b46fb74.png" src="_images/ae11cd05ce62a3ba3e4f32c603afa9c0be69236beadb70e9a58946403b46fb74.png" />
 </div>
 </div>
 </section>
@@ -705,7 +710,7 @@ Turbine 3, T3: windio_turbine
 3.5667386439657554
 </pre></div>
 </div>
-<img alt="_images/58c13ac627b0c26679f2e910a85920badc2bb251169e5fc4d9bfc2dea40d6b1c.png" src="_images/58c13ac627b0c26679f2e910a85920badc2bb251169e5fc4d9bfc2dea40d6b1c.png" />
+<img alt="_images/8580022967e3ee011dfbefd7d58e52bda980ae5b0462f736b3051d3eee431d3a.png" src="_images/8580022967e3ee011dfbefd7d58e52bda980ae5b0462f736b3051d3eee431d3a.png" />
 </div>
 </div>
 </section>
@@ -777,7 +782,7 @@ Error norm:
 4.925589047967199
 </pre></div>
 </div>
-<img alt="_images/68d136ed8e18aee6fb062546407bfb5934d34f04d2dd2f3b521bd5cdebb2a43f.png" src="_images/68d136ed8e18aee6fb062546407bfb5934d34f04d2dd2f3b521bd5cdebb2a43f.png" />
+<img alt="_images/6e21f61f47fed0a84f74c195af769845e04ec9f0dd662c530fba5c85be931678.png" src="_images/6e21f61f47fed0a84f74c195af769845e04ec9f0dd662c530fba5c85be931678.png" />
 </div>
 </div>
 </section>
@@ -868,7 +873,7 @@ Turbine 3, T3: windio_turbine
 13.013058028397586
 </pre></div>
 </div>
-<img alt="_images/2af1c4b00d042fd84a02dc1f27db4d86fcdbc62357946a583a80fbc0197204fb.png" src="_images/2af1c4b00d042fd84a02dc1f27db4d86fcdbc62357946a583a80fbc0197204fb.png" />
+<img alt="_images/cb49e10311a644e8158acfdd41a708c548feda664a8df56b22d940ed7dd907c1.png" src="_images/cb49e10311a644e8158acfdd41a708c548feda664a8df56b22d940ed7dd907c1.png" />
 </div>
 </div>
 </section>
@@ -940,8 +945,8 @@ Error norm:
 3.3160717557378208
 </pre></div>
 </div>
-<img alt="_images/a1467bb33ec43f246b1ac9860ed3c8b359a280af42e015b9a8eeb3f67e38860a.png" src="_images/a1467bb33ec43f246b1ac9860ed3c8b359a280af42e015b9a8eeb3f67e38860a.png" />
-<img alt="_images/48a4e99ca0bc953aa50a97c75589e6a8569c1c36661ed07253ae79644ea060e7.png" src="_images/48a4e99ca0bc953aa50a97c75589e6a8569c1c36661ed07253ae79644ea060e7.png" />
+<img alt="_images/8e27f5f6792cea2ba9e317c1b185b39215bdcf21f06c47fa85527cfd688cd6d5.png" src="_images/8e27f5f6792cea2ba9e317c1b185b39215bdcf21f06c47fa85527cfd688cd6d5.png" />
+<img alt="_images/8fe4f8ebd0b80463db9162fc890f4e7e4bf10201e13bf059078088d587dfd619.png" src="_images/8fe4f8ebd0b80463db9162fc890f4e7e4bf10201e13bf059078088d587dfd619.png" />
 </div>
 </div>
 </section>
@@ -1068,9 +1073,9 @@ I've set kd to beta.</p>
 4.274196853600336
 </pre></div>
 </div>
-<img alt="_images/208dbcb3eb93081bbf10fa409967fd194c705602965ab53c890b4c5dea65f779.png" src="_images/208dbcb3eb93081bbf10fa409967fd194c705602965ab53c890b4c5dea65f779.png" />
-<img alt="_images/b5e964f394151c625f5b9095bf6e24130807c55b1f5868ec4db50d0a8a57132f.png" src="_images/b5e964f394151c625f5b9095bf6e24130807c55b1f5868ec4db50d0a8a57132f.png" />
-<img alt="_images/83404f9ccbade7035cb9a333644eec3dd1cebfd21fa7fb4000cdd2d6a4d7c222.png" src="_images/83404f9ccbade7035cb9a333644eec3dd1cebfd21fa7fb4000cdd2d6a4d7c222.png" />
+<img alt="_images/ac353325a3cfeaff43bb07ebcc8c8fd23e54f2eda568728f3aafd7dd11fde0c7.png" src="_images/ac353325a3cfeaff43bb07ebcc8c8fd23e54f2eda568728f3aafd7dd11fde0c7.png" />
+<img alt="_images/cc7866d8a94350702487dd7d90a741176061635e26d29530be63c285352b2354.png" src="_images/cc7866d8a94350702487dd7d90a741176061635e26d29530be63c285352b2354.png" />
+<img alt="_images/957ea78978891281af783fd465e9c844a8bd4c46211875f21f3d2d4ca96f2793.png" src="_images/957ea78978891281af783fd465e9c844a8bd4c46211875f21f3d2d4ca96f2793.png" />
 </div>
 </div>
 </section>
@@ -1209,9 +1214,9 @@ Turbine 3, T3: windio_turbine
 12.375514689019521
 </pre></div>
 </div>
-<img alt="_images/efa552e941a63ae5b825f07d66e06a3ff3091c591fa99956118f4a794faf9973.png" src="_images/efa552e941a63ae5b825f07d66e06a3ff3091c591fa99956118f4a794faf9973.png" />
-<img alt="_images/f62d23a39d2b71220f010a48e705e31b192e2139803be90662f90cbe75f1a546.png" src="_images/f62d23a39d2b71220f010a48e705e31b192e2139803be90662f90cbe75f1a546.png" />
-<img alt="_images/93c5067e1b6a4c5e2c1451bd9b6fd1f6f88e948e7a59e4852521b5c503f4946d.png" src="_images/93c5067e1b6a4c5e2c1451bd9b6fd1f6f88e948e7a59e4852521b5c503f4946d.png" />
+<img alt="_images/30ee6408ceaf050b1227213f14851cf3faf7343a08521e10e8ffaa343848c916.png" src="_images/30ee6408ceaf050b1227213f14851cf3faf7343a08521e10e8ffaa343848c916.png" />
+<img alt="_images/09b3b0a4b8715f9362d39b33d90340fe1a4acbc9a277b8892b1f3a155d364071.png" src="_images/09b3b0a4b8715f9362d39b33d90340fe1a4acbc9a277b8892b1f3a155d364071.png" />
+<img alt="_images/caf9f7f9e851a1370962cf971c05a5eb5f02a1d988be5fabffc47bb4076b6580.png" src="_images/caf9f7f9e851a1370962cf971c05a5eb5f02a1d988be5fabffc47bb4076b6580.png" />
 </div>
 </div>
 </section>
@@ -1245,7 +1250,7 @@ Turbine 3, T3: windio_turbine
               
               
               
-                <footer class="prev-next-footer">
+                <footer class="prev-next-footer d-print-none">
                   
 <div class="prev-next-area">
     <a class="left-prev"
@@ -1343,8 +1348,8 @@ By Rafael Mudafort
   </div>
   
   <!-- Scripts loaded after <body> so the DOM is not blocked -->
-  <script src="_static/scripts/bootstrap.js?digest=8d27b9dea8ad943066ae"></script>
-<script src="_static/scripts/pydata-sphinx-theme.js?digest=8d27b9dea8ad943066ae"></script>
+  <script src="_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
 
   <footer class="bd-footer">
   </footer>
