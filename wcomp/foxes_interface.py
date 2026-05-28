@@ -1,7 +1,6 @@
 
 from pathlib import Path
 
-import foxes.constants as FC
 import foxes.variables as FV
 import numpy as np
 import pandas as pd
@@ -18,9 +17,8 @@ from foxes.models.wake_models.wind import JensenWake
 from foxes.models.wake_models.wind import Bastankhah2014
 from foxes.models.wake_models.wind import Bastankhah2016
 from foxes.models.wake_models.wind import TurbOParkWake
-from foxes.models.wake_frames import YawedWakes
 
-from windIO.utils.yml_utils import load_yaml
+from windIO import load_yaml
 from .base_interface import WCompBase
 from .output_struct import WakePlane, WakeProfile
 from .plotting import plot_plane, plot_profile
@@ -61,7 +59,7 @@ WAKE_MODEL_MAPPING = {
     "turbopark": {
         "model_ref": TurbOParkWake,
         "parameters": {
-            "A": "A",
+            "ka": "A",
         }
     },
 
@@ -75,7 +73,7 @@ WAKE_MODEL_MAPPING = {
     #     }
     # }
     "bastankhah2016_deflection": {
-        "model_ref": YawedWakes,
+        "model_ref": "",
         "parameters": {
             "alpha": "alpha",
             "beta": "beta",
@@ -131,34 +129,34 @@ class WCompFoxes(WCompBase):
         """
         wres = res["wind_resource"]
 
-        wd = np.array(wres["wind_direction"], dtype=FC.DTYPE)
-        ws = np.array(wres["wind_speed"], dtype=FC.DTYPE)
+        wd = np.array(wres["wind_direction"])
+        ws = np.array(wres["wind_speed"])
         n_wd = len(wd)
         n_ws = len(ws)
         n = n_wd*n_ws
 
-        data = np.zeros((n_wd, n_ws, 2), dtype=FC.DTYPE)
+        data = np.zeros((n_wd, n_ws, 2))
         data[:, :, 0] = wd[:, None]
         data[:, :, 1] = ws[None, :]
         names = ["wind_direction", "wind_speed"]
 
         def _to_data(v, d, dims):
             nonlocal data, names
-            hdata = np.zeros((n_wd, n_ws, 1), dtype=FC.DTYPE)
+            hdata = np.zeros((n_wd, n_ws, 1))
             if len(dims) == 0:
-                hdata[:, :, 0] = FC.DTYPE(d)
+                hdata[:, :, 0] = d
             elif len(dims) == 1:
                 if dims[0] == "wind_direction":
-                    hdata[:, :, 0] = np.array(d, dtype=FC.DTYPE)[:, None]
+                    hdata[:, :, 0] = np.array(d)[:, None]
                 elif dims[0] == "wind_speed":
-                    hdata[:, :, 0] = np.array(d, dtype=FC.DTYPE)[None, :]
+                    hdata[:, :, 0] = np.array(d)[None, :]
                 else:
                     raise ValueError(f"Unknown dimension '{dims[0]}' for data '{v}'")
             elif len(dims) == 2:
                 if dims[0] == "wind_direction" and dims[1] == "wind_speed":
-                    hdata[:, :, 0] = np.array(d, dtype=FC.DTYPE)
+                    hdata[:, :, 0] = np.array(d)
                 elif dims[1] == "wind_direction" and dims[0] == "wind_speed":
-                    hdata[:, :, 0] = np.swapaxes(np.array(d, dtype=FC.DTYPE), 0, 1)
+                    hdata[:, :, 0] = np.swapaxes(np.array(d), 0, 1)
                 else:
                     raise ValueError(f"Cannot handle dims = {dims} for data '{v}'")
             else:
@@ -250,8 +248,8 @@ class WCompFoxes(WCompBase):
             lname = list(fdict['layouts'].keys())[layout]
             layout = fdict['layouts'][lname]
 
-        x = np.array(layout["coordinates"]["x"], dtype=FC.DTYPE)
-        y = np.array(layout["coordinates"]["y"], dtype=FC.DTYPE)
+        x = np.array(layout["coordinates"]["x"])
+        y = np.array(layout["coordinates"]["y"])
         N = len(x)
         ldata = pd.DataFrame(index=range(N))
         ldata.index.name = "index"
@@ -261,15 +259,15 @@ class WCompFoxes(WCompBase):
         tdict = fdict["turbines"]
         pdict = tdict["performance"]
 
-        ct_ws = np.array(pdict["Ct_curve"]["Ct_wind_speeds"], dtype=FC.DTYPE)
+        ct_ws = np.array(pdict["Ct_curve"]["Ct_wind_speeds"])
         ct_data = pd.DataFrame(index=range(len(ct_ws)))
         ct_data["ws"] = ct_ws
-        ct_data["ct"] = np.array(pdict["Ct_curve"]["Ct_values"], dtype=FC.DTYPE)
+        ct_data["ct"] = np.array(pdict["Ct_curve"]["Ct_values"])
 
-        cp_ws = np.array(pdict["Cp_curve"]["Cp_wind_speeds"], dtype=FC.DTYPE)
+        cp_ws = np.array(pdict["Cp_curve"]["Cp_wind_speeds"])
         cp_data = pd.DataFrame(index=range(len(cp_ws)))
         cp_data["ws"] = cp_ws
-        cp_data["cp"] = np.array(pdict["Cp_curve"]["Cp_values"], dtype=FC.DTYPE)
+        cp_data["cp"] = np.array(pdict["Cp_curve"]["Cp_values"])
 
         D = float(tdict["rotor_diameter"])
         H = float(tdict["hub_height"])
@@ -370,14 +368,14 @@ class WCompFoxes(WCompBase):
         # mbook.print_toc(subset="wake_models")
 
         return Downwind(
-            mbook,
             farm,
             states,
-            verbosity=0,
-            rotor_model="grid16",
-            partial_wakes_model="rotor_points",
             wake_models=[wake_model_name],
+            rotor_model="grid16",
             wake_frame=wake_frame,
+            partial_wakes="rotor_points",
+            mbook=mbook,
+            verbosity=0,
             **algo_pars
         )
 
