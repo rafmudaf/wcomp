@@ -28,7 +28,7 @@ from py_wake.rotor_avg_models import (
     GaussianOverlapAvgModel,
 )
 
-from windIO.utils.yml_utils import load_yaml
+from windIO import load_yaml
 
 from .base_interface import WCompBase
 from .output_struct import WakePlane, WakeProfile

@@ -14,11 +14,11 @@ REQUIRES_PYTHON = ">=3.10"
 
 # What packages are required for this module to be executed?
 REQUIRED = [
-    "floris==v3.6",
-    "foxes==v0.6.2",
-    "py-wake",  # At master with two additional commits on rafmudaf/PyWake, latest hash is 35e63b7
-    "numpy>=1.20",
-    "windIO",
+    "floris==v4.6.4",
+    "foxes==v1.6.2",
+    "py-wake",  # At master slightly ahead of v2.6.20 with a few additional commits on rafmudaf/PyWake, latest hash is ea1d632
+    "numpy>=2.4",
+    "windIO>=2",
     "matplotlib",
 ]
 EXTRAS = {
