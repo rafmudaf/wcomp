@@ -3,8 +3,8 @@ import copy
 from pathlib import Path
 
 import numpy as np
-from floris.tools import FlorisInterface
-from windIO.utils.yml_utils import load_yaml
+from floris.floris_model import FlorisModel
+from windIO import load_yaml
 
 from .base_interface import WCompBase
 from .output_struct import WakePlane, WakeProfile
@@ -101,6 +101,7 @@ basic_dict = {
         'enable_secondary_steering': False,
         'enable_yaw_added_recovery': False,
         'enable_transverse_velocities': False,
+        'enable_active_wake_mixing': False,
         'wake_deflection_parameters': {
             'jimenez': {
                 'ad': 0.0,
@@ -157,22 +158,22 @@ class WCompFloris(WCompBase):
         input_dictionary = load_yaml(input_file)
 
         self.floris_dict = self._create_floris_dict(input_dictionary)
-        self.fi = FlorisInterface(self.floris_dict)
+        self.fmodel = FlorisModel(self.floris_dict)
 
-        n_wind_directions = self.fi.floris.flow_field.n_wind_directions
-        n_wind_speeds = self.fi.floris.flow_field.n_wind_speeds
-        n_turbines = self.fi.floris.farm.n_turbines
-        self.yaw_angles = np.zeros((n_wind_directions, n_wind_speeds, n_turbines))
-        self.yaw_angles[:,:] = input_dictionary["attributes"]["analyses"]["yaw_angles"]
-        self.fi.calculate_wake(yaw_angles=self.yaw_angles)
+        n_findex = self.fmodel.core.flow_field.n_findex
+        n_turbines = self.fmodel.core.farm.n_turbines
+        yaw_angles = np.zeros((n_findex, n_turbines))
+        yaw_angles[:] = input_dictionary["attributes"]["analyses"]["yaw_angles"]    # We need the extra dimension here to set the yaw angles for all findex. The current windIO inputs don't have the wind condition dimension so we apply the yaw setting to all.
+        self.fmodel.set(yaw_angles=yaw_angles)
+        self.fmodel.run()
 
     @property
     def rotor_diameter(self) -> float:
-        return self.fi.floris.farm.rotor_diameters[0,0,0]
+        return self.fmodel.core.farm.rotor_diameters[0,0]
 
     @property
     def hub_height(self) -> float:
-        return self.fi.floris.farm.hub_heights[0,0,0]
+        return self.fmodel.core.farm.hub_heights[0,0]
 
     ### Create the model from windIO
 
@@ -182,13 +183,13 @@ class WCompFloris(WCompBase):
         new_dict = copy.deepcopy(basic_dict)
         new_dict["name"] = wes["name"]
         new_dict["description"] = wes["name"]
-        new_dict["floris_version"] = "v3.4.0"
+        new_dict["floris_version"] = "v4"
 
         wes_wind_resource = wes["site"]["energy_resource"]["wind_resource"]
         new_dict["flow_field"] = {
             'air_density': 1.225,
             'reference_wind_height': -1,
-            'turbulence_intensity': wes_wind_resource["turbulence_intensity"]["data"],
+            'turbulence_intensities': [wes_wind_resource["turbulence_intensity"]["data"]],
             'wind_directions': wes_wind_resource["wind_direction"],
             'wind_shear': 0.12,
             'wind_speeds': wes_wind_resource["wind_speed"],
@@ -199,19 +200,24 @@ class WCompFloris(WCompBase):
 
         new_turbine = {
             "turbine_type": wes_turbine["name"],
-            "generator_efficiency": 1.0,
             "hub_height": wes_turbine["hub_height"],
-            "pP": 1.88,
-            "pT": 1.88,         # How to set these?
             "rotor_diameter": wes_turbine["rotor_diameter"],
             "TSR": 8.0,         # Can we calculate this from diameter and power curve?
-            "ref_density_cp_ct": 1.225,
-            "ref_tilt_cp_ct": 0.0,       # Set to 0
+            "operation_model": "cosine-loss",
             "power_thrust_table": {
+                "ref_air_density": 1.225,
+                "ref_tilt": 5.0,
+                "cosine_loss_exponent_yaw": 1.88,
+                "cosine_loss_exponent_tilt": 1.88,
+                # helix_a: 1.719
+                # helix_power_b: 4.823e-03
+                # helix_power_c: 2.314e-10
+                # helix_thrust_b: 1.157e-03
+                # helix_thrust_c: 1.167e-04
                 "power": wes_turbine["performance"]["Cp_curve"]["Cp_values"],
-                "thrust": wes_turbine["performance"]["Ct_curve"]["Ct_values"],
+                "thrust_coefficient": wes_turbine["performance"]["Ct_curve"]["Ct_values"],
                 "wind_speed": wes_turbine["performance"]["Ct_curve"]["Ct_wind_speeds"]
-            }
+            },
         }
 
         new_dict["farm"] = {
@@ -248,6 +254,7 @@ class WCompFloris(WCompBase):
             'enable_secondary_steering': False,
             'enable_yaw_added_recovery': False,
             'enable_transverse_velocities': False,
+            'enable_active_wake_mixing': False,
             'wake_deflection_parameters': {_deflection_model: _deflection_model_parameters},
             'wake_velocity_parameters': {_velocity_model: _velocity_model_parameters},
             'wake_turbulence_parameters': {
@@ -265,7 +272,7 @@ class WCompFloris(WCompBase):
     ### Post processing
 
     def AEP(self):
-        self.fi.get_farm_AEP()
+        self.fmodel.get_farm_AEP()
 
     # 1D line plots
 
@@ -277,14 +284,14 @@ class WCompFloris(WCompBase):
         zmax: float
     ) -> WakeProfile:
 
-        cut_plane = self.fi.calculate_y_plane(
+        findex = np.where(self.fmodel.core.flow_field.wind_directions == wind_direction)[0][0]
+        cut_plane = self.fmodel.calculate_y_plane(
             crossstream_dist=y_coordinate,
-            wd=[wind_direction],
             x_resolution=self.N_POINTS_1D,
             z_resolution=self.N_POINTS_1D,
             x_bounds=[x_coordinate, x_coordinate],
             z_bounds=[0, zmax],
-            yaw_angles=self.yaw_angles,
+            findex_for_viz=findex,
         )
         profile = WakeProfile(
             cut_plane.df.x2,
@@ -310,14 +317,14 @@ class WCompFloris(WCompBase):
         xmax: float
     ) -> WakeProfile:
 
-        cut_plane = self.fi.calculate_y_plane(
+        findex = np.where(self.fmodel.core.flow_field.wind_directions == wind_direction)[0][0]
+        cut_plane = self.fmodel.calculate_y_plane(
             crossstream_dist=y_coordinate,
-            wd=[wind_direction],
             x_resolution=self.N_POINTS_1D,
             z_resolution=self.N_POINTS_1D,
             x_bounds=[xmin, xmax],
             z_bounds=[self.hub_height, self.hub_height],
-            yaw_angles=self.yaw_angles,
+            findex_for_viz=findex,
         )
         profile = WakeProfile(
             cut_plane.df.x1,
@@ -343,14 +350,14 @@ class WCompFloris(WCompBase):
         ymax: float
     ) -> WakeProfile:
 
-        cut_plane = self.fi.calculate_horizontal_plane(
+        findex = np.where(self.fmodel.core.flow_field.wind_directions == wind_direction)[0][0]
+        cut_plane = self.fmodel.calculate_horizontal_plane(
             height=self.hub_height,
-            wd=[wind_direction],
             # x_resolution=resolution[0],
             y_resolution=self.N_POINTS_1D,
             x_bounds=[x_coordinate, x_coordinate],
             y_bounds=[ymin, ymax],
-            yaw_angles=self.yaw_angles,
+            findex_for_viz=findex,
         )
         profile = WakeProfile(
             cut_plane.df.x2,
@@ -373,7 +380,7 @@ class WCompFloris(WCompBase):
     def horizontal_contour(self, wind_direction: float) -> WakePlane:
         coordinates = np.array([
             (x, y, self.hub_height)
-            for x, y in list(zip(self.fi.layout_x, self.fi.layout_y))
+            for x, y in list(zip(self.fmodel.layout_x, self.fmodel.layout_y))
         ])
         _x, _y, _ = coordinates.T
         x_min = np.min(_x) - 2 * self.rotor_diameter
@@ -389,7 +396,7 @@ class WCompFloris(WCompBase):
         y = y.flatten()
         z = self.hub_height * np.ones_like(x)
 
-        u = self.fi.sample_flow_at_points(x, y, z)[0,0]
+        u = self.fmodel.sample_flow_at_points(x, y, z)[0]
 
         plane = WakePlane(x, y, u, "z")
         plot_plane(
@@ -403,7 +410,7 @@ class WCompFloris(WCompBase):
     def xsection_contour(self, wind_direction: float, x_coordinate: float) -> WakePlane:
         coordinates = np.array([
             (x, y, self.hub_height)
-            for x, y in list(zip(self.fi.layout_x, self.fi.layout_y))
+            for x, y in list(zip(self.fmodel.layout_x, self.fmodel.layout_y))
         ])
         _, _y, _z = coordinates.T
         y_min = np.min(_y) - 2 * self.rotor_diameter
@@ -419,7 +426,7 @@ class WCompFloris(WCompBase):
         z = z.flatten()
         x = x_coordinate * np.ones_like(y)
 
-        u = self.fi.sample_flow_at_points(x, y, z)[0,0]
+        u = self.fmodel.sample_flow_at_points(x, y, z)[0]
 
         plane = WakePlane(y, z, u, "x")
         plot_plane(
