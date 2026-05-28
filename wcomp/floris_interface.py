@@ -42,7 +42,7 @@ WAKE_MODEL_MAPPING = {
         }
     },
     "turbopark": {
-        "model_ref": "turbopark",
+        "model_ref": "turboparkgauss",
         "parameters": {
             "A": "A",
         }
