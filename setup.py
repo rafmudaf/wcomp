@@ -23,7 +23,7 @@ REQUIRED = [
 ]
 EXTRAS = {
     "docs": {
-        "jupyter-book",
+        "jupyter-book~=1.0",
         # "jupyter-book==0.14",
         # "sphinx-book-theme==0.4.0rc1",
         # "sphinx-autodoc-typehints",
