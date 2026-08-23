@@ -30,9 +30,9 @@ Documentation for `wcomp` is available at https://rafmudaf.github.io/wcomp/.
 
 Currently, `wcomp` must be installed manually `pip`. The dependencies are:
 
-- windIO v1.0, can be installed directly from PyPI
-- FLORIS v3.6 can be installed directly from PyPI
-- foxes v0.6.2, can be installed directly from PyPI
+- windIO v2, can be installed directly from PyPI
+- FLORIS v4.6.4, can be installed directly from PyPI
+- foxes v1.6.2, can be installed directly from PyPI
 - PyWake v2.5.0 plus three additional commits, must be installed from https://github.com/rafmudaf/PyWake at master branch
 
 Follow these steps to install the dependencies and `wcomp`:
@@ -41,8 +41,8 @@ Follow these steps to install the dependencies and `wcomp`:
 
 ```bash
 pip install windIO
-pip install foxes==v0.6.2
-pip install floris==v3.6
+pip install foxes==1.6.2
+git clone https://github.com/nrel/floris -b main && pip install -e floris/
 git clone https://github.com/rafmudaf/PyWake && pip install -e PyWake/
 ```
 
