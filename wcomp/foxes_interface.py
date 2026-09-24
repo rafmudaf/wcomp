@@ -531,10 +531,10 @@ class WCompFoxes(WCompBase):
     # 2D contour plots
 
     def horizontal_contour(self, wind_direction: float) -> WakePlane:
-        x_min = np.min(self.farm_results.X) - 2 * self.rotor_diameter
-        x_max = np.max(self.farm_results.X) + 10 * self.rotor_diameter
-        y_min = np.min(self.farm_results.Y) - 2 * self.rotor_diameter
-        y_max = np.max(self.farm_results.Y) + 2 * self.rotor_diameter
+        x_min = float(np.min(self.farm_results.X)) - 2 * self.rotor_diameter
+        x_max = float(np.max(self.farm_results.X)) + 10 * self.rotor_diameter
+        y_min = float(np.min(self.farm_results.Y)) - 2 * self.rotor_diameter
+        y_max = float(np.max(self.farm_results.Y)) + 2 * self.rotor_diameter
 
         o = FlowPlots2D(self.algo, self.farm_results)
         u, grid_data = o.get_mean_data_xy(
@@ -565,8 +565,8 @@ class WCompFoxes(WCompBase):
         return plane
     
     def xsection_contour(self, wind_direction: float, x_coordinate: float) -> WakePlane:
-        y_min = np.min(self.farm_results.Y) - 2 * self.rotor_diameter
-        y_max = np.max(self.farm_results.Y) + 2 * self.rotor_diameter
+        y_min = float(np.min(self.farm_results.Y)) - 2 * self.rotor_diameter
+        y_max = float(np.max(self.farm_results.Y)) + 2 * self.rotor_diameter
         z_min = 0.001
         z_max = 6 * self.hub_height
 

@@ -383,10 +383,10 @@ class WCompFloris(WCompBase):
             for x, y in list(zip(self.fmodel.layout_x, self.fmodel.layout_y))
         ])
         _x, _y, _ = coordinates.T
-        x_min = np.min(_x) - 2 * self.rotor_diameter
-        x_max = np.max(_x) + 10 * self.rotor_diameter
-        y_min = np.min(_y) - 2 * self.rotor_diameter
-        y_max = np.max(_y) + 2 * self.rotor_diameter
+        x_min = float(np.min(_x)) - 2 * self.rotor_diameter
+        x_max = float(np.max(_x)) + 10 * self.rotor_diameter
+        y_min = float(np.min(_y)) - 2 * self.rotor_diameter
+        y_max = float(np.max(_y)) + 2 * self.rotor_diameter
         x, y = np.meshgrid(
             np.linspace(x_min, x_max, int((x_max - x_min) / self.RESOLUTION_2D) + 1),
             np.linspace(y_min, y_max, int((y_max - y_min) / self.RESOLUTION_2D) + 1),
@@ -413,8 +413,8 @@ class WCompFloris(WCompBase):
             for x, y in list(zip(self.fmodel.layout_x, self.fmodel.layout_y))
         ])
         _, _y, _z = coordinates.T
-        y_min = np.min(_y) - 2 * self.rotor_diameter
-        y_max = np.max(_y) + 2 * self.rotor_diameter
+        y_min = float(np.min(_y)) - 2 * self.rotor_diameter
+        y_max = float(np.max(_y)) + 2 * self.rotor_diameter
         z_min = 0.001
         z_max = 6 * self.hub_height
         y, z = np.meshgrid(
