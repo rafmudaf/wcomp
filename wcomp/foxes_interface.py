@@ -355,11 +355,9 @@ class WCompFoxes(WCompBase):
             for t in farm.turbines:
                 t.insert_model(0, "set_yawm")
                 t.insert_model(1, "yawm2yaw")
-            wake_frame="yawed"
+            wake_frame="rotor_wd"
             # TODO: How to set axial_induction=Betz for deflection
             # Does it need to be set for deflection?
-        else:
-            wake_frame="rotor_wd"
 
         mbook.wake_models[wake_model_name] = _velocity_model(
             **_velocity_model_parameters,
@@ -372,7 +370,7 @@ class WCompFoxes(WCompBase):
             states,
             wake_models=[wake_model_name],
             rotor_model="grid16",
-            wake_frame=wake_frame,
+            wake_frame="rotor_wd",
             partial_wakes="rotor_points",
             mbook=mbook,
             verbosity=0,
