@@ -238,15 +238,14 @@ Compare how the software model wind shear and wind veer
 ```{mermaid}
 ---
 title: Timeline of software releases
-config:
-  theme: base
-  themeVariables:
-    sectionBkgColor: green
-    altSectionBkgColor: red
-    sectionBkgColor2: blue
-    taskBkgColor: lightgrey
-    taskBorderColor: black
-    taskTextColor: black
+theme: base
+themeVariables:
+  sectionBkgColor: green
+  altSectionBkgColor: red
+  sectionBkgColor2: blue
+  taskBkgColor: lightgrey
+  taskBorderColor: black
+  taskTextColor: black
 caption: Timeline of software releases
 ---
 gantt
