@@ -29,7 +29,6 @@ html:
     google_analytics_id: G-7LZJG24QM5
 
 sphinx:
-  mermaid_version: 10.7.0
   extra_extensions:
   - 'sphinx.ext.autodoc'
   - 'sphinx.ext.autosummary'
