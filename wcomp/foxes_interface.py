@@ -568,25 +568,24 @@ class WCompFoxes(WCompBase):
         z_min = 0.001
         z_max = 6 * self.hub_height
 
-        o = FlowPlots2D(self.algo, self.farm_results)
-        u, grid_data = o.get_mean_data_yz(
-            resolution=self.RESOLUTION_2D,
-            variables=["WS"],
-            ymin=y_min,
-            ymax=y_max,
-            zmin=z_min,
-            zmax=z_max,
-            x=x_coordinate,
-            ret_grid=True,
-            data_format="numpy",
+        y, z = np.meshgrid(
+            np.linspace(y_min, y_max, int((y_max - y_min) / self.RESOLUTION_2D) + 1),
+            np.linspace(z_min, z_max, int((z_max - z_min) / self.RESOLUTION_2D) + 1),
+            indexing='ij'
         )
-        x_pos, y_pos, z_pos, grid_points = grid_data
-        # x = grid_points[0, :, 0]
-        y = grid_points[0, :, 1]
-        z = grid_points[0, :, 2]
-        u = u[:,:,0].flatten()
+        points = np.stack(
+            [
+                x_coordinate * np.ones_like(y),
+                y,
+                z,
+            ],
+            axis=-1,
+        ).reshape(1, -1, 3)
 
-        plane = WakePlane(y, z, u, "x")
+        point_results = self.algo.calc_points(self.farm_results, points)
+        u = point_results[FV.WS][0, :]
+
+        plane = WakePlane(y.flatten(), z.flatten(), u, "x")
         plot_plane(
             plane,
             # cmap='Blues_r',
