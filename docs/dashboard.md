@@ -12,49 +12,148 @@ kernelspec:
 
 ```{code-cell}
 ---
-tags: [hide-input]
+tags: [remove-input]
 ---
 
 # stdlib
+import warnings
 from pathlib import Path
+
+# Silence solver-related warnings (e.g. tqdm's IProgress notice, raised at import
+# time by FOXES) so they don't end up embedded in the built page.
+warnings.filterwarnings("ignore")
+
+# third-party
 import matplotlib.pyplot as plt
 import numpy as np
+import plotly.io as pio
 
 # wcomp
 from wcomp import WCompFloris, WCompPyWake, WCompFoxes
-from wcomp.plotting import plot_plane
+from wcomp.cache import DiskCache, quiet
+from wcomp.plotting import render_wake_model_tabs
+from windIO import load_yaml
 
-# plot settings
-PROFILE_LINEWIDTH = 1.0
-ERROR_LINEWIDTH = 1.5
+# Load plotly.js once from a CDN instead of inlining a full copy in every cell output.
+pio.renderers.default = "notebook_connected"
 
-SMALL_SIZE = 10
-MEDIUM_SIZE = 12
-BIGGER_SIZE = 14
-# plt.rc('font', size=SMALL_SIZE)          # controls default text sizes
-plt.rc('xtick', labelsize=SMALL_SIZE)    # fontsize of the tick labels
-plt.rc('ytick', labelsize=SMALL_SIZE)    # fontsize of the tick labels
-plt.rc('axes', labelsize=MEDIUM_SIZE)
-plt.rc('axes', titlesize=BIGGER_SIZE)
-plt.rc('legend', fontsize=MEDIUM_SIZE)
-plt.rc('figure', titlesize=BIGGER_SIZE)
+plt.rc('axes', labelsize=12)
+plt.rc('axes', titlesize=14)
+plt.rc('legend', fontsize=12)
+plt.rc('figure', titlesize=14)
 
-# Constants for all cases. Copy to a particular code block to change, as needed.
-CASE_DIR = Path('cases_torque2024/one_turbine')
-this_case = CASE_DIR / Path('jensen/wind_energy_system.yaml')
-floris_case = WCompFloris(this_case)
-ROTOR_D = floris_case.rotor_diameter
-XMIN = -1 * ROTOR_D
-XMAX = 20 * ROTOR_D
-YMIN = -2 * ROTOR_D
-YMAX =  2 * ROTOR_D
+CASE_ROOT = Path('cases_torque2024/four_turbine')
+
+# The four turbines in this case are evenly spaced 5D apart (0D, 5D, 10D, 15D)
+TURBINE_LOCATIONS_D = [0, 5, 10, 15]
+
+# Solver results are cached on disk (see wcomp.cache.DiskCache) so that rebuilding this
+# page doesn't require re-running every wake model every time, and so the noisy console
+# output the solvers produce (progress bars, per-chunk logging) doesn't end up embedded
+# in the page on cache hits. wcomp.cache.quiet() silences that output on cache misses.
+CACHE = DiskCache(Path('.cache/dashboard'))
+
+# Maps each wake-model case to the software packages that implement it, and the subset
+# (if any) that should also be compared with a horizontal contour plot.
+WAKE_MODEL_CASES = {
+    "jensen": {
+        "software": [WCompFloris, WCompFoxes, WCompPyWake],
+        "contour_software": [WCompFloris, WCompFoxes],
+    },
+    "bastankhah2014": {
+        "software": [WCompFoxes, WCompPyWake],
+        "contour_software": [WCompFoxes, WCompPyWake],
+    },
+    "bastankhah2016": {
+        "software": [WCompFloris, WCompFoxes],
+        "contour_software": [WCompFloris, WCompFoxes],
+    },
+    "bastankhah2016_deflection": {
+        "software": [WCompFloris, WCompFoxes],
+        "contour_software": [],
+    },
+    "jimenez": {
+        "software": [WCompFloris, WCompPyWake],
+        "contour_software": [WCompFloris, WCompPyWake],
+    },
+    "turbopark": {
+        "software": [WCompFloris, WCompFoxes, WCompPyWake],
+        "contour_software": [WCompFloris, WCompFoxes],
+    },
+}
+
+def compute_case(wake_model: str) -> dict:
+    """
+    Run (or load from the on-disk cache) every software package integrated for a given
+    wake-model case, and extract the plain data needed to render the comparison plots.
+    """
+    spec = WAKE_MODEL_CASES[wake_model]
+    case_file = CASE_ROOT / wake_model / 'wind_energy_system.yaml'
+
+    def _run():
+        with quiet():
+            instances = {cls: cls(case_file) for cls in spec["software"]}
+            rotor_d = next(iter(instances.values())).rotor_diameter
+            # Cross-section plots share this as their y-axis range, so they're
+            # comparable across wake models and downstream locations.
+            wind_speed = load_yaml(case_file)["site"]["energy_resource"]["wind_resource"]["wind_speed"][0]
+            first_turbine_d = TURBINE_LOCATIONS_D[0]
+            last_turbine_d = TURBINE_LOCATIONS_D[-1]
+            xmin, xmax = -1 * rotor_d, (last_turbine_d + 20) * rotor_d
+            ymin, ymax = -2 * rotor_d, 2 * rotor_d
+
+            # Cross-sections are sampled 4D past the first turbine (before its wake
+            # reaches the second turbine) and 1D/5D/10D past the last turbine, where
+            # the combined wake of the whole farm has had a chance to develop.
+            xsection_locations = {
+                "4 D (past first turbine)": first_turbine_d + 4,
+                "1 D (past last turbine)": last_turbine_d + 1,
+                "5 D (past last turbine)": last_turbine_d + 5,
+                "10 D (past last turbine)": last_turbine_d + 10,
+            }
+
+            streamwise = {}
+            xsections = {label: {} for label in xsection_locations}
+            for cls, instance in instances.items():
+                streamwise[cls.LEGEND] = instance.streamwise_profile_plot(
+                    wind_direction=270, y_coordinate=0.0, xmin=xmin, xmax=xmax
+                )
+                for label, location_d in xsection_locations.items():
+                    xsections[label][cls.LEGEND] = instance.xsection_profile_plot(
+                        wind_direction=270,
+                        x_coordinate=location_d * rotor_d,
+                        ymin=ymin,
+                        ymax=ymax,
+                    )
+
+            planes = {
+                cls.LEGEND: instances[cls].horizontal_contour(wind_direction=270)
+                for cls in spec["contour_software"]
+            }
+
+        plt.close('all')  # discard the matplotlib figures created as a side effect above
+        return {
+            "rotor_diameter": rotor_d,
+            "wind_speed": wind_speed,
+            "streamwise": streamwise,
+            "xsections": xsections,
+            "planes": planes,
+        }
+
+    return CACHE.get_or_compute(wake_model, _run)
+
+# Used below to draw the schematic of sample locations, shared across every case.
+_jensen_result = compute_case("jensen")
+ROTOR_D = _jensen_result["rotor_diameter"]
+XMIN, XMAX = -1 * ROTOR_D, (TURBINE_LOCATIONS_D[-1] + 20) * ROTOR_D
+YMIN, YMAX = -2 * ROTOR_D, 2 * ROTOR_D
 ```
 
 # Dashboard
 
-This page contains a series of cases that compare various aspects of the integrated
-wake modeling software including the mathematical wake models and other software-specific
-design decisions.
+This page compares the integrated wake modeling software (FLORIS, FOXES, PyWake) on a
+common set of cases. Each comparison figure is interactive: hover over a trace for exact
+values, or click a legend entry to toggle it on/off.
 
 ## Wake model implementations
 The mathematical models included in each software are generally grouped into models
@@ -95,29 +194,45 @@ The models available in each software are shown in the tables below.
 :::
 
 
-### 1-dimension wake profiles
+### Wake profiles
+
+The schematic below shows the sample locations used for every comparison in this section:
+a streamwise profile through four turbines, a cross-stream profile 4D downstream of the
+first turbine, and cross-stream profiles at 1D, 5D, and 10D downstream of the last
+turbine, where the combined farm wake has developed.
 
 ```{code-cell}
 ---
-tags: [hide-input]
+tags: [remove-input]
 ---
 
-x_turbine = np.array([0.0, 0.0])
 y_turbine = np.array([-ROTOR_D/2, ROTOR_D/2])
 x_streamwise = np.array([XMIN, XMAX])
 y_streamwise = np.array([0.0, 0.0])
-x_1d = np.array([1 * ROTOR_D, 1 * ROTOR_D])
-x_5d = np.array([5 * ROTOR_D, 5 * ROTOR_D])
-x_10d = np.array([10 * ROTOR_D, 10 * ROTOR_D])
 y_crosswise = np.array([YMIN, YMAX])
+first_turbine_d = TURBINE_LOCATIONS_D[0]
+last_turbine_d = TURBINE_LOCATIONS_D[-1]
 
 fig, ax = plt.subplots(figsize=(6, 3))
-ax.plot(x_turbine, y_turbine, '-', color='black', linewidth=3, label="Turbine")
+for i, turbine_d in enumerate(TURBINE_LOCATIONS_D):
+    x_turbine = np.array([turbine_d * ROTOR_D, turbine_d * ROTOR_D])
+    ax.plot(
+        x_turbine, y_turbine, '-', color='black', linewidth=3,
+        label="Turbine" if i == 0 else None,
+    )
 ax.plot(x_streamwise, y_streamwise, '-.', color='black', linewidth=2, label="Streamwise")
-ax.plot(x_1d, y_crosswise, linestyle=(0, (2, 3)), color='black', linewidth=2)
-ax.plot(x_5d, y_crosswise, linestyle=(0, (2, 3)), color='black', linewidth=2)
-ax.plot(x_10d, y_crosswise, linestyle=(0, (2, 3)), color='black', linewidth=2, label="1D, 5D, 10D cross sections")
-ax.set_title("One-turbine velocity profiles")
+x_4d = np.array([(first_turbine_d + 4) * ROTOR_D, (first_turbine_d + 4) * ROTOR_D])
+ax.plot(
+    x_4d, y_crosswise, linestyle=(0, (1, 1)), color='black', linewidth=2,
+    label="4D cross section (past first turbine)",
+)
+for i, d in enumerate((1, 5, 10)):
+    x_d = np.array([(last_turbine_d + d) * ROTOR_D, (last_turbine_d + d) * ROTOR_D])
+    ax.plot(
+        x_d, y_crosswise, linestyle=(0, (2, 3)), color='black', linewidth=2,
+        label="1D, 5D, 10D cross sections (past last turbine)" if i == 2 else None,
+    )
+ax.set_title("Four-turbine sample locations")
 ax.set_xlabel("X (m)")
 ax.set_ylabel("Y (m)")
 ax.set_ylim([-1000, 1000])
@@ -126,126 +241,44 @@ ax.grid()
 ax.legend()
 ```
 
-
-#### Jensen
 ```{code-cell}
 ---
-tags: [hide-input]
+tags: [remove-input]
 ---
 
-this_case = CASE_DIR / Path('jensen/wind_energy_system.yaml')
-floris_case = WCompFloris(this_case)
-foxes_case = WCompFoxes(this_case)
-pywake_case = WCompPyWake(this_case)
-
-fig, ax = plt.subplots(figsize=(6,4))
-floris_case.streamwise_profile_plot(wind_direction=270, y_coordinate=0.0, xmin=XMIN, xmax=XMAX)
-foxes_case.streamwise_profile_plot(wind_direction=270, y_coordinate=0.0, xmin=XMIN, xmax=XMAX)
-pywake_case.streamwise_profile_plot(wind_direction=270, y_coordinate=0.0, xmin=XMIN, xmax=XMAX)
-ax.plot([1*ROTOR_D, 1*ROTOR_D], [0, 10], color="black", linestyle='--', linewidth=PROFILE_LINEWIDTH)
-ax.plot([5*ROTOR_D, 5*ROTOR_D], [0, 10], color="black", linestyle='--', linewidth=PROFILE_LINEWIDTH)
-ax.plot([10*ROTOR_D, 10*ROTOR_D], [0, 10], color="black", linestyle='--', linewidth=PROFILE_LINEWIDTH, label="Cross-stream profile locations")
-lines = ax.lines
-x1, y1 = lines[0].get_data()
-x2, y2 = lines[1].get_data()
-x3, y3 = lines[2].get_data()
-e1 = np.abs(y1 - y2)
-e2 = np.abs(y2 - y3)
-ax.plot(x1, e1, color="black", linestyle='-.', linewidth=ERROR_LINEWIDTH, label="|FLORIS - FOXES|")
-ax.plot(x1, e2, color="black", linestyle=':', linewidth=ERROR_LINEWIDTH, label="|FOXES - PyWake|")
-ax.set_title("One-turbine streamwise velocity profile")
-ax.set_xlabel("X (m)")
-ax.set_ylabel('U (m/s)')
-ax.set_ybound(lower=0.0)
-ax.legend()
-ax.grid()
-
-fig, ax = plt.subplots(3, 1, figsize=(6,4))
-fig.suptitle("One-turbine cross section velocity profile")
-X_D = [1, 5, 10]
-for i, D_X in enumerate(X_D):
-    plt.axes(ax[i])
-    floris_case.xsection_profile_plot(wind_direction=270, x_coordinate=D_X * ROTOR_D, ymin=YMIN, ymax=YMAX)
-    foxes_case.xsection_profile_plot(wind_direction=270, x_coordinate=D_X * ROTOR_D, ymin=YMIN, ymax=YMAX)
-    pywake_case.xsection_profile_plot(wind_direction=270, x_coordinate=D_X * ROTOR_D, ymin=YMIN, ymax=YMAX)
-    ax[i].set_title(f"{D_X} D")
-    ax[i].set_ylabel("U (m/s)")
-    ax[i].set_ybound(lower=0.0, upper=12.0)
-    ax[i].grid()
-    if i < len(X_D) - 1:
-        ax[i].xaxis.set_ticklabels([])
-    else:
-        ax[i].set_xlabel("Y (m)")
-        ax[i].legend()
-fig.tight_layout()
+# Each tab shows the full set of comparison plots (1D profiles, cross-sections, and a
+# contour comparison where available) for one wake model. This is rendered as a single
+# self-contained HTML block because myst-nb does not support executable code cells
+# nested inside other directives (like a MyST tab-item).
+render_wake_model_tabs({
+    "Jensen": _jensen_result,
+    "Bastankhah / Porte Agel 2014": compute_case("bastankhah2014"),
+    "Bastankhah / Porte Agel 2016": compute_case("bastankhah2016"),
+    "Bastankhah / Porte Agel 2016 (with deflection)": compute_case("bastankhah2016_deflection"),
+    "Jensen / Jimenez (with deflection)": compute_case("jimenez"),
+    "TurbOPark": compute_case("turbopark"),
+})
 ```
 
+## What's next
 
-:::{dropdown} Grid points
-Dropdown content
-:::
-
-:::{dropdown} Rotor velocity average
-Dropdown content
-:::
-
-:::{dropdown} Partial wake
-Dropdown content
-:::
-
-## Spatial discretization and rotor average velocity
-Since the focus is specifically on analytical wake models, this class of software does not
-require a specific type of grid to model the wake.
-In practice, each software can choose a grid that meets its design and use objectives.
-However, the grid type has an impact on the results of the model through the computation
-of the thrust coefficient from a rotor-averaged velocity.
-The grid-types and methods for rotor averaging are compared here.
-
-### Point placement
-
-Show the locations in space and note that the points are used in combination with a velocity average method.
-
-
-### Rotor velocity average
-
-Develop a test case that demonstrates how the rotor-averaged velocity method performs.
-Ideally, this would be case that compares the methods outside the context of a wake model simulation,
-so something like average a function that analytically averages to 1.
-
-### Partial wake treatment
-
-Describe how the rotor average velocity is computed for a turbine where part of the
-rotor is waked.
-
-### Grid dependency
-
-plot of some quantity that's a function of the incoming wind (power, rotor average velocity...)
-as a function of grid resolution
-
-
-## Overlapping wakes
-The mathematical models included in each software are generally grouped into models
-describing the velocity of the wind in a wind turbine wake (velocity model) and
-models describing the magnitude of deflection of the wake (deflection model).
-The models available in each software are shown in the tables below.
-
-## Wind shear and veer
-
-Compare how the software model wind shear and wind veer
+Spatial discretization/rotor-averaging comparisons, overlapping wakes, and wind shear/veer
+handling are planned additions to this dashboard. See the [Roadmap](roadmap.md) page for
+details on what's coming.
 
 # Software projects described
 
 ```{mermaid}
 ---
 title: Timeline of software releases
-theme: base
+<!-- theme: base
 themeVariables:
   sectionBkgColor: green
   altSectionBkgColor: red
   sectionBkgColor2: blue
   taskBkgColor: lightgrey
   taskBorderColor: black
-  taskTextColor: black
+  taskTextColor: black -->
 caption: Timeline of software releases
 ---
 gantt

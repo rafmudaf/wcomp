@@ -1,0 +1,22 @@
+/* Light styling on top of the sphinx-book-theme default so the dashboard feels
+   less like the out-of-the-box Jupyter Book template. */
+
+:root {
+  --pst-color-primary: #0b6e8c;
+  --pst-color-link: #0b6e8c;
+}
+
+/* Give tab-sets (used to switch between wake models on the dashboard) a bit more
+   breathing room and a subtle border so they read as a single grouped panel. */
+.sd-tab-set {
+  border: 1px solid var(--pst-color-border, #d1d5db);
+  border-radius: 6px;
+  padding: 0.75rem 1rem 1rem;
+  margin-bottom: 1.5rem;
+}
+
+/* Tighten the vertical gap between stacked plot outputs so scanning several
+   comparison figures in a row feels like one dashboard, not separate sections. */
+.cell_output {
+  margin-bottom: 0.5rem;
+}
