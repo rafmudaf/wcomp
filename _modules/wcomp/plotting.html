@@ -36,6 +36,7 @@
     <link rel="stylesheet" type="text/css" href="../../_static/mystnb.11b39860a7a0cbfd473a3ad8a317855267ff0bd372690045ca344a6b62be495e.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/sphinx-thebe.css?v=4fa983c6" />
     <link rel="stylesheet" type="text/css" href="../../_static/sphinx-design.min.css?v=95c83b7e" />
+    <link rel="stylesheet" type="text/css" href="../../_static/custom.css?v=c6f0821d" />
   
   <!-- So that users can add custom icons -->
   <script defer src="../../_static/scripts/fontawesome.js?digest=55c26ed414f5f8a31ebb"></script>
@@ -755,9 +756,26 @@ window.runMermaid = runMermaid;</script>
                   
   <h1>Source code for wcomp.plotting</h1><div class="highlight"><pre>
 <span></span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">base64</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">io</span><span class="w"> </span><span class="kn">import</span> <span class="n">BytesIO</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">TYPE_CHECKING</span>
+
 <span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">plotly.graph_objects</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">go</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">plotly.subplots</span><span class="w"> </span><span class="kn">import</span> <span class="n">make_subplots</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">.output_struct</span><span class="w"> </span><span class="kn">import</span> <span class="n">WakePlane</span><span class="p">,</span> <span class="n">WakeProfile</span>
+
+<span class="k">if</span> <span class="n">TYPE_CHECKING</span><span class="p">:</span>
+    <span class="kn">import</span><span class="w"> </span><span class="nn">IPython</span>
+
+<span class="c1"># Default per-software colors shared by the interactive dashboard plots</span>
+<span class="n">DASHBOARD_COLORS</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">"FLORIS"</span><span class="p">:</span> <span class="s2">"#2ca02c"</span><span class="p">,</span>
+    <span class="s2">"FOXES"</span><span class="p">:</span> <span class="s2">"#d62728"</span><span class="p">,</span>
+    <span class="s2">"PyWake"</span><span class="p">:</span> <span class="s2">"#1f77b4"</span><span class="p">,</span>
+<span class="p">}</span>
 
 
 <div class="viewcode-block" id="plot_profile">
@@ -854,6 +872,275 @@ window.runMermaid = runMermaid;</script>
 
     <span class="c1"># Make equal axis</span>
     <span class="n">ax</span><span class="o">.</span><span class="n">set_aspect</span><span class="p">(</span><span class="s2">"equal"</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="compare_profiles_plotly">
+<a class="viewcode-back" href="../../_autosummary/wcomp.plotting.html#wcomp.plotting.compare_profiles_plotly">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">compare_profiles_plotly</span><span class="p">(</span>
+    <span class="n">profiles</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">WakeProfile</span><span class="p">],</span>
+    <span class="n">xlabel</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">""</span><span class="p">,</span>
+    <span class="n">ylabel</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"U (m/s)"</span><span class="p">,</span>
+    <span class="n">title</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">""</span><span class="p">,</span>
+    <span class="n">show_diff</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+    <span class="n">colors</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">go</span><span class="o">.</span><span class="n">Figure</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    Build an interactive Plotly figure comparing the same 1D wake profile</span>
+<span class="sd">    computed by multiple software packages, including traces for the absolute</span>
+<span class="sd">    difference between consecutive software results.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        profiles (dict[str, WakeProfile]): Mapping of software name (e.g. "FLORIS")</span>
+<span class="sd">            to its computed WakeProfile for one comparison location.</span>
+<span class="sd">        xlabel (str, optional): X-axis label. Defaults to "".</span>
+<span class="sd">        ylabel (str, optional): Y-axis label. Defaults to "U (m/s)".</span>
+<span class="sd">        title (str, optional): Figure title. Defaults to "".</span>
+<span class="sd">        show_diff (bool, optional): If True, add a trace for the absolute</span>
+<span class="sd">            difference between each consecutive pair of software results.</span>
+<span class="sd">            Defaults to True.</span>
+<span class="sd">        colors (dict[str, str], optional): Mapping of software name to a plotly</span>
+<span class="sd">            color string. Defaults to `DASHBOARD_COLORS`.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        plotly.graph_objects.Figure: Interactive comparison figure. Traces can be</span>
+<span class="sd">            toggled on/off via the legend and hovered for exact values.</span>
+<span class="sd">    """</span>
+    <span class="n">colors</span> <span class="o">=</span> <span class="n">colors</span> <span class="ow">or</span> <span class="n">DASHBOARD_COLORS</span>
+    <span class="n">names</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">profiles</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+
+    <span class="n">fig</span> <span class="o">=</span> <span class="n">go</span><span class="o">.</span><span class="n">Figure</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">names</span><span class="p">:</span>
+        <span class="n">profile</span> <span class="o">=</span> <span class="n">profiles</span><span class="p">[</span><span class="n">name</span><span class="p">]</span>
+        <span class="n">fig</span><span class="o">.</span><span class="n">add_trace</span><span class="p">(</span><span class="n">go</span><span class="o">.</span><span class="n">Scatter</span><span class="p">(</span>
+            <span class="n">x</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">profile</span><span class="o">.</span><span class="n">x1</span><span class="p">),</span>
+            <span class="n">y</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">profile</span><span class="o">.</span><span class="n">values</span><span class="p">),</span>
+            <span class="n">mode</span><span class="o">=</span><span class="s2">"lines"</span><span class="p">,</span>
+            <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span>
+            <span class="n">line</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">color</span><span class="o">=</span><span class="n">colors</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">name</span><span class="p">),</span> <span class="n">width</span><span class="o">=</span><span class="mi">2</span><span class="p">),</span>
+        <span class="p">))</span>
+
+    <span class="k">if</span> <span class="n">show_diff</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">names</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">names</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">names</span><span class="p">[</span><span class="mi">1</span><span class="p">:]):</span>
+            <span class="n">diff</span> <span class="o">=</span> <span class="n">profiles</span><span class="p">[</span><span class="n">a</span><span class="p">]</span> <span class="o">-</span> <span class="n">profiles</span><span class="p">[</span><span class="n">b</span><span class="p">]</span>
+            <span class="n">fig</span><span class="o">.</span><span class="n">add_trace</span><span class="p">(</span><span class="n">go</span><span class="o">.</span><span class="n">Scatter</span><span class="p">(</span>
+                <span class="n">x</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">diff</span><span class="o">.</span><span class="n">x1</span><span class="p">),</span>
+                <span class="n">y</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">diff</span><span class="o">.</span><span class="n">values</span><span class="p">)),</span>
+                <span class="n">mode</span><span class="o">=</span><span class="s2">"lines"</span><span class="p">,</span>
+                <span class="n">name</span><span class="o">=</span><span class="sa">f</span><span class="s2">"|</span><span class="si">{</span><span class="n">a</span><span class="si">}</span><span class="s2"> - </span><span class="si">{</span><span class="n">b</span><span class="si">}</span><span class="s2">|"</span><span class="p">,</span>
+                <span class="n">line</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">color</span><span class="o">=</span><span class="s2">"#888888"</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="mf">1.5</span><span class="p">,</span> <span class="n">dash</span><span class="o">=</span><span class="s2">"dot"</span><span class="p">),</span>
+            <span class="p">))</span>
+
+    <span class="n">fig</span><span class="o">.</span><span class="n">update_layout</span><span class="p">(</span>
+        <span class="n">title</span><span class="o">=</span><span class="n">title</span><span class="p">,</span>
+        <span class="n">xaxis_title</span><span class="o">=</span><span class="n">xlabel</span><span class="p">,</span>
+        <span class="n">yaxis_title</span><span class="o">=</span><span class="n">ylabel</span><span class="p">,</span>
+        <span class="n">template</span><span class="o">=</span><span class="s2">"plotly_white"</span><span class="p">,</span>
+        <span class="n">legend</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">orientation</span><span class="o">=</span><span class="s2">"v"</span><span class="p">,</span> <span class="n">yanchor</span><span class="o">=</span><span class="s2">"top"</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">xanchor</span><span class="o">=</span><span class="s2">"left"</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="mf">1.02</span><span class="p">),</span>
+        <span class="n">margin</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">t</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="mi">40</span><span class="p">,</span> <span class="n">l</span><span class="o">=</span><span class="mi">60</span><span class="p">,</span> <span class="n">r</span><span class="o">=</span><span class="mi">160</span><span class="p">),</span>
+        <span class="n">height</span><span class="o">=</span><span class="mi">380</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="k">return</span> <span class="n">fig</span></div>
+
+
+
+<div class="viewcode-block" id="compare_xsections_plotly">
+<a class="viewcode-back" href="../../_autosummary/wcomp.plotting.html#wcomp.plotting.compare_xsections_plotly">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">compare_xsections_plotly</span><span class="p">(</span>
+    <span class="n">xsections</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">WakeProfile</span><span class="p">]],</span>
+    <span class="n">xlabel</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"Y (m)"</span><span class="p">,</span>
+    <span class="n">ylabel</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"U (m/s)"</span><span class="p">,</span>
+    <span class="n">title</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">""</span><span class="p">,</span>
+    <span class="n">colors</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">ymin</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">ymax</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">go</span><span class="o">.</span><span class="n">Figure</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    Build an interactive Plotly figure comparing cross-section wake profiles</span>
+<span class="sd">    computed by multiple software packages at several downstream locations.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        xsections (dict[str, dict[str, WakeProfile]]): Mapping of a downstream</span>
+<span class="sd">            location label (e.g. "5 D", used verbatim as the subplot title) to a</span>
+<span class="sd">            mapping of software name to its computed WakeProfile at that location.</span>
+<span class="sd">        xlabel (str, optional): X-axis label. Defaults to "Y (m)".</span>
+<span class="sd">        ylabel (str, optional): Y-axis label. Defaults to "U (m/s)".</span>
+<span class="sd">        title (str, optional): Figure title. Defaults to "".</span>
+<span class="sd">        colors (dict[str, str], optional): Mapping of software name to a plotly</span>
+<span class="sd">            color string. Defaults to `DASHBOARD_COLORS`.</span>
+<span class="sd">        ymin (float, optional): Fixed lower bound applied to every subplot's y-axis, so</span>
+<span class="sd">            cross-sections are comparable across downstream locations and wake models.</span>
+<span class="sd">            Defaults to None (auto-scaled per subplot).</span>
+<span class="sd">        ymax (float, optional): Fixed upper bound applied to every subplot's y-axis. See</span>
+<span class="sd">            `ymin`. Defaults to None (auto-scaled per subplot).</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        plotly.graph_objects.Figure: Figure with one row per downstream location,</span>
+<span class="sd">            sharing a single, de-duplicated legend.</span>
+<span class="sd">    """</span>
+    <span class="n">colors</span> <span class="o">=</span> <span class="n">colors</span> <span class="ow">or</span> <span class="n">DASHBOARD_COLORS</span>
+    <span class="n">locations</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">xsections</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+    <span class="n">yrange</span> <span class="o">=</span> <span class="p">[</span><span class="n">ymin</span><span class="p">,</span> <span class="n">ymax</span><span class="p">]</span> <span class="k">if</span> <span class="n">ymin</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">ymax</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="kc">None</span>
+
+    <span class="n">fig</span> <span class="o">=</span> <span class="n">make_subplots</span><span class="p">(</span>
+        <span class="n">rows</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">locations</span><span class="p">),</span>
+        <span class="n">cols</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+        <span class="n">shared_xaxes</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">subplot_titles</span><span class="o">=</span><span class="n">locations</span><span class="p">,</span>
+        <span class="n">vertical_spacing</span><span class="o">=</span><span class="mf">0.08</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="n">seen_legend_names</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">row</span><span class="p">,</span> <span class="n">location</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">locations</span><span class="p">,</span> <span class="n">start</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">profile</span> <span class="ow">in</span> <span class="n">xsections</span><span class="p">[</span><span class="n">location</span><span class="p">]</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="n">fig</span><span class="o">.</span><span class="n">add_trace</span><span class="p">(</span>
+                <span class="n">go</span><span class="o">.</span><span class="n">Scatter</span><span class="p">(</span>
+                    <span class="n">x</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">profile</span><span class="o">.</span><span class="n">x1</span><span class="p">),</span>
+                    <span class="n">y</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">profile</span><span class="o">.</span><span class="n">values</span><span class="p">),</span>
+                    <span class="n">mode</span><span class="o">=</span><span class="s2">"lines"</span><span class="p">,</span>
+                    <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span>
+                    <span class="n">legendgroup</span><span class="o">=</span><span class="n">name</span><span class="p">,</span>
+                    <span class="n">showlegend</span><span class="o">=</span><span class="n">name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">seen_legend_names</span><span class="p">,</span>
+                    <span class="n">line</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">color</span><span class="o">=</span><span class="n">colors</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">name</span><span class="p">),</span> <span class="n">width</span><span class="o">=</span><span class="mi">2</span><span class="p">),</span>
+                <span class="p">),</span>
+                <span class="n">row</span><span class="o">=</span><span class="n">row</span><span class="p">,</span>
+                <span class="n">col</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+            <span class="p">)</span>
+            <span class="n">seen_legend_names</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+
+    <span class="n">fig</span><span class="o">.</span><span class="n">update_layout</span><span class="p">(</span>
+        <span class="n">title</span><span class="o">=</span><span class="n">title</span><span class="p">,</span>
+        <span class="n">template</span><span class="o">=</span><span class="s2">"plotly_white"</span><span class="p">,</span>
+        <span class="n">legend</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">orientation</span><span class="o">=</span><span class="s2">"v"</span><span class="p">,</span> <span class="n">yanchor</span><span class="o">=</span><span class="s2">"top"</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">xanchor</span><span class="o">=</span><span class="s2">"left"</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="mf">1.02</span><span class="p">),</span>
+        <span class="n">margin</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">t</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="mi">40</span><span class="p">,</span> <span class="n">l</span><span class="o">=</span><span class="mi">60</span><span class="p">,</span> <span class="n">r</span><span class="o">=</span><span class="mi">160</span><span class="p">),</span>
+        <span class="n">height</span><span class="o">=</span><span class="mi">260</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">locations</span><span class="p">),</span>
+    <span class="p">)</span>
+    <span class="n">fig</span><span class="o">.</span><span class="n">update_xaxes</span><span class="p">(</span><span class="n">title_text</span><span class="o">=</span><span class="n">xlabel</span><span class="p">,</span> <span class="n">row</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">locations</span><span class="p">),</span> <span class="n">col</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">locations</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
+        <span class="n">fig</span><span class="o">.</span><span class="n">update_yaxes</span><span class="p">(</span><span class="n">title_text</span><span class="o">=</span><span class="n">ylabel</span><span class="p">,</span> <span class="nb">range</span><span class="o">=</span><span class="n">yrange</span><span class="p">,</span> <span class="n">row</span><span class="o">=</span><span class="n">row</span><span class="p">,</span> <span class="n">col</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">fig</span></div>
+
+
+
+
+<div class="viewcode-block" id="compare_contours">
+<a class="viewcode-back" href="../../_autosummary/wcomp.plotting.html#wcomp.plotting.compare_contours">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">compare_contours</span><span class="p">(</span>
+    <span class="n">planes</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">WakePlane</span><span class="p">],</span>
+    <span class="n">title</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"Horizontal streamwise velocity contour"</span><span class="p">,</span>
+<span class="p">):</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    Build a matplotlib figure comparing horizontal contour planes from exactly two</span>
+<span class="sd">    software packages, plus a third panel showing their difference.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        planes (dict[str, WakePlane]): Mapping of exactly two software names to their</span>
+<span class="sd">            computed WakePlane for the same case.</span>
+<span class="sd">        title (str, optional): Figure title. Defaults to</span>
+<span class="sd">            "Horizontal streamwise velocity contour".</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        matplotlib.figure.Figure</span>
+<span class="sd">    """</span>
+    <span class="n">names</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">planes</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">names</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">2</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"compare_contours() requires exactly two planes to compare."</span><span class="p">)</span>
+    <span class="n">a</span><span class="p">,</span> <span class="n">b</span> <span class="o">=</span> <span class="n">names</span>
+    <span class="n">diff</span> <span class="o">=</span> <span class="n">planes</span><span class="p">[</span><span class="n">a</span><span class="p">]</span> <span class="o">-</span> <span class="n">planes</span><span class="p">[</span><span class="n">b</span><span class="p">]</span>
+    <span class="n">abs_diff</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">diff</span><span class="o">.</span><span class="n">values</span><span class="p">)</span>
+
+    <span class="n">fig</span><span class="p">,</span> <span class="n">axes</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">14</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">axes</span><span class="p">(</span><span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+    <span class="n">plot_plane</span><span class="p">(</span><span class="n">planes</span><span class="p">[</span><span class="n">a</span><span class="p">],</span> <span class="n">clevels</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">color_bar</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="n">a</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">axes</span><span class="p">(</span><span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+    <span class="n">plot_plane</span><span class="p">(</span><span class="n">planes</span><span class="p">[</span><span class="n">b</span><span class="p">],</span> <span class="n">clevels</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">color_bar</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="n">b</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">axes</span><span class="p">(</span><span class="n">axes</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
+    <span class="n">plot_plane</span><span class="p">(</span>
+        <span class="n">diff</span><span class="p">,</span>
+        <span class="n">min_speed</span><span class="o">=-</span><span class="mi">1</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">abs_diff</span><span class="p">),</span>
+        <span class="n">max_speed</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">abs_diff</span><span class="p">),</span>
+        <span class="n">cmap</span><span class="o">=</span><span class="s1">'PuOr'</span><span class="p">,</span>
+        <span class="n">clevels</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>
+        <span class="n">color_bar</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">title</span><span class="o">=</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">a</span><span class="si">}</span><span class="s2"> - </span><span class="si">{</span><span class="n">b</span><span class="si">}</span><span class="s2">"</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">fig</span><span class="o">.</span><span class="n">suptitle</span><span class="p">(</span><span class="n">title</span><span class="p">)</span>
+    <span class="n">fig</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">fig</span></div>
+
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_plotly_to_html</span><span class="p">(</span><span class="n">fig</span><span class="p">:</span> <span class="n">go</span><span class="o">.</span><span class="n">Figure</span><span class="p">,</span> <span class="n">include_js</span><span class="p">:</span> <span class="nb">bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="n">height</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">layout</span><span class="o">.</span><span class="n">height</span> <span class="ow">or</span> <span class="mi">400</span>
+    <span class="k">return</span> <span class="n">fig</span><span class="o">.</span><span class="n">to_html</span><span class="p">(</span>
+        <span class="n">full_html</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="n">include_plotlyjs</span><span class="o">=</span><span class="s2">"cdn"</span> <span class="k">if</span> <span class="n">include_js</span> <span class="k">else</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="n">default_width</span><span class="o">=</span><span class="s2">"100%"</span><span class="p">,</span>
+        <span class="n">default_height</span><span class="o">=</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">height</span><span class="si">}</span><span class="s2">px"</span><span class="p">,</span>
+    <span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_matplotlib_to_html</span><span class="p">(</span><span class="n">fig</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="n">buffer</span> <span class="o">=</span> <span class="n">BytesIO</span><span class="p">()</span>
+    <span class="n">fig</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">buffer</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="s2">"png"</span><span class="p">,</span> <span class="n">bbox_inches</span><span class="o">=</span><span class="s2">"tight"</span><span class="p">,</span> <span class="n">dpi</span><span class="o">=</span><span class="mi">120</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">close</span><span class="p">(</span><span class="n">fig</span><span class="p">)</span>
+    <span class="n">encoded</span> <span class="o">=</span> <span class="n">base64</span><span class="o">.</span><span class="n">b64encode</span><span class="p">(</span><span class="n">buffer</span><span class="o">.</span><span class="n">getvalue</span><span class="p">())</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s2">"ascii"</span><span class="p">)</span>
+    <span class="k">return</span> <span class="sa">f</span><span class="s1">'&lt;img alt="</span><span class="si">{</span><span class="n">fig</span><span class="o">.</span><span class="n">_suptitle</span><span class="o">.</span><span class="n">get_text</span><span class="p">()</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">fig</span><span class="o">.</span><span class="n">_suptitle</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="s2">""</span><span class="si">}</span><span class="s1">" src="data:image/png;base64,</span><span class="si">{</span><span class="n">encoded</span><span class="si">}</span><span class="s1">" style="max-width: 100%;" /&gt;'</span>
+
+
+<div class="viewcode-block" id="render_wake_model_tabs">
+<a class="viewcode-back" href="../../_autosummary/wcomp.plotting.html#wcomp.plotting.render_wake_model_tabs">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">render_wake_model_tabs</span><span class="p">(</span><span class="n">cases</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">dict</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="s2">"IPython.core.display.HTML"</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    Build a single interactive tab-set, reusing the CSS already loaded by</span>
+<span class="sd">    sphinx-design's `{tab-set}` directive, where each tab shows the complete set of</span>
+<span class="sd">    comparison plots (1D profiles, cross-sections, and a contour comparison, where</span>
+<span class="sd">    available) for one wake model. This exists because myst-nb does not support</span>
+<span class="sd">    executable code cells nested inside other directives (like a MyST tab-item), so</span>
+<span class="sd">    the whole tab-set is instead rendered as a single, self-contained HTML output.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        cases (dict[str, dict]): Mapping of a tab label (e.g. a wake model name) to</span>
+<span class="sd">            the dict returned by a case's compute function, with keys "streamwise",</span>
+<span class="sd">            "xsections", "wind_speed" (used to fix the cross-section y-axis range to</span>
+<span class="sd">            [0, wind_speed] so it's comparable across locations and wake models), and</span>
+<span class="sd">            (optionally) "planes".</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        IPython.display.HTML: A rich HTML display object for the whole tab-set.</span>
+<span class="sd">    """</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">IPython.display</span><span class="w"> </span><span class="kn">import</span> <span class="n">HTML</span>
+
+    <span class="n">group_name</span> <span class="o">=</span> <span class="s2">"wake-model-tabs"</span>
+    <span class="n">include_js</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="n">parts</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'&lt;div class="sd-tab-set docutils"&gt;'</span><span class="p">]</span>
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="p">(</span><span class="n">label</span><span class="p">,</span> <span class="n">case</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">cases</span><span class="o">.</span><span class="n">items</span><span class="p">()):</span>
+        <span class="n">input_id</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">group_name</span><span class="si">}</span><span class="s2">-</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">"</span>
+        <span class="n">checked</span> <span class="o">=</span> <span class="s2">" checked"</span> <span class="k">if</span> <span class="n">i</span> <span class="o">==</span> <span class="mi">0</span> <span class="k">else</span> <span class="s2">""</span>
+        <span class="n">parts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s1">'&lt;input</span><span class="si">{</span><span class="n">checked</span><span class="si">}</span><span class="s1"> id="</span><span class="si">{</span><span class="n">input_id</span><span class="si">}</span><span class="s1">" name="</span><span class="si">{</span><span class="n">group_name</span><span class="si">}</span><span class="s1">" type="radio"&gt;'</span><span class="p">)</span>
+        <span class="n">parts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s1">'&lt;label class="sd-tab-label" for="</span><span class="si">{</span><span class="n">input_id</span><span class="si">}</span><span class="s1">"&gt;</span><span class="si">{</span><span class="n">label</span><span class="si">}</span><span class="s1">&lt;/label&gt;'</span><span class="p">)</span>
+        <span class="n">parts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">'&lt;div class="sd-tab-content docutils"&gt;'</span><span class="p">)</span>
+
+        <span class="n">streamwise_fig</span> <span class="o">=</span> <span class="n">compare_profiles_plotly</span><span class="p">(</span>
+            <span class="k">case</span><span class="p">[</span><span class="s2">"streamwise"</span><span class="p">],</span> <span class="n">xlabel</span><span class="o">=</span><span class="s2">"X (m)"</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s2">"Streamwise velocity"</span>
+        <span class="p">)</span>
+        <span class="n">parts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">_plotly_to_html</span><span class="p">(</span><span class="n">streamwise_fig</span><span class="p">,</span> <span class="n">include_js</span><span class="p">))</span>
+        <span class="n">include_js</span> <span class="o">=</span> <span class="kc">False</span>
+
+        <span class="n">xsections_fig</span> <span class="o">=</span> <span class="n">compare_xsections_plotly</span><span class="p">(</span>
+            <span class="k">case</span><span class="p">[</span><span class="s2">"xsections"</span><span class="p">],</span> <span class="n">title</span><span class="o">=</span><span class="s2">"Cross-section velocity"</span><span class="p">,</span>
+            <span class="n">ymin</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">ymax</span><span class="o">=</span><span class="n">case</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"wind_speed"</span><span class="p">),</span>
+        <span class="p">)</span>
+        <span class="n">parts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">_plotly_to_html</span><span class="p">(</span><span class="n">xsections_fig</span><span class="p">,</span> <span class="n">include_js</span><span class="p">))</span>
+
+        <span class="k">if</span> <span class="n">case</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"planes"</span><span class="p">):</span>
+            <span class="n">parts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">_matplotlib_to_html</span><span class="p">(</span><span class="n">compare_contours</span><span class="p">(</span><span class="n">case</span><span class="p">[</span><span class="s2">"planes"</span><span class="p">])))</span>
+
+        <span class="n">parts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">'&lt;/div&gt;'</span><span class="p">)</span>
+    <span class="n">parts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">'&lt;/div&gt;'</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">HTML</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">"</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">parts</span><span class="p">))</span></div>
+
+
 
 </pre></div>
 

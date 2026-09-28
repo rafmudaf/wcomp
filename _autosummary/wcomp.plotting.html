@@ -37,6 +37,7 @@
     <link rel="stylesheet" type="text/css" href="../_static/mystnb.11b39860a7a0cbfd473a3ad8a317855267ff0bd372690045ca344a6b62be495e.css" />
     <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css?v=4fa983c6" />
     <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+    <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=c6f0821d" />
   
   <!-- So that users can add custom icons -->
   <script defer src="../_static/scripts/fontawesome.js?digest=55c26ed414f5f8a31ebb"></script>
@@ -464,6 +465,10 @@
                 <ul class="pst-show_toc_level nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#wcomp.plotting.plot_profile"><code class="docutils literal notranslate"><span class="pre">plot_profile()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#wcomp.plotting.plot_plane"><code class="docutils literal notranslate"><span class="pre">plot_plane()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#wcomp.plotting.compare_profiles_plotly"><code class="docutils literal notranslate"><span class="pre">compare_profiles_plotly()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#wcomp.plotting.compare_xsections_plotly"><code class="docutils literal notranslate"><span class="pre">compare_xsections_plotly()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#wcomp.plotting.compare_contours"><code class="docutils literal notranslate"><span class="pre">compare_contours()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#wcomp.plotting.render_wake_model_tabs"><code class="docutils literal notranslate"><span class="pre">render_wake_model_tabs()</span></code></a></li>
 </ul>
             </nav>
         </div>
@@ -480,11 +485,23 @@
 <p class="rubric">Functions</p>
 <div class="pst-scrollable-table-container"><table class="autosummary longtable table autosummary">
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#wcomp.plotting.plot_plane" title="wcomp.plotting.plot_plane"><code class="xref py py-obj docutils literal notranslate"><span class="pre">plot_plane</span></code></a>(wake_plane[, min_speed, ...])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#wcomp.plotting.compare_contours" title="wcomp.plotting.compare_contours"><code class="xref py py-obj docutils literal notranslate"><span class="pre">compare_contours</span></code></a>(planes[, title])</p></td>
+<td><p>Build a matplotlib figure comparing horizontal contour planes from exactly two software packages, plus a third panel showing their difference.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#wcomp.plotting.compare_profiles_plotly" title="wcomp.plotting.compare_profiles_plotly"><code class="xref py py-obj docutils literal notranslate"><span class="pre">compare_profiles_plotly</span></code></a>(profiles[, xlabel, ...])</p></td>
+<td><p>Build an interactive Plotly figure comparing the same 1D wake profile computed by multiple software packages, including traces for the absolute difference between consecutive software results.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#wcomp.plotting.compare_xsections_plotly" title="wcomp.plotting.compare_xsections_plotly"><code class="xref py py-obj docutils literal notranslate"><span class="pre">compare_xsections_plotly</span></code></a>(xsections[, ...])</p></td>
+<td><p>Build an interactive Plotly figure comparing cross-section wake profiles computed by multiple software packages at several downstream locations.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#wcomp.plotting.plot_plane" title="wcomp.plotting.plot_plane"><code class="xref py py-obj docutils literal notranslate"><span class="pre">plot_plane</span></code></a>(wake_plane[, min_speed, ...])</p></td>
 <td><p>Plot the data in a WakePlane object on a 2D contour plot.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#wcomp.plotting.plot_profile" title="wcomp.plotting.plot_profile"><code class="xref py py-obj docutils literal notranslate"><span class="pre">plot_profile</span></code></a>(wake_profile[, title])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#wcomp.plotting.plot_profile" title="wcomp.plotting.plot_profile"><code class="xref py py-obj docutils literal notranslate"><span class="pre">plot_profile</span></code></a>(wake_profile[, title])</p></td>
 <td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#wcomp.plotting.render_wake_model_tabs" title="wcomp.plotting.render_wake_model_tabs"><code class="xref py py-obj docutils literal notranslate"><span class="pre">render_wake_model_tabs</span></code></a>(cases)</p></td>
+<td><p>Build a single interactive tab-set, reusing the CSS already loaded by sphinx-design's <cite>{tab-set}</cite> directive, where each tab shows the complete set of comparison plots (1D profiles, cross-sections, and a contour comparison, where available) for one wake model.</p></td>
 </tr>
 </tbody>
 </table>
@@ -534,6 +551,122 @@ for available parameters.</p></li>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="wcomp.plotting.compare_profiles_plotly">
+<span class="sig-prename descclassname"><span class="pre">wcomp.plotting.</span></span><span class="sig-name descname"><span class="pre">compare_profiles_plotly</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">profiles</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="wcomp.output_struct.html#wcomp.output_struct.WakeProfile" title="wcomp.output_struct.WakeProfile"><span class="pre">WakeProfile</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">xlabel</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ylabel</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'U</span> <span class="pre">(m/s)'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">title</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">show_diff</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">colors</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Figure</span></span></span><a class="reference internal" href="../_modules/wcomp/plotting.html#compare_profiles_plotly"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#wcomp.plotting.compare_profiles_plotly" title="Link to this definition">#</a></dt>
+<dd><p>Build an interactive Plotly figure comparing the same 1D wake profile
+computed by multiple software packages, including traces for the absolute
+difference between consecutive software results.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>profiles</strong> (<em>dict</em><em>[</em><em>str</em><em>, </em><a class="reference internal" href="wcomp.output_struct.html#wcomp.output_struct.WakeProfile" title="wcomp.output_struct.WakeProfile"><em>WakeProfile</em></a><em>]</em>) -- Mapping of software name (e.g. &quot;FLORIS&quot;)
+to its computed WakeProfile for one comparison location.</p></li>
+<li><p><strong>xlabel</strong> (<em>str</em><em>, </em><em>optional</em>) -- X-axis label. Defaults to &quot;&quot;.</p></li>
+<li><p><strong>ylabel</strong> (<em>str</em><em>, </em><em>optional</em>) -- Y-axis label. Defaults to &quot;U (m/s)&quot;.</p></li>
+<li><p><strong>title</strong> (<em>str</em><em>, </em><em>optional</em>) -- Figure title. Defaults to &quot;&quot;.</p></li>
+<li><p><strong>show_diff</strong> (<em>bool</em><em>, </em><em>optional</em>) -- If True, add a trace for the absolute
+difference between each consecutive pair of software results.
+Defaults to True.</p></li>
+<li><p><strong>colors</strong> (<em>dict</em><em>[</em><em>str</em><em>, </em><em>str</em><em>]</em><em>, </em><em>optional</em>) -- Mapping of software name to a plotly
+color string. Defaults to <cite>DASHBOARD_COLORS</cite>.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><dl class="simple">
+<dt>Interactive comparison figure. Traces can be</dt><dd><p>toggled on/off via the legend and hovered for exact values.</p>
+</dd>
+</dl>
+</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>plotly.graph_objects.Figure</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="wcomp.plotting.compare_xsections_plotly">
+<span class="sig-prename descclassname"><span class="pre">wcomp.plotting.</span></span><span class="sig-name descname"><span class="pre">compare_xsections_plotly</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">xsections</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="wcomp.output_struct.html#wcomp.output_struct.WakeProfile" title="wcomp.output_struct.WakeProfile"><span class="pre">WakeProfile</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">xlabel</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'Y</span> <span class="pre">(m)'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ylabel</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'U</span> <span class="pre">(m/s)'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">title</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">colors</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ymin</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ymax</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Figure</span></span></span><a class="reference internal" href="../_modules/wcomp/plotting.html#compare_xsections_plotly"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#wcomp.plotting.compare_xsections_plotly" title="Link to this definition">#</a></dt>
+<dd><p>Build an interactive Plotly figure comparing cross-section wake profiles
+computed by multiple software packages at several downstream locations.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>xsections</strong> (<em>dict</em><em>[</em><em>str</em><em>, </em><em>dict</em><em>[</em><em>str</em><em>, </em><a class="reference internal" href="wcomp.output_struct.html#wcomp.output_struct.WakeProfile" title="wcomp.output_struct.WakeProfile"><em>WakeProfile</em></a><em>]</em><em>]</em>) -- Mapping of a downstream
+location label (e.g. &quot;5 D&quot;, used verbatim as the subplot title) to a
+mapping of software name to its computed WakeProfile at that location.</p></li>
+<li><p><strong>xlabel</strong> (<em>str</em><em>, </em><em>optional</em>) -- X-axis label. Defaults to &quot;Y (m)&quot;.</p></li>
+<li><p><strong>ylabel</strong> (<em>str</em><em>, </em><em>optional</em>) -- Y-axis label. Defaults to &quot;U (m/s)&quot;.</p></li>
+<li><p><strong>title</strong> (<em>str</em><em>, </em><em>optional</em>) -- Figure title. Defaults to &quot;&quot;.</p></li>
+<li><p><strong>colors</strong> (<em>dict</em><em>[</em><em>str</em><em>, </em><em>str</em><em>]</em><em>, </em><em>optional</em>) -- Mapping of software name to a plotly
+color string. Defaults to <cite>DASHBOARD_COLORS</cite>.</p></li>
+<li><p><strong>ymin</strong> (<em>float</em><em>, </em><em>optional</em>) -- Fixed lower bound applied to every subplot's y-axis, so
+cross-sections are comparable across downstream locations and wake models.
+Defaults to None (auto-scaled per subplot).</p></li>
+<li><p><strong>ymax</strong> (<em>float</em><em>, </em><em>optional</em>) -- Fixed upper bound applied to every subplot's y-axis. See
+<cite>ymin</cite>. Defaults to None (auto-scaled per subplot).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><dl class="simple">
+<dt>Figure with one row per downstream location,</dt><dd><p>sharing a single, de-duplicated legend.</p>
+</dd>
+</dl>
+</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>plotly.graph_objects.Figure</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="wcomp.plotting.compare_contours">
+<span class="sig-prename descclassname"><span class="pre">wcomp.plotting.</span></span><span class="sig-name descname"><span class="pre">compare_contours</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">planes</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="wcomp.output_struct.html#wcomp.output_struct.WakePlane" title="wcomp.output_struct.WakePlane"><span class="pre">WakePlane</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">title</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'Horizontal</span> <span class="pre">streamwise</span> <span class="pre">velocity</span> <span class="pre">contour'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/wcomp/plotting.html#compare_contours"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#wcomp.plotting.compare_contours" title="Link to this definition">#</a></dt>
+<dd><p>Build a matplotlib figure comparing horizontal contour planes from exactly two
+software packages, plus a third panel showing their difference.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>planes</strong> (<em>dict</em><em>[</em><em>str</em><em>, </em><a class="reference internal" href="wcomp.output_struct.html#wcomp.output_struct.WakePlane" title="wcomp.output_struct.WakePlane"><em>WakePlane</em></a><em>]</em>) -- Mapping of exactly two software names to their
+computed WakePlane for the same case.</p></li>
+<li><p><strong>title</strong> (<em>str</em><em>, </em><em>optional</em>) -- Figure title. Defaults to
+&quot;Horizontal streamwise velocity contour&quot;.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>matplotlib.figure.Figure</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="wcomp.plotting.render_wake_model_tabs">
+<span class="sig-prename descclassname"><span class="pre">wcomp.plotting.</span></span><span class="sig-name descname"><span class="pre">render_wake_model_tabs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cases</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">dict</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">IPython.core.display.HTML</span></span></span><a class="reference internal" href="../_modules/wcomp/plotting.html#render_wake_model_tabs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#wcomp.plotting.render_wake_model_tabs" title="Link to this definition">#</a></dt>
+<dd><p>Build a single interactive tab-set, reusing the CSS already loaded by
+sphinx-design's <cite>{tab-set}</cite> directive, where each tab shows the complete set of
+comparison plots (1D profiles, cross-sections, and a contour comparison, where
+available) for one wake model. This exists because myst-nb does not support
+executable code cells nested inside other directives (like a MyST tab-item), so
+the whole tab-set is instead rendered as a single, self-contained HTML output.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>cases</strong> (<em>dict</em><em>[</em><em>str</em><em>, </em><em>dict</em><em>]</em>) -- Mapping of a tab label (e.g. a wake model name) to
+the dict returned by a case's compute function, with keys &quot;streamwise&quot;,
+&quot;xsections&quot;, &quot;wind_speed&quot; (used to fix the cross-section y-axis range to
+[0, wind_speed] so it's comparable across locations and wake models), and
+(optionally) &quot;planes&quot;.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A rich HTML display object for the whole tab-set.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>IPython.display.HTML</p>
 </dd>
 </dl>
 </dd></dl>
@@ -599,6 +732,10 @@ for available parameters.</p></li>
     <ul class="pst-show_toc_level nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#wcomp.plotting.plot_profile"><code class="docutils literal notranslate"><span class="pre">plot_profile()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#wcomp.plotting.plot_plane"><code class="docutils literal notranslate"><span class="pre">plot_plane()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#wcomp.plotting.compare_profiles_plotly"><code class="docutils literal notranslate"><span class="pre">compare_profiles_plotly()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#wcomp.plotting.compare_xsections_plotly"><code class="docutils literal notranslate"><span class="pre">compare_xsections_plotly()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#wcomp.plotting.compare_contours"><code class="docutils literal notranslate"><span class="pre">compare_contours()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#wcomp.plotting.render_wake_model_tabs"><code class="docutils literal notranslate"><span class="pre">render_wake_model_tabs()</span></code></a></li>
 </ul>
   </nav></div>
 
