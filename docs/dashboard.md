@@ -155,7 +155,7 @@ This page compares the integrated wake modeling software (FLORIS, FOXES, PyWake)
 common set of cases. Each comparison figure is interactive: hover over a trace for exact
 values, or click a legend entry to toggle it on/off.
 
-## Wake model implementations
+## Implementation table
 The mathematical models included in each software are generally grouped into models
 describing the velocity of the wind in a wind turbine wake (velocity model) and
 models describing the magnitude of deflection of the wake (deflection model).
@@ -194,7 +194,7 @@ The models available in each software are shown in the tables below.
 :::
 
 
-### Wake profiles
+## Wake profiles
 
 The schematic below shows the sample locations used for every comparison in this section:
 a streamwise profile through four turbines, a cross-stream profile 4D downstream of the
