@@ -206,39 +206,95 @@ turbine, where the combined farm wake has developed.
 tags: [remove-input]
 ---
 
-y_turbine = np.array([-ROTOR_D/2, ROTOR_D/2])
-x_streamwise = np.array([XMIN, XMAX])
-y_streamwise = np.array([0.0, 0.0])
-y_crosswise = np.array([YMIN, YMAX])
+from IPython.display import HTML
+
 first_turbine_d = TURBINE_LOCATIONS_D[0]
 last_turbine_d = TURBINE_LOCATIONS_D[-1]
+schematic_width = 920
+schematic_height = 300
+left_margin = 60
+right_margin = 60
+usable_width = schematic_width - left_margin - right_margin
+scale = usable_width / (XMAX - XMIN)
 
-fig, ax = plt.subplots(figsize=(6, 3))
-for i, turbine_d in enumerate(TURBINE_LOCATIONS_D):
-    x_turbine = np.array([turbine_d * ROTOR_D, turbine_d * ROTOR_D])
-    ax.plot(
-        x_turbine, y_turbine, '-', color='black', linewidth=3,
-        label="Turbine" if i == 0 else None,
-    )
-ax.plot(x_streamwise, y_streamwise, '-.', color='black', linewidth=2, label="Streamwise")
-x_4d = np.array([(first_turbine_d + 4) * ROTOR_D, (first_turbine_d + 4) * ROTOR_D])
-ax.plot(
-    x_4d, y_crosswise, linestyle=(0, (1, 1)), color='black', linewidth=2,
-    label="4D cross section (past first turbine)",
+def x_px(distance_m: float) -> float:
+    return left_margin + (distance_m - XMIN) * scale
+
+# Vertical layout, top to bottom: cross-section plane labels, the planes themselves
+# (centered on the streamwise axis, since that's the line they actually sample along),
+# turbines drawn on top of the axis, turbine labels below the planes, and the
+# streamwise arrow at the bottom. Keeping each label in its own horizontal band means
+# nearby markers (e.g. the last turbine and the "1D past last turbine" plane, only 1D
+# apart) never collide, regardless of how close their x positions are.
+axis_y = 130
+plane_label_y = 45
+plane_top, plane_bottom = axis_y - 70, axis_y + 70
+turbine_top, turbine_bottom = axis_y - 25, axis_y + 25
+turbine_label_y = plane_bottom + 20
+arrow_y = turbine_label_y + 30
+arrow_label_y = arrow_y + 18
+footnote_y = arrow_label_y + 22
+
+def cross_section_plane(distance_m: float, label: str, color: str) -> str:
+    x_pos = x_px(distance_m)
+    return f'''
+    <line x1="{x_pos:.1f}" y1="{plane_top}" x2="{x_pos:.1f}" y2="{plane_bottom}"
+          stroke="{color}" stroke-width="2.5" stroke-dasharray="6 5" />
+    <text x="{x_pos:.1f}" y="{plane_label_y}" text-anchor="middle" class="plane-label" fill="{color}">{label}</text>
+    '''
+
+planes = cross_section_plane((first_turbine_d + 4) * ROTOR_D, "4D", "#2563eb")
+planes += ''.join(
+    cross_section_plane((last_turbine_d + d) * ROTOR_D, f"{d}D", "#15803d")
+    for d in (1, 5, 10)
 )
-for i, d in enumerate((1, 5, 10)):
-    x_d = np.array([(last_turbine_d + d) * ROTOR_D, (last_turbine_d + d) * ROTOR_D])
-    ax.plot(
-        x_d, y_crosswise, linestyle=(0, (2, 3)), color='black', linewidth=2,
-        label="1D, 5D, 10D cross sections (past last turbine)" if i == 2 else None,
-    )
-ax.set_title("Four-turbine sample locations")
-ax.set_xlabel("X (m)")
-ax.set_ylabel("Y (m)")
-ax.set_ylim([-1000, 1000])
-ax.axis('equal')
-ax.grid()
-ax.legend()
+
+turbines = ''.join(
+    f'''
+    <line x1="{x_px(turbine_d * ROTOR_D):.1f}" y1="{turbine_top}" x2="{x_px(turbine_d * ROTOR_D):.1f}" y2="{turbine_bottom}"
+          stroke="#111827" stroke-width="6" stroke-linecap="round" />
+    <text x="{x_px(turbine_d * ROTOR_D):.1f}" y="{turbine_label_y}" text-anchor="middle" class="turbine-label">{turbine_d}D</text>
+    '''
+    for turbine_d in TURBINE_LOCATIONS_D
+)
+
+stream_start, stream_end = x_px(XMIN), x_px(XMAX)
+stream_mid = 0.5 * (stream_start + stream_end)
+
+svg = f'''
+<div style="max-width: 920px; margin: 0 auto; font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;">
+  <svg viewBox="0 0 {schematic_width} {schematic_height}" width="100%" role="img" aria-labelledby="wake-sample-title wake-sample-desc">
+    <title id="wake-sample-title">Four-turbine sample locations</title>
+    <desc id="wake-sample-desc">A streamwise profile through the farm, a 4D cross section past the first turbine, and cross sections 1D, 5D, and 10D past the last turbine.</desc>
+
+    <defs>
+      <marker id="arrow-orange" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto" markerUnits="strokeWidth">
+        <path d="M 0 0 L 6 3 L 0 6 z" fill="#d97706" />
+      </marker>
+      <style>
+        .plane-label {{ font-size: 12px; font-weight: 600; }}
+        .turbine-label {{ font-size: 13px; font-weight: 600; fill: #111827; }}
+        .caption {{ font-size: 12px; fill: #6b7280; }}
+      </style>
+    </defs>
+
+    <rect x="0" y="0" width="{schematic_width}" height="{schematic_height}" rx="18" fill="#fafafa" stroke="#e5e7eb" />
+
+    {planes}
+
+    <line x1="{left_margin}" y1="{axis_y}" x2="{schematic_width - right_margin}" y2="{axis_y}" stroke="#9ca3af" stroke-width="2" />
+
+    {turbines}
+
+    <line x1="{stream_start:.1f}" y1="{arrow_y}" x2="{stream_end:.1f}" y2="{arrow_y}" stroke="#d97706" stroke-width="1.5" marker-start="url(#arrow-orange)" marker-end="url(#arrow-orange)" />
+    <text x="{stream_mid:.1f}" y="{arrow_label_y}" text-anchor="middle" class="caption" fill="#d97706">Streamwise direction (X)</text>
+
+    <text x="{stream_mid:.1f}" y="{footnote_y}" text-anchor="middle" class="caption">Bold lines mark turbine locations. Dashed lines mark cross-section sample planes.</text>
+  </svg>
+</div>
+'''
+
+HTML(svg)
 ```
 
 ```{code-cell}
@@ -259,12 +315,6 @@ render_wake_model_tabs({
     "TurbOPark": compute_case("turbopark"),
 })
 ```
-
-## What's next
-
-Spatial discretization/rotor-averaging comparisons, overlapping wakes, and wind shear/veer
-handling are planned additions to this dashboard. See the [Roadmap](roadmap.md) page for
-details on what's coming.
 
 # Software projects described
 
