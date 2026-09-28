@@ -25,7 +25,7 @@ in the comparison directly.
 ::::{grid}
 :gutter: 3
 
-:::{grid-item-card} [FLORIS](https://github.com/NREL/floris)
+:::{grid-item-card} [FLORIS](https://github.com/NatLabRockies/floris)
 ![floris](_static/logo_floris.png)
 :::
 
@@ -59,7 +59,7 @@ Follow these steps to install the dependencies and `wcomp`:
 ```bash
 pip install windIO
 pip install foxes==1.6.2
-git clone https://github.com/nrel/floris -b main && pip install -e floris/
+git clone https://github.com/NatLabRockies/floris -b main && pip install -e floris/
 git clone https://github.com/rafmudaf/PyWake && pip install -e PyWake/
 ```
 

@@ -42,7 +42,7 @@ Follow these steps to install the dependencies and `wcomp`:
 ```bash
 pip install windIO
 pip install foxes==1.6.2
-git clone https://github.com/nrel/floris -b main && pip install -e floris/
+git clone https://github.com/natlabrockies/floris -b main && pip install -e floris/
 git clone https://github.com/rafmudaf/PyWake && pip install -e PyWake/
 ```
 

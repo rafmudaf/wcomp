@@ -8,7 +8,7 @@ from setuptools import find_packages, setup
 NAME = "wcomp"
 DESCRIPTION = "A framework for systematically comparing steady-state, analytical wind farm wake modeling software."
 URL = "https://github.com/rafmudaf/wcomp"
-EMAIL = "rafael.mudafort@nrel.gov"
+EMAIL = "rafael.mudafort@nlr.gov"
 AUTHOR = "NREL National Wind Technology Center"
 REQUIRES_PYTHON = ">=3.10"
 
