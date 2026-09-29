@@ -1,0 +1,57 @@
+[
+  {
+    "pair": [
+      "FLORIS",
+      "FOXES"
+    ],
+    "target": "streamwise",
+    "rmse": 0.7153300941632301,
+    "max_abs": 2.8719241946486553,
+    "mean_abs": 0.4648467729755577,
+    "nrmse": 0.0858865585971319
+  },
+  {
+    "pair": [
+      "FLORIS",
+      "FOXES"
+    ],
+    "target": "xsection:1D_downstream",
+    "rmse": 1.0328445176968744,
+    "max_abs": 3.6163899365748673,
+    "mean_abs": 0.5417467867571185,
+    "nrmse": 0.1445436648597653
+  },
+  {
+    "pair": [
+      "FLORIS",
+      "FOXES"
+    ],
+    "target": "xsection:5D_downstream",
+    "rmse": 0.5535391013172565,
+    "max_abs": 1.4593319399398181,
+    "mean_abs": 0.3379860098519285,
+    "nrmse": 0.13661010206317029
+  },
+  {
+    "pair": [
+      "FLORIS",
+      "FOXES"
+    ],
+    "target": "xsection:10D_downstream",
+    "rmse": 0.25256731059963483,
+    "max_abs": 0.5160104298728125,
+    "mean_abs": 0.19176604754428475,
+    "nrmse": 0.14466568850806916
+  },
+  {
+    "pair": [
+      "FLORIS",
+      "FOXES"
+    ],
+    "target": "contour",
+    "rmse": 0.5796854859810144,
+    "max_abs": 4.304067535258908,
+    "mean_abs": 0.2749558475240892,
+    "nrmse": 0.06930699789680483
+  }
+]

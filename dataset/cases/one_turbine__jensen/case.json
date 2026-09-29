@@ -1,0 +1,32 @@
+{
+  "scenario": "one_turbine",
+  "wake_model": "jensen",
+  "categories": [
+    "velocity"
+  ],
+  "rotor_diameter": 240.0,
+  "hub_height": 150.0,
+  "wind_speed": 9.8,
+  "turbine_locations_d": [
+    0
+  ],
+  "turbine_yaw_deg": [
+    0.0
+  ],
+  "software": [
+    "FLORIS",
+    "FOXES",
+    "PyWake"
+  ],
+  "xsection_labels": [
+    "1D_downstream",
+    "5D_downstream",
+    "10D_downstream"
+  ],
+  "xsection_locations_d": {
+    "1D_downstream": 1,
+    "5D_downstream": 5,
+    "10D_downstream": 10
+  },
+  "has_contour": true
+}

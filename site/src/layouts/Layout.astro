@@ -1,0 +1,78 @@
+---
+interface Props {
+  title: string;
+}
+const { title } = Astro.props;
+const base = import.meta.env.BASE_URL;
+---
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width" />
+    <title>{title} · wcomp</title>
+    <script is:inline src="https://cdn.plot.ly/plotly-2.35.2.min.js"></script>
+    <style is:global>
+      :root { color-scheme: light; }
+      body {
+        font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+        margin: 0;
+        color: #1f2937;
+      }
+      header {
+        padding: 1rem 2rem;
+        border-bottom: 1px solid #e5e7eb;
+        display: flex;
+        gap: 1.5rem;
+        align-items: baseline;
+      }
+      header a.brand { color: #1f2937; text-decoration: none; font-weight: 700; }
+      header nav a { color: #2563eb; text-decoration: none; margin-right: 1rem; }
+      main { max-width: 1100px; margin: 0 auto; padding: 1.5rem 2rem 4rem; }
+      table { border-collapse: collapse; width: 100%; margin: 1rem 0; }
+      th, td { border: 1px solid #e5e7eb; padding: 0.4rem 0.6rem; text-align: left; font-size: 0.9rem; }
+      th { background: #f9fafb; }
+      th.sortable { cursor: pointer; user-select: none; }
+      th.sortable::after { content: ' \21C5'; color: #9ca3af; font-size: 0.75em; }
+      .check-cell { width: 5rem; text-align: center; }
+      .check { color: #15803d; font-weight: 700; font-size: 1.1rem; }
+      .chart { margin: 1.5rem 0; }
+      .case-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+        gap: 0.75rem;
+        margin: 1rem 0 2rem;
+      }
+      .case-card {
+        border: 1px solid #e5e7eb;
+        border-radius: 8px;
+        padding: 0.75rem 1rem;
+        text-decoration: none;
+        color: inherit;
+        display: block;
+      }
+      .case-card:hover { border-color: #2563eb; }
+      .tag {
+        display: inline-block;
+        font-size: 0.75rem;
+        padding: 0.1rem 0.5rem;
+        border-radius: 999px;
+        background: #eef2ff;
+        color: #4338ca;
+        margin-right: 0.25rem;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <a class="brand" href={base}>wcomp</a>
+      <nav>
+        <a href={base}>Comparisons</a>
+        <a href={`${base}models/`}>Implementation matrix</a>
+      </nav>
+    </header>
+    <main>
+      <slot />
+    </main>
+  </body>
+</html>

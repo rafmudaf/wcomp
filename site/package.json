@@ -1,0 +1,16 @@
+{
+  "name": "wcomp-site",
+  "type": "module",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "predev": "node scripts/copy-dataset.mjs",
+    "dev": "astro dev",
+    "prebuild": "node scripts/copy-dataset.mjs",
+    "build": "astro build",
+    "preview": "astro preview"
+  },
+  "dependencies": {
+    "astro": "^7.3.5"
+  }
+}

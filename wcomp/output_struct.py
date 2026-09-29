@@ -21,6 +21,13 @@ class WakeProfile:
             self.values - other.values
         )
 
+    def to_dict(self) -> dict:
+        """JSON-serializable representation, used by the dataset generator."""
+        return {
+            "x1": np.round(np.asarray(self.x1), 3).tolist(),
+            "values": np.round(np.asarray(self.values), 4).tolist(),
+        }
+
 class WakePlane:
 
     def __init__(
@@ -55,6 +62,15 @@ class WakePlane:
             self.values - other.values,
             self.normal_vector,
         )
+
+    def to_dict(self) -> dict:
+        """JSON-serializable representation, used by the dataset generator."""
+        return {
+            "x1": np.round(np.asarray(self.x1), 3).tolist(),
+            "x2": np.round(np.asarray(self.x2), 3).tolist(),
+            "values": np.round(np.asarray(self.values), 4).tolist(),
+            "normal_vector": self.normal_vector,
+        }
 
 class WakeVolume:
     def __init__(self, df, x1_resolution, x2_resolution, normal_vector):

@@ -1,0 +1,68 @@
+[
+  {
+    "pair": [
+      "FOXES",
+      "PyWake"
+    ],
+    "target": "streamwise",
+    "rmse": 4.036092446502277,
+    "max_abs": 9.8,
+    "mean_abs": 3.2238986950040562,
+    "nrmse": 0.4131526714736734
+  },
+  {
+    "pair": [
+      "FOXES",
+      "PyWake"
+    ],
+    "target": "xsection:4D_past_first_turbine",
+    "rmse": 2.140358604368838,
+    "max_abs": 4.548164792736684,
+    "mean_abs": 1.4916760695790239,
+    "nrmse": 0.47059829665515684
+  },
+  {
+    "pair": [
+      "FOXES",
+      "PyWake"
+    ],
+    "target": "xsection:1D_past_last_turbine",
+    "rmse": 3.2864732816045183,
+    "max_abs": 7.839148552312086,
+    "mean_abs": 2.2329319037758353,
+    "nrmse": 0.4192385768509534
+  },
+  {
+    "pair": [
+      "FOXES",
+      "PyWake"
+    ],
+    "target": "xsection:5D_past_last_turbine",
+    "rmse": 1.466936298804374,
+    "max_abs": 3.210555210143248,
+    "mean_abs": 1.1063942664985542,
+    "nrmse": 0.4569278892382874
+  },
+  {
+    "pair": [
+      "FOXES",
+      "PyWake"
+    ],
+    "target": "xsection:10D_past_last_turbine",
+    "rmse": 0.770442837920387,
+    "max_abs": 1.6250808780271573,
+    "mean_abs": 0.6123197607429358,
+    "nrmse": 0.47431174854471664
+  },
+  {
+    "pair": [
+      "FOXES",
+      "PyWake"
+    ],
+    "target": "contour",
+    "rmse": 0.17820693044558214,
+    "max_abs": 9.8,
+    "mean_abs": 0.04101695715366315,
+    "nrmse": 0.0182420671391016
+  }
+]
