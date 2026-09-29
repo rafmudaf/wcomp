@@ -4,6 +4,7 @@ interface Props {
 }
 const { title } = Astro.props;
 const base = import.meta.env.BASE_URL;
+const GA_MEASUREMENT_ID = 'G-7LZJG24QM5';
 ---
 <!doctype html>
 <html lang="en">
@@ -11,6 +12,13 @@ const base = import.meta.env.BASE_URL;
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width" />
     <title>{title} · wcomp</title>
+    <script is:inline async src={`https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`}></script>
+    <script is:inline define:vars={{ GA_MEASUREMENT_ID }}>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() { dataLayer.push(arguments); }
+      gtag('js', new Date());
+      gtag('config', GA_MEASUREMENT_ID);
+    </script>
     <script is:inline src="https://cdn.plot.ly/plotly-2.35.2.min.js"></script>
     <style is:global>
       :root { color-scheme: light; }
@@ -66,10 +74,6 @@ const base = import.meta.env.BASE_URL;
   <body>
     <header>
       <a class="brand" href={base}>wcomp</a>
-      <nav>
-        <a href={base}>Comparisons</a>
-        <a href={`${base}models/`}>Implementation matrix</a>
-      </nav>
     </header>
     <main>
       <slot />
