@@ -197,9 +197,13 @@ The models available in each software are shown in the tables below.
 ## Wake profiles
 
 The schematic below shows the sample locations used for every comparison in this section:
-a streamwise profile through four turbines, a cross-stream profile 4D downstream of the
-first turbine, and cross-stream profiles at 1D, 5D, and 10D downstream of the last
-turbine, where the combined farm wake has developed.
+- A streamwise profile through four turbines
+- A cross-stream profile 4D downstream of the first turbine
+- Cross-stream profiles at 1D, 5D, and 10D downstream of the last turbine where the combined
+  wake is fully developed
+
+In the deflection model cases, the first two turbines are yawed 10°.
+Without a deflection model, all turbines are aligned with the wind.
 
 ```{code-cell}
 ---
@@ -249,13 +253,23 @@ planes += ''.join(
     for d in (1, 5, 10)
 )
 
-turbines = ''.join(
-    f'''
-    <line x1="{x_px(turbine_d * ROTOR_D):.1f}" y1="{turbine_top}" x2="{x_px(turbine_d * ROTOR_D):.1f}" y2="{turbine_bottom}"
-          stroke="#111827" stroke-width="6" stroke-linecap="round" />
-    <text x="{x_px(turbine_d * ROTOR_D):.1f}" y="{turbine_label_y}" text-anchor="middle" class="turbine-label">{turbine_d}D</text>
+# The first two turbines are yawed 10 degrees, matching the yaw_angles used in the
+# deflection cases (e.g. bastankhah2016_deflection/wind_energy_system.yaml).
+TURBINE_YAW_DEG = [10, 10, 0, 0]
+
+def turbine_marker(turbine_d: float, yaw_deg: float) -> str:
+    x_pos = x_px(turbine_d * ROTOR_D)
+    rotate = f' transform="rotate({yaw_deg} {x_pos:.1f} {axis_y})"' if yaw_deg else ''
+    label = f"{turbine_d}D" + (f" ({yaw_deg}\u00b0 yaw)" if yaw_deg else "")
+    return f'''
+    <line x1="{x_pos:.1f}" y1="{turbine_top}" x2="{x_pos:.1f}" y2="{turbine_bottom}"
+          stroke="#111827" stroke-width="6" stroke-linecap="round"{rotate} />
+    <text x="{x_pos:.1f}" y="{turbine_label_y}" text-anchor="middle" class="turbine-label">{label}</text>
     '''
-    for turbine_d in TURBINE_LOCATIONS_D
+
+turbines = ''.join(
+    turbine_marker(turbine_d, yaw_deg)
+    for turbine_d, yaw_deg in zip(TURBINE_LOCATIONS_D, TURBINE_YAW_DEG)
 )
 
 stream_start, stream_end = x_px(XMIN), x_px(XMAX)
