@@ -2,45 +2,39 @@ name: deploy-pages
 
 on:
   push:
-    # branches:
-    # - develop
-    # paths:
-    # - docs/**
+    branches:
+    - main
+    paths:
+    - site/**
+    - dataset/**
+    - .github/workflows/deploy-pages.yaml
 
-# This job installs dependencies, builds the book, and pushes it to `gh-pages`
+# This job builds the Astro site (which reads the committed `dataset/`) and pushes
+# the static output to `gh-pages`. No Python/solver dependencies are needed here --
+# the dataset is generated locally and committed, decoupling site builds from it.
 jobs:
-  deploy-book:
+  deploy-site:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
 
-    # Install dependencies
-    - name: Set up Python
-      uses: actions/setup-python@v5
+    - name: Set up Node
+      uses: actions/setup-node@v4
       with:
-        python-version: "3.12"
+        node-version: "20"
+        cache: npm
+        cache-dependency-path: site/package-lock.json
 
     - name: Install dependencies
-      run: |
-        git clone https://github.com/rafmudaf/PyWake
-        pip install -e PyWake
-        pip install -e ".[docs]"
+      working-directory: site
+      run: npm ci
 
-    # Generate any required diagrams
-    - name: Make diagrams
-      working-directory: ${{runner.workspace}}/wcomp/wcomp
-      run: |
-        pyreverse base_interface.py -c WCompBase -o mmd
+    - name: Build the site
+      working-directory: site
+      run: npm run build
 
-    # Build the book
-    - name: Build the book
-      working-directory: ${{runner.workspace}}/wcomp/docs/
-      run: |
-        jupyter-book build .
-
-    # Push the book's HTML to github-pages
     - name: GitHub Pages action
       uses: peaceiris/actions-gh-pages@v3.9.3
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
-        publish_dir: ./docs/_build/html
+        publish_dir: ./site/dist
