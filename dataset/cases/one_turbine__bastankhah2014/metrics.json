@@ -1,0 +1,57 @@
+[
+  {
+    "pair": [
+      "FOXES",
+      "PyWake"
+    ],
+    "target": "streamwise",
+    "rmse": 3.9895682914406843,
+    "max_abs": 9.8,
+    "mean_abs": 2.788813586868831,
+    "nrmse": 0.40839024860885276
+  },
+  {
+    "pair": [
+      "FOXES",
+      "PyWake"
+    ],
+    "target": "xsection:1D_downstream",
+    "rmse": 4.238062811917609,
+    "max_abs": 9.7754439176682,
+    "mean_abs": 2.681844120810822,
+    "nrmse": 0.43491705278557835
+  },
+  {
+    "pair": [
+      "FOXES",
+      "PyWake"
+    ],
+    "target": "xsection:5D_downstream",
+    "rmse": 1.7681536386381158,
+    "max_abs": 3.6893146542348685,
+    "mean_abs": 1.2624932420804733,
+    "nrmse": 0.479263441682454
+  },
+  {
+    "pair": [
+      "FOXES",
+      "PyWake"
+    ],
+    "target": "xsection:10D_downstream",
+    "rmse": 0.8767498170034396,
+    "max_abs": 1.7498007883403464,
+    "mean_abs": 0.6785045623597803,
+    "nrmse": 0.5010569333638377
+  },
+  {
+    "pair": [
+      "FOXES",
+      "PyWake"
+    ],
+    "target": "contour",
+    "rmse": 0.19290315367897265,
+    "max_abs": 9.8,
+    "mean_abs": 0.006300421656176551,
+    "nrmse": 0.01974643899627019
+  }
+]

@@ -1,0 +1,32 @@
+{
+  "scenario": "one_turbine",
+  "wake_model": "bastankhah2016_deflection",
+  "categories": [
+    "velocity",
+    "deflection"
+  ],
+  "rotor_diameter": 240.0,
+  "hub_height": 150.0,
+  "wind_speed": 9.8,
+  "turbine_locations_d": [
+    0
+  ],
+  "turbine_yaw_deg": [
+    10.0
+  ],
+  "software": [
+    "FLORIS",
+    "FOXES"
+  ],
+  "xsection_labels": [
+    "1D_downstream",
+    "5D_downstream",
+    "10D_downstream"
+  ],
+  "xsection_locations_d": {
+    "1D_downstream": 1,
+    "5D_downstream": 5,
+    "10D_downstream": 10
+  },
+  "has_contour": true
+}

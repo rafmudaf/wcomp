@@ -1,0 +1,139 @@
+[
+  {
+    "name": "Jensen 1983",
+    "category": "velocity",
+    "software": [
+      "FLORIS",
+      "FOXES",
+      "PyWake"
+    ],
+    "case": "jensen"
+  },
+  {
+    "name": "Larsen 2009",
+    "category": "velocity",
+    "software": [
+      "PyWake"
+    ],
+    "case": null
+  },
+  {
+    "name": "Bastankhah / Porte Agel 2014",
+    "category": "velocity",
+    "software": [
+      "FOXES",
+      "PyWake"
+    ],
+    "case": "bastankhah2014"
+  },
+  {
+    "name": "Bastankhah / Porte Agel 2016",
+    "category": "velocity",
+    "software": [
+      "FLORIS",
+      "FOXES"
+    ],
+    "case": "bastankhah2016"
+  },
+  {
+    "name": "Niayifar / Porte-Agel 2016",
+    "category": "velocity",
+    "software": [
+      "PyWake"
+    ],
+    "case": null
+  },
+  {
+    "name": "IEA Task 37 Bastankhah 2018",
+    "category": "velocity",
+    "software": [
+      "PyWake"
+    ],
+    "case": null
+  },
+  {
+    "name": "Carbajo Fuertes / Markfort / Porte-Agel 2018",
+    "category": "velocity",
+    "software": [
+      "PyWake"
+    ],
+    "case": null
+  },
+  {
+    "name": "Blondel / Cathelain 2020",
+    "category": "velocity",
+    "software": [
+      "PyWake"
+    ],
+    "case": null
+  },
+  {
+    "name": "Zong / Porte-Agel 2020",
+    "category": "velocity",
+    "software": [
+      "PyWake"
+    ],
+    "case": null
+  },
+  {
+    "name": "Cumulative Curl 2022",
+    "category": "velocity",
+    "software": [
+      "FLORIS"
+    ],
+    "case": null
+  },
+  {
+    "name": "TurbOPark (Nygaard 2022)",
+    "category": "velocity",
+    "software": [
+      "FLORIS",
+      "FOXES",
+      "PyWake"
+    ],
+    "case": "turbopark"
+  },
+  {
+    "name": "Empirical Gauss 2023",
+    "category": "velocity",
+    "software": [
+      "FLORIS"
+    ],
+    "case": null
+  },
+  {
+    "name": "Jimenez 2010",
+    "category": "deflection",
+    "software": [
+      "FLORIS",
+      "FOXES",
+      "PyWake"
+    ],
+    "case": "jimenez"
+  },
+  {
+    "name": "Bastankhah / Porte Agel 2016 (deflection)",
+    "category": "deflection",
+    "software": [
+      "FLORIS",
+      "FOXES"
+    ],
+    "case": "bastankhah2016_deflection"
+  },
+  {
+    "name": "Larsen et al 2020",
+    "category": "deflection",
+    "software": [
+      "PyWake"
+    ],
+    "case": null
+  },
+  {
+    "name": "Empirical Gauss 2023 (deflection)",
+    "category": "deflection",
+    "software": [
+      "FLORIS"
+    ],
+    "case": null
+  }
+]

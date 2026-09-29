@@ -1,0 +1,23 @@
+{
+  "generated_at": "2026-09-29T21:04:28.273399+00:00",
+  "wcomp_version": "0.1.0",
+  "software_versions": {
+    "FLORIS": "4.6.6",
+    "FOXES": "1.6.2",
+    "PyWake": "0.1.dev675+gea1d632c8"
+  },
+  "cases": [
+    "one_turbine__jensen",
+    "one_turbine__bastankhah2014",
+    "one_turbine__bastankhah2016",
+    "one_turbine__bastankhah2016_deflection",
+    "one_turbine__jimenez",
+    "one_turbine__turbopark",
+    "four_turbine__jensen",
+    "four_turbine__bastankhah2014",
+    "four_turbine__bastankhah2016",
+    "four_turbine__bastankhah2016_deflection",
+    "four_turbine__jimenez",
+    "four_turbine__turbopark"
+  ]
+}

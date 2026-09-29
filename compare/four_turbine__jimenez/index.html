@@ -1,0 +1,254 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width"><title>jimenez (four_turbine) · wcomp</title><script src="https://cdn.plot.ly/plotly-2.35.2.min.js"></script><style>:root{color-scheme:light}body{color:#1f2937;margin:0;font-family:system-ui,-apple-system,BlinkMacSystemFont,sans-serif}header{border-bottom:1px solid #e5e7eb;align-items:baseline;gap:1.5rem;padding:1rem 2rem;display:flex}header a.brand{color:#1f2937;font-weight:700;text-decoration:none}header nav a{color:#2563eb;margin-right:1rem;text-decoration:none}main{max-width:1100px;margin:0 auto;padding:1.5rem 2rem 4rem}table{border-collapse:collapse;width:100%;margin:1rem 0}th,td{text-align:left;border:1px solid #e5e7eb;padding:.4rem .6rem;font-size:.9rem}th{background:#f9fafb}th.sortable{cursor:pointer;user-select:none}th.sortable:after{content:" ⇅";color:#9ca3af;font-size:.75em}.check-cell{text-align:center;width:5rem}.check{color:#15803d;font-size:1.1rem;font-weight:700}.chart{margin:1.5rem 0}.case-grid{grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:.75rem;margin:1rem 0 2rem;display:grid}.case-card{color:inherit;border:1px solid #e5e7eb;border-radius:8px;padding:.75rem 1rem;text-decoration:none;display:block}.case-card:hover{border-color:#2563eb}.tag{color:#4338ca;background:#eef2ff;border-radius:999px;margin-right:.25rem;padding:.1rem .5rem;font-size:.75rem;display:inline-block}
+</style></head><body><header><a class="brand" href="/wcomp/">wcomp</a><nav><a href="/wcomp/">Comparisons</a><a href="/wcomp/models/">Implementation matrix</a></nav></header><main><p><a href="/wcomp/">&larr; All comparisons</a></p><h1>jimenez <small>&mdash; four turbines</small></h1><p><span class="tag">velocity</span><span class="tag">deflection</span>Software: FLORIS, FOXES, PyWake &middot; Rotor diameter 240 m &middot; Wind speed 9.8 m/s</p><p><a href="/wcomp/compare/one_turbine__jimenez/">View the one turbine scenario for this wake model &rarr;</a></p><section><h2>Layout &amp; sample locations</h2><p>Turbine positions (bold, rotated by yaw angle where applicable) and the cross-section sample planes (dashed) used by the plots below.</p><div id="layout-diagram"></div></section><section><h2>Streamwise velocity</h2><div id="chart-streamwise" class="chart"></div></section><section><h2>Cross-sections</h2><div id="chart-xsection-4D_past_first_turbine" class="chart" data-label="4D_past_first_turbine"></div><div id="chart-xsection-1D_past_last_turbine" class="chart" data-label="1D_past_last_turbine"></div><div id="chart-xsection-5D_past_last_turbine" class="chart" data-label="5D_past_last_turbine"></div><div id="chart-xsection-10D_past_last_turbine" class="chart" data-label="10D_past_last_turbine"></div></section><section><h2>Horizontal contour</h2><div id="chart-contour" class="chart"></div></section><section><h2>Comparison metrics</h2><p>Pairwise error between software for each plotted quantity. Click a column to sort.</p><table id="metrics-table"><thead><tr><th class="sortable" data-key="pair">Software pair</th><th class="sortable" data-key="target">Target</th><th class="sortable" data-key="rmse">RMSE (m/s)</th><th class="sortable" data-key="max_abs">Max abs error (m/s)</th><th class="sortable" data-key="mean_abs">Mean abs error (m/s)</th><th class="sortable" data-key="nrmse">NRMSE</th></tr></thead><tbody></tbody></table></section><script>(function(){const dataBase = "/wcomp/dataset/cases/four_turbine__jimenez";
+const software = ["FLORIS","FOXES","PyWake"];
+const xsectionLabels = ["4D_past_first_turbine","1D_past_last_turbine","5D_past_last_turbine","10D_past_last_turbine"];
+const hasContour = true;
+const windSpeed = 9.8;
+const rotorDiameter = 240;
+const turbineLocationsD = [0,5,10,15];
+const turbineYawDeg = [10,10,0,0];
+const xsectionLocationsD = {"4D_past_first_turbine":4,"1D_past_last_turbine":16,"5D_past_last_turbine":20,"10D_past_last_turbine":25};
+
+    const COLORS = { FLORIS: '#2ca02c', FOXES: '#d62728', PyWake: '#1f77b4' };
+
+    async function fetchJson(path) {
+      const res = await fetch(path);
+      if (!res.ok) throw new Error(`Failed to fetch ${path}: ${res.status}`);
+      return res.json();
+    }
+
+    async function loadPerSoftware(pathSuffix) {
+      const entries = await Promise.all(
+        software.map(async (name) => {
+          try {
+            return [name, await fetchJson(`${dataBase}/software/${name}/${pathSuffix}`)];
+          } catch {
+            return [name, null];
+          }
+        })
+      );
+      return Object.fromEntries(entries);
+    }
+
+    function plotProfiles(divId, profiles, xlabel, ylabel) {
+      const traces = software
+        .filter((name) => profiles[name])
+        .map((name) => ({
+          x: profiles[name].x1,
+          y: profiles[name].values,
+          mode: 'lines',
+          name,
+          line: { color: COLORS[name], width: 2 },
+        }));
+      Plotly.newPlot(
+        divId,
+        traces,
+        {
+          template: 'plotly_white',
+          xaxis: { title: xlabel },
+          // Pin the velocity axis to [0, ambient wind speed] so every panel/case is
+          // visually comparable rather than autoscaled to each trace's own range.
+          yaxis: { title: ylabel, range: [0, windSpeed] },
+          margin: { t: 20, b: 40, l: 55, r: 20 },
+          height: 340,
+          legend: { orientation: 'h' },
+        },
+        { responsive: true }
+      );
+    }
+
+    async function renderCharts() {
+      const streamwise = await loadPerSoftware('streamwise.json');
+      plotProfiles('chart-streamwise', streamwise, 'X (m)', 'U (m/s)');
+
+      for (const label of xsectionLabels) {
+        const xsection = await loadPerSoftware(`xsections/${label}.json`);
+        plotProfiles(`chart-xsection-${label}`, xsection, 'Y (m)', 'U (m/s)');
+      }
+
+      if (hasContour) {
+        const planes = await loadPerSoftware('contour.json');
+        const present = software.filter((name) => planes[name]);
+        const traces = present.map((name, i) => {
+          const plane = planes[name];
+          const suffix = i === 0 ? '' : String(i + 1);
+          return {
+            type: 'scattergl',
+            mode: 'markers',
+            x: plane.x1,
+            y: plane.x2,
+            marker: {
+              color: plane.values,
+              colorscale: 'RdBu',
+              reversescale: true,
+              cmin: 0,
+              cmax: windSpeed,
+              size: 4,
+              colorbar: i === present.length - 1 ? { title: 'm/s' } : undefined,
+            },
+            name,
+            xaxis: `x${suffix}`,
+            yaxis: `y${suffix}`,
+          };
+        });
+
+        // The wake domain is far wider (streamwise) than it is tall (crosswind), so
+        // stack one panel per software (rather than side-by-side) and size each row's
+        // height from the data's real aspect ratio, then lock x/y to equal scale.
+        const containerWidth = document.getElementById('chart-contour').clientWidth || 1000;
+        const aspect = Math.max(
+          ...present.map((name) => {
+            const plane = planes[name];
+            const xRange = Math.max(...plane.x1) - Math.min(...plane.x1);
+            const yRange = Math.max(...plane.x2) - Math.min(...plane.x2);
+            return xRange / yRange;
+          })
+        );
+        const rowHeight = Math.min(420, Math.max(140, containerWidth / aspect));
+
+        const layout = {
+          template: 'plotly_white',
+          height: (rowHeight + 50) * present.length + 40,
+          showlegend: false,
+          margin: { t: 30, b: 40, l: 55, r: 20 },
+          grid: { rows: present.length, columns: 1, pattern: 'independent', ygap: 0.25 },
+          annotations: present.map((name, i) => ({
+            text: name,
+            showarrow: false,
+            xref: `x${i === 0 ? '' : i + 1} domain`,
+            yref: `y${i === 0 ? '' : i + 1} domain`,
+            x: 0.5,
+            y: 1.1,
+          })),
+        };
+        present.forEach((name, i) => {
+          const suffix = i === 0 ? '' : String(i + 1);
+          layout[`xaxis${suffix}`] = { constrain: 'domain' };
+          layout[`yaxis${suffix}`] = { scaleanchor: `x${suffix}`, scaleratio: 1 };
+        });
+
+        Plotly.newPlot('chart-contour', traces, layout, { responsive: true });
+      }
+    }
+
+    function renderLayoutDiagram() {
+      const container = document.getElementById('layout-diagram');
+      const width = container.clientWidth || 900;
+      const height = 190;
+      const leftMargin = 50;
+      const rightMargin = 30;
+      const lastTurbineD = Math.max(...turbineLocationsD);
+      const xmin = -1 * rotorDiameter;
+      const xmax = (lastTurbineD + 20) * rotorDiameter;
+      const scale = (width - leftMargin - rightMargin) / (xmax - xmin);
+      const xPx = (distanceM) => leftMargin + (distanceM - xmin) * scale;
+
+      // Top to bottom: plane labels, the planes themselves (centered on the axis),
+      // turbines drawn on the axis, turbine labels, then the streamwise arrow. Each
+      // marker type gets its own horizontal band so nearby labels never collide.
+      const axisY = 78;
+      const planeLabelY = 16;
+      const planeTop = axisY - 42;
+      const planeBottom = axisY + 42;
+      const turbineTop = axisY - 16;
+      const turbineBottom = axisY + 16;
+      const turbineLabelY = planeBottom + 18;
+      const arrowY = turbineLabelY + 24;
+      const arrowLabelY = arrowY + 16;
+
+      const planes = Object.entries(xsectionLocationsD)
+        .map(([label, distanceD]) => {
+          const x = xPx(distanceD * rotorDiameter);
+          return `
+            <line x1="${x.toFixed(1)}" y1="${planeTop}" x2="${x.toFixed(1)}" y2="${planeBottom}"
+                  stroke="#2563eb" stroke-width="2.5" stroke-dasharray="6 5" />
+            <text x="${x.toFixed(1)}" y="${planeLabelY}" text-anchor="middle" class="plane-label">${distanceD}D</text>
+          `;
+        })
+        .join('');
+
+      const turbines = turbineLocationsD
+        .map((turbineD, i) => {
+          const x = xPx(turbineD * rotorDiameter);
+          const yaw = turbineYawDeg[i] ?? 0;
+          const rotate = yaw ? ` transform="rotate(${yaw} ${x.toFixed(1)} ${axisY})"` : '';
+          const label = `${turbineD}D` + (yaw ? ` (${yaw}\u00b0 yaw)` : '');
+          return `
+            <line x1="${x.toFixed(1)}" y1="${turbineTop}" x2="${x.toFixed(1)}" y2="${turbineBottom}"
+                  stroke="#111827" stroke-width="6" stroke-linecap="round"${rotate} />
+            <text x="${x.toFixed(1)}" y="${turbineLabelY}" text-anchor="middle" class="turbine-label">${label}</text>
+          `;
+        })
+        .join('');
+
+      const streamStart = xPx(xmin);
+      const streamEnd = xPx(xmax);
+      const streamMid = 0.5 * (streamStart + streamEnd);
+
+      container.innerHTML = `
+        <svg viewBox="0 0 ${width} ${height}" width="100%" role="img" aria-label="Turbine and sample-plane layout">
+          <defs>
+            <marker id="layout-arrow" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto" markerUnits="strokeWidth">
+              <path d="M 0 0 L 6 3 L 0 6 z" fill="#d97706" />
+            </marker>
+            <style>
+              .plane-label { font-size: 12px; font-weight: 600; fill: #2563eb; }
+              .turbine-label { font-size: 12px; font-weight: 600; fill: #111827; }
+              .caption { font-size: 11px; fill: #6b7280; }
+            </style>
+          </defs>
+          <rect x="0" y="0" width="${width}" height="${height}" rx="12" fill="#fafafa" stroke="#e5e7eb" />
+          ${planes}
+          <line x1="${leftMargin}" y1="${axisY}" x2="${width - rightMargin}" y2="${axisY}" stroke="#9ca3af" stroke-width="2" />
+          ${turbines}
+          <line x1="${streamStart.toFixed(1)}" y1="${arrowY}" x2="${streamEnd.toFixed(1)}" y2="${arrowY}"
+                stroke="#d97706" stroke-width="1.5" marker-start="url(#layout-arrow)" marker-end="url(#layout-arrow)" />
+          <text x="${streamMid.toFixed(1)}" y="${arrowLabelY}" text-anchor="middle" class="caption" fill="#d97706">Streamwise direction (X)</text>
+        </svg>
+      `;
+    }
+
+    function renderMetricsTable() {
+      const tbody = document.querySelector('#metrics-table tbody');
+      let sortKey = null;
+      let sortAsc = true;
+      let rows = [];
+
+      function render() {
+        tbody.innerHTML = '';
+        for (const row of rows) {
+          const tr = document.createElement('tr');
+          for (const value of [row.pair, row.target, row.rmse, row.max_abs, row.mean_abs, row.nrmse]) {
+            const td = document.createElement('td');
+            td.textContent = typeof value === 'number' ? value.toFixed(4) : (value ?? '\u2014');
+            tr.appendChild(td);
+          }
+          tbody.appendChild(tr);
+        }
+      }
+
+      document.querySelectorAll('#metrics-table th.sortable').forEach((th) => {
+        th.addEventListener('click', () => {
+          const key = th.dataset.key;
+          sortAsc = sortKey === key ? !sortAsc : true;
+          sortKey = key;
+          rows = [...rows].sort((a, b) => {
+            const av = a[key];
+            const bv = b[key];
+            const cmp = typeof av === 'number' ? av - bv : String(av).localeCompare(String(bv));
+            return sortAsc ? cmp : -cmp;
+          });
+          render();
+        });
+      });
+
+      fetchJson(`${dataBase}/metrics.json`).then((metrics) => {
+        rows = metrics.map((m) => ({ ...m, pair: m.pair.join(' vs ') }));
+        render();
+      });
+    }
+
+    renderLayoutDiagram();
+    renderCharts();
+    renderMetricsTable();
+  })();</script></main></body></html>

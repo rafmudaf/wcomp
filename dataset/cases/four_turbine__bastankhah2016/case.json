@@ -1,0 +1,39 @@
+{
+  "scenario": "four_turbine",
+  "wake_model": "bastankhah2016",
+  "categories": [
+    "velocity"
+  ],
+  "rotor_diameter": 240.0,
+  "hub_height": 150.0,
+  "wind_speed": 9.8,
+  "turbine_locations_d": [
+    0,
+    5,
+    10,
+    15
+  ],
+  "turbine_yaw_deg": [
+    0.0,
+    0.0,
+    0.0,
+    0.0
+  ],
+  "software": [
+    "FLORIS",
+    "FOXES"
+  ],
+  "xsection_labels": [
+    "4D_past_first_turbine",
+    "1D_past_last_turbine",
+    "5D_past_last_turbine",
+    "10D_past_last_turbine"
+  ],
+  "xsection_locations_d": {
+    "4D_past_first_turbine": 4,
+    "1D_past_last_turbine": 16,
+    "5D_past_last_turbine": 20,
+    "10D_past_last_turbine": 25
+  },
+  "has_contour": true
+}
