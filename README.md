@@ -53,6 +53,39 @@ git clone https://github.com/rafmudaf/wcomp
 pip install -e wcomp
 ```
 
+## Wake model comparison website
+
+The comparison website (https://rafmudaf.github.io/wcomp/) is generated from a versioned
+dataset of solver outputs, decoupled from the site build itself.
+
+1. Generate the dataset (requires `wcomp` installed per Installation above):
+
+   ```bash
+   python -m wcomp.dataset
+   ```
+
+   This writes JSON results for every wake-model/scenario combination to `dataset/` at the
+   repo root, which is committed to version control as the site's source of truth.
+
+2. Run the site locally (requires Node.js 20+):
+
+   ```bash
+   npm install --prefix site
+   npm run dev --prefix site
+   ```
+
+   This copies `dataset/` into `site/public/dataset/` and starts the Astro dev server.
+
+3. Build the production site (the same command CI runs):
+
+   ```bash
+   npm run build --prefix site
+   ```
+
+   Output is written to `site/dist/`. `.github/workflows/deploy-pages.yaml` builds and
+   deploys this automatically on push to `main` -- it has no Python/solver dependencies,
+   since the dataset is generated locally and committed rather than regenerated in CI.
+
 ## Architecture and Design
 
 The `wcomp` framework is meant to be simple and flexible. At it's core, it is three
