@@ -18,6 +18,91 @@
     "FLORIS",
     "FOXES"
   ],
+  "model_configuration": {
+    "inputs": [
+      {
+        "category": "velocity",
+        "name": "bastankhah2016",
+        "parameters": {
+          "alpha": 0.58,
+          "beta": 0.077,
+          "ka": 0.3837,
+          "kb": 0.003678
+        }
+      },
+      {
+        "category": "deflection",
+        "name": "bastankhah2016_deflection",
+        "parameters": {
+          "alpha": 0.58,
+          "beta": 0.077,
+          "ka": 0.3837,
+          "kb": 0.003678
+        }
+      }
+    ],
+    "implementations": [
+      {
+        "software": "FLORIS",
+        "models": [
+          {
+            "category": "velocity",
+            "name": "gauss",
+            "parameters": {
+              "alpha": 0.58,
+              "beta": 0.077,
+              "ka": 0.3837,
+              "kb": 0.003678
+            }
+          },
+          {
+            "category": "deflection",
+            "name": "gauss",
+            "parameters": {
+              "alpha": 0.58,
+              "beta": 0.077,
+              "ka": 0.3837,
+              "kb": 0.003678
+            }
+          }
+        ],
+        "notes": [
+          "Uses sum-of-squares freestream deficit superposition (sosfs), a nine-point turbine-grid solver, and Crespo-Hernandez wake-added turbulence. Secondary steering, yaw-added recovery, transverse velocities, and active wake mixing are disabled.",
+          "The gauss velocity and deflection models each receive their own copy of the four input coefficients."
+        ]
+      },
+      {
+        "software": "FOXES",
+        "models": [
+          {
+            "category": "velocity",
+            "name": "Bastankhah2016",
+            "parameters": {
+              "alpha": 0.58,
+              "beta": 0.077,
+              "kTI": 0.3837,
+              "kb": 0.003678,
+              "induction": "Betz",
+              "k": "from kTI turbine model"
+            }
+          },
+          {
+            "category": "deflection",
+            "name": "internal Bastankhah2016 yaw deflection",
+            "parameters": {}
+          }
+        ],
+        "notes": [
+          "Uses Betz induction, quadratic wind-speed superposition, grid16 rotor sampling, rotor-point partial wakes, and the rotor_wd wake frame. No separate wake-added turbulence model is configured.",
+          "The ka and kb inputs configure a separate kTI turbine model; the wake model receives k=None so expansion is supplied by that turbine model.",
+          "Yaw deflection is internal to Bastankhah2016. The duplicated windIO deflection parameters are not read; the velocity-block parameters govern the calculation."
+        ]
+      }
+    ],
+    "notes": [
+      "This is a coupled comparison: yaw-dependent thrust, velocity deficit, deflection, rotor averaging, and wake superposition can all contribute to differences. It does not isolate the deflection equation."
+    ]
+  },
   "xsection_labels": [
     "1D_downstream",
     "5D_downstream",

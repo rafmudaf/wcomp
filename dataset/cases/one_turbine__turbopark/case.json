@@ -18,6 +18,67 @@
     "FOXES",
     "PyWake"
   ],
+  "model_configuration": {
+    "inputs": [
+      {
+        "category": "velocity",
+        "name": "turbopark",
+        "parameters": {
+          "A": 0.04
+        }
+      }
+    ],
+    "implementations": [
+      {
+        "software": "FLORIS",
+        "models": [
+          {
+            "category": "velocity",
+            "name": "turboparkgauss",
+            "parameters": {
+              "A": 0.04
+            }
+          }
+        ],
+        "notes": [
+          "Uses sum-of-squares freestream deficit superposition (sosfs), a nine-point turbine-grid solver, and Crespo-Hernandez wake-added turbulence. Secondary steering, yaw-added recovery, transverse velocities, and active wake mixing are disabled."
+        ]
+      },
+      {
+        "software": "FOXES",
+        "models": [
+          {
+            "category": "velocity",
+            "name": "TurbOParkWake",
+            "parameters": {
+              "ka": 0.04,
+              "induction": "Betz"
+            }
+          }
+        ],
+        "notes": [
+          "Uses Betz induction, quadratic wind-speed superposition, grid16 rotor sampling, rotor-point partial wakes, and the rotor_wd wake frame. No separate wake-added turbulence model is configured."
+        ]
+      },
+      {
+        "software": "PyWake",
+        "models": [
+          {
+            "category": "velocity",
+            "name": "TurboGaussianDeficit",
+            "parameters": {
+              "A": 0.04
+            }
+          }
+        ],
+        "notes": [
+          "Uses PropagateDownwind with squared-sum superposition, GridRotorAvg rotor averaging, effective local wind speed, and ct2a_mom1d induction. No separate wake-added turbulence model is configured.",
+          "Uses the lower-level TurboGaussianDeficit class rather than PyWake's Nygaard_2022 literature preset."
+        ]
+      }
+    ],
+    "notes": []
+  },
   "xsection_labels": [
     "1D_downstream",
     "5D_downstream",

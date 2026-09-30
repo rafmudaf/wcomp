@@ -19,6 +19,100 @@
     "FOXES",
     "PyWake"
   ],
+  "model_configuration": {
+    "inputs": [
+      {
+        "category": "velocity",
+        "name": "jensen",
+        "parameters": {
+          "alpha": 0.1
+        }
+      },
+      {
+        "category": "deflection",
+        "name": "jimenez",
+        "parameters": {
+          "beta": 0.1
+        }
+      }
+    ],
+    "implementations": [
+      {
+        "software": "FLORIS",
+        "models": [
+          {
+            "category": "velocity",
+            "name": "jensen",
+            "parameters": {
+              "we": 0.1
+            }
+          },
+          {
+            "category": "deflection",
+            "name": "jimenez",
+            "parameters": {
+              "kd": 0.05
+            }
+          }
+        ],
+        "notes": [
+          "Uses sum-of-squares freestream deficit superposition (sosfs), a nine-point turbine-grid solver, and Crespo-Hernandez wake-added turbulence. Secondary steering, yaw-added recovery, transverse velocities, and active wake mixing are disabled.",
+          "Converts the windIO coefficient with kd = beta / 2 because FLORIS uses 1 + 2*kd*x/D where the other implementations use 1 + beta*x/D."
+        ]
+      },
+      {
+        "software": "FOXES",
+        "models": [
+          {
+            "category": "velocity",
+            "name": "JensenWake",
+            "parameters": {
+              "k": 0.1,
+              "induction": "Betz"
+            }
+          },
+          {
+            "category": "deflection",
+            "name": "JimenezDeflection",
+            "parameters": {
+              "beta": 0.1,
+              "rotate": false
+            }
+          }
+        ],
+        "notes": [
+          "Uses Betz induction, quadratic wind-speed superposition, grid16 rotor sampling, rotor-point partial wakes, and the rotor_wd wake frame. No separate wake-added turbulence model is configured.",
+          "Uses JimenezDeflection with rotate=False, translating the wake path without rotating the wake cross-section."
+        ]
+      },
+      {
+        "software": "PyWake",
+        "models": [
+          {
+            "category": "velocity",
+            "name": "NOJDeficit",
+            "parameters": {
+              "k": 0.1
+            }
+          },
+          {
+            "category": "deflection",
+            "name": "JimenezWakeDeflection",
+            "parameters": {
+              "beta": 0.1
+            }
+          }
+        ],
+        "notes": [
+          "Uses PropagateDownwind with squared-sum superposition, GridRotorAvg rotor averaging, effective local wind speed, and ct2a_mom1d induction. No separate wake-added turbulence model is configured.",
+          "Uses the lower-level NOJDeficit class rather than PyWake's Jensen_1983 literature preset."
+        ]
+      }
+    ],
+    "notes": [
+      "This is a coupled comparison: yaw-dependent thrust, velocity deficit, deflection, rotor averaging, and wake superposition can all contribute to differences. It does not isolate the deflection equation."
+    ]
+  },
   "xsection_labels": [
     "1D_downstream",
     "5D_downstream",

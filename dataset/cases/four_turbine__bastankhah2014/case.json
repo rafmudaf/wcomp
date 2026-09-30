@@ -23,6 +23,52 @@
     "FOXES",
     "PyWake"
   ],
+  "model_configuration": {
+    "inputs": [
+      {
+        "category": "velocity",
+        "name": "bastankhah2014",
+        "parameters": {
+          "k_star": 0.03
+        }
+      }
+    ],
+    "implementations": [
+      {
+        "software": "FOXES",
+        "models": [
+          {
+            "category": "velocity",
+            "name": "Bastankhah2014",
+            "parameters": {
+              "k": 0.03,
+              "induction": "Betz"
+            }
+          }
+        ],
+        "notes": [
+          "Uses Betz induction, quadratic wind-speed superposition, grid16 rotor sampling, rotor-point partial wakes, and the rotor_wd wake frame. No separate wake-added turbulence model is configured."
+        ]
+      },
+      {
+        "software": "PyWake",
+        "models": [
+          {
+            "category": "velocity",
+            "name": "BastankhahGaussianDeficit",
+            "parameters": {
+              "k": 0.03
+            }
+          }
+        ],
+        "notes": [
+          "Uses PropagateDownwind with squared-sum superposition, GridRotorAvg rotor averaging, effective local wind speed, and ct2a_mom1d induction. No separate wake-added turbulence model is configured.",
+          "Uses the lower-level BastankhahGaussianDeficit class rather than PyWake's Bastankhah_PorteAgel_2014 literature preset."
+        ]
+      }
+    ],
+    "notes": []
+  },
   "xsection_labels": [
     "4D_past_first_turbine",
     "1D_past_last_turbine",
