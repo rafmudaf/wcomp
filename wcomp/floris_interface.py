@@ -240,6 +240,10 @@ class WCompFloris(WCompBase):
                 k: wes_analysis["wake_model"]["deflection"]["parameters"][v]
                 for k, v in _deflection_model_mapping["parameters"].items()
             }
+            if _deflection_model == "jimenez":
+                # FLORIS uses 1 + 2*kd*x/D where windIO's beta convention uses
+                # 1 + beta*x/D.
+                _deflection_model_parameters["kd"] /= 2.0
         else:
             _deflection_model = "none"
             _deflection_model_parameters = {}
