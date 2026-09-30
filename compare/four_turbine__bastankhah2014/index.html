@@ -5,7 +5,7 @@
       gtag('js', new Date());
       gtag('config', GA_MEASUREMENT_ID);
     })();</script><script src="https://cdn.plot.ly/plotly-2.35.2.min.js"></script><style>:root{color-scheme:light}body{color:#1f2937;margin:0;font-family:system-ui,-apple-system,BlinkMacSystemFont,sans-serif}header{border-bottom:1px solid #e5e7eb;align-items:baseline;gap:1.5rem;padding:1rem 2rem;display:flex}header a.brand{color:#1f2937;font-weight:700;text-decoration:none}header nav a{color:#2563eb;margin-right:1rem;text-decoration:none}main{max-width:1100px;margin:0 auto;padding:1.5rem 2rem 4rem}table{border-collapse:collapse;width:100%;margin:1rem 0}th,td{text-align:left;border:1px solid #e5e7eb;padding:.4rem .6rem;font-size:.9rem}th{background:#f9fafb}th.sortable{cursor:pointer;user-select:none}th.sortable:after{content:" ⇅";color:#9ca3af;font-size:.75em}.check-cell{text-align:center;width:5rem}.check{color:#15803d;font-size:1.1rem;font-weight:700}.chart{margin:1.5rem 0}.case-grid{grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:.75rem;margin:1rem 0 2rem;display:grid}.case-card{color:inherit;border:1px solid #e5e7eb;border-radius:8px;padding:.75rem 1rem;text-decoration:none;display:block}.case-card:hover{border-color:#2563eb}.tag{color:#4338ca;background:#eef2ff;border-radius:999px;margin-right:.25rem;padding:.1rem .5rem;font-size:.75rem;display:inline-block}
-</style></head><body><header><a class="brand" href="/wcomp/">wcomp</a></header><main><p><a href="/wcomp/">&larr; All comparisons</a></p><h1>bastankhah2014 <small>&mdash; four turbines</small></h1><p><span class="tag">velocity</span>Software: FOXES, PyWake &middot; Rotor diameter 240 m &middot; Wind speed 9.8 m/s</p><p><a href="/wcomp/compare/one_turbine__bastankhah2014/">View the one turbine scenario for this wake model &rarr;</a></p><section><h2>Layout &amp; sample locations</h2><p>Turbine positions (bold, rotated by yaw angle where applicable) and the cross-section sample planes (dashed) used by the plots below.</p><div id="layout-diagram"></div></section><section><h2>Streamwise velocity</h2><div id="chart-streamwise" class="chart"></div></section><section><h2>Cross-sections</h2><div id="chart-xsection-4D_past_first_turbine" class="chart" data-label="4D_past_first_turbine"></div><div id="chart-xsection-1D_past_last_turbine" class="chart" data-label="1D_past_last_turbine"></div><div id="chart-xsection-5D_past_last_turbine" class="chart" data-label="5D_past_last_turbine"></div><div id="chart-xsection-10D_past_last_turbine" class="chart" data-label="10D_past_last_turbine"></div></section><section><h2>Horizontal contour</h2><div id="chart-contour" class="chart"></div></section><section><h2>Comparison metrics</h2><p>Pairwise error between software for each plotted quantity. Click a column to sort.</p><table id="metrics-table"><thead><tr><th class="sortable" data-key="pair">Software pair</th><th class="sortable" data-key="target">Target</th><th class="sortable" data-key="rmse">RMSE (m/s)</th><th class="sortable" data-key="max_abs">Max abs error (m/s)</th><th class="sortable" data-key="mean_abs">Mean abs error (m/s)</th><th class="sortable" data-key="nrmse">NRMSE</th></tr></thead><tbody></tbody></table></section><script>(function(){const dataBase = "/wcomp/dataset/cases/four_turbine__bastankhah2014";
+</style></head><body><header><a class="brand" href="/wcomp/">wcomp</a></header><main><p><a href="/wcomp/">&larr; All comparisons</a></p><h1>bastankhah2014 <small>&mdash; four turbines</small></h1><p><span class="tag">velocity</span>Software: FOXES, PyWake &middot; Rotor diameter 240 m &middot; Wind speed 9.8 m/s</p><p><a href="/wcomp/compare/one_turbine__bastankhah2014/">View the one turbine scenario for this wake model &rarr;</a></p><section><h2>Layout &amp; sample locations</h2><p>Turbine positions (bold, rotated by yaw angle where applicable) and the cross-section sample planes (dashed) used by the plots below.</p><div id="layout-diagram"></div></section><section><h2>Streamwise velocity</h2><div id="chart-streamwise" class="chart"></div></section><section><h2>Cross-sections</h2><div id="chart-xsection-4D_past_first_turbine" class="chart" data-label="4D_past_first_turbine"></div><div id="chart-xsection-1D_past_last_turbine" class="chart" data-label="1D_past_last_turbine"></div><div id="chart-xsection-5D_past_last_turbine" class="chart" data-label="5D_past_last_turbine"></div><div id="chart-xsection-10D_past_last_turbine" class="chart" data-label="10D_past_last_turbine"></div></section><section><h2>Horizontal contour</h2><p>X-Y plane at hub height.</p><div id="chart-contour" class="chart"></div></section><section><h2>Vertical contour</h2><p>X-Z plane at Y=0 (lateral centerline).</p><div id="chart-contour-vertical" class="chart"></div></section><section><h2>Cross-section contour</h2><p>Y-Z plane at X=20D.</p><div id="chart-contour-xsection" class="chart"></div></section><section><h2>Comparison metrics</h2><p>Pairwise error between software for each plotted quantity. Click a column to sort.</p><table id="metrics-table"><thead><tr><th class="sortable" data-key="pair">Software pair</th><th class="sortable" data-key="target">Target</th><th class="sortable" data-key="rmse">RMSE (m/s)</th><th class="sortable" data-key="max_abs">Max abs error (m/s)</th><th class="sortable" data-key="mean_abs">Mean abs error (m/s)</th><th class="sortable" data-key="nrmse">NRMSE</th></tr></thead><tbody></tbody></table></section><script>(function(){const dataBase = "/wcomp/dataset/cases/four_turbine__bastankhah2014";
 const software = ["FOXES","PyWake"];
 const xsectionLabels = ["4D_past_first_turbine","1D_past_last_turbine","5D_past_last_turbine","10D_past_last_turbine"];
 const hasContour = true;
@@ -73,68 +73,75 @@ const xsectionLocationsD = {"4D_past_first_turbine":4,"1D_past_last_turbine":16,
       }
 
       if (hasContour) {
-        const planes = await loadPerSoftware('contour.json');
-        const present = software.filter((name) => planes[name]);
-        const traces = present.map((name, i) => {
-          const plane = planes[name];
-          const suffix = i === 0 ? '' : String(i + 1);
-          return {
-            type: 'scattergl',
-            mode: 'markers',
-            x: plane.x1,
-            y: plane.x2,
-            marker: {
-              color: plane.values,
-              colorscale: 'RdBu',
-              reversescale: true,
-              cmin: 0,
-              cmax: windSpeed,
-              size: 4,
-              colorbar: i === present.length - 1 ? { title: 'm/s' } : undefined,
-            },
-            name,
-            xaxis: `x${suffix}`,
-            yaxis: `y${suffix}`,
-          };
-        });
-
-        // The wake domain is far wider (streamwise) than it is tall (crosswind), so
-        // stack one panel per software (rather than side-by-side) and size each row's
-        // height from the data's real aspect ratio, then lock x/y to equal scale.
-        const containerWidth = document.getElementById('chart-contour').clientWidth || 1000;
-        const aspect = Math.max(
-          ...present.map((name) => {
-            const plane = planes[name];
-            const xRange = Math.max(...plane.x1) - Math.min(...plane.x1);
-            const yRange = Math.max(...plane.x2) - Math.min(...plane.x2);
-            return xRange / yRange;
-          })
-        );
-        const rowHeight = Math.min(420, Math.max(140, containerWidth / aspect));
-
-        const layout = {
-          template: 'plotly_white',
-          height: (rowHeight + 50) * present.length + 40,
-          showlegend: false,
-          margin: { t: 30, b: 40, l: 55, r: 20 },
-          grid: { rows: present.length, columns: 1, pattern: 'independent', ygap: 0.25 },
-          annotations: present.map((name, i) => ({
-            text: name,
-            showarrow: false,
-            xref: `x${i === 0 ? '' : i + 1} domain`,
-            yref: `y${i === 0 ? '' : i + 1} domain`,
-            x: 0.5,
-            y: 1.1,
-          })),
-        };
-        present.forEach((name, i) => {
-          const suffix = i === 0 ? '' : String(i + 1);
-          layout[`xaxis${suffix}`] = { constrain: 'domain' };
-          layout[`yaxis${suffix}`] = { scaleanchor: `x${suffix}`, scaleratio: 1 };
-        });
-
-        Plotly.newPlot('chart-contour', traces, layout, { responsive: true });
+        await renderContour('chart-contour', 'contour.json', 'X (m)', 'Y (m)');
+        await renderContour('chart-contour-vertical', 'contour_vertical.json', 'X (m)', 'Z (m)');
+        await renderContour('chart-contour-xsection', 'contour_xsection.json', 'Y (m)', 'Z (m)');
       }
+    }
+
+    async function renderContour(divId, pathSuffix, xlabel, ylabel) {
+      const planes = await loadPerSoftware(pathSuffix);
+      const present = software.filter((name) => planes[name]);
+      if (present.length === 0) return;
+      const traces = present.map((name, i) => {
+        const plane = planes[name];
+        const suffix = i === 0 ? '' : String(i + 1);
+        return {
+          type: 'scattergl',
+          mode: 'markers',
+          x: plane.x1,
+          y: plane.x2,
+          marker: {
+            color: plane.values,
+            colorscale: 'RdBu',
+            reversescale: true,
+            cmin: 0,
+            cmax: windSpeed,
+            size: 4,
+            colorbar: i === present.length - 1 ? { title: 'm/s' } : undefined,
+          },
+          name,
+          xaxis: `x${suffix}`,
+          yaxis: `y${suffix}`,
+        };
+      });
+
+      // The wake domain is far wider (streamwise) than it is tall (crosswind), so
+      // stack one panel per software (rather than side-by-side) and size each row's
+      // height from the data's real aspect ratio, then lock x/y to equal scale.
+      const containerWidth = document.getElementById(divId).clientWidth || 1000;
+      const aspect = Math.max(
+        ...present.map((name) => {
+          const plane = planes[name];
+          const xRange = Math.max(...plane.x1) - Math.min(...plane.x1);
+          const yRange = Math.max(...plane.x2) - Math.min(...plane.x2);
+          return xRange / yRange;
+        })
+      );
+      const rowHeight = Math.min(420, Math.max(140, containerWidth / aspect));
+
+      const layout = {
+        template: 'plotly_white',
+        height: (rowHeight + 50) * present.length + 40,
+        showlegend: false,
+        margin: { t: 30, b: 40, l: 55, r: 20 },
+        grid: { rows: present.length, columns: 1, pattern: 'independent', ygap: 0.25 },
+        annotations: present.map((name, i) => ({
+          text: name,
+          showarrow: false,
+          xref: `x${i === 0 ? '' : i + 1} domain`,
+          yref: `y${i === 0 ? '' : i + 1} domain`,
+          x: 0.5,
+          y: 1.1,
+        })),
+      };
+      present.forEach((name, i) => {
+        const suffix = i === 0 ? '' : String(i + 1);
+        layout[`xaxis${suffix}`] = { constrain: 'domain', title: xlabel };
+        layout[`yaxis${suffix}`] = { scaleanchor: `x${suffix}`, scaleratio: 1, title: ylabel };
+      });
+
+      Plotly.newPlot(divId, traces, layout, { responsive: true });
     }
 
     function renderLayoutDiagram() {

@@ -28,5 +28,6 @@
     "5D_downstream": 5,
     "10D_downstream": 10
   },
-  "has_contour": true
+  "has_contour": true,
+  "xsection_contour_location_d": 5
 }
