@@ -191,7 +191,7 @@ class WCompFloris(WCompBase):
             'reference_wind_height': -1,
             'turbulence_intensities': [wes_wind_resource["turbulence_intensity"]["data"]],
             'wind_directions': wes_wind_resource["wind_direction"],
-            'wind_shear': 0.12,
+            'wind_shear': 0.0,
             'wind_speeds': wes_wind_resource["wind_speed"],
             'wind_veer': 0.0
         }
