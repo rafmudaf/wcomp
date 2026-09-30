@@ -18,6 +18,7 @@ from windIO import load_yaml
 
 from . import WCompFloris, WCompFoxes, WCompPyWake, __version__
 from .cache import quiet
+from .comparison_metadata import build_model_configuration
 from .metrics import plane_metrics, profile_metrics
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
@@ -210,6 +211,9 @@ def compute_case(scenario: str, wake_model: str) -> dict:
         "wind_speed": wind_speed,
         "yaw_angles": yaw_angles,
         "categories": categories,
+        "model_configuration": build_model_configuration(
+            case_wake_model, [cls.LEGEND for cls in spec["software"]]
+        ),
         "xsection_locations_d": xsection_locations,
         "streamwise": streamwise,
         "xsections": xsections,
@@ -235,6 +239,7 @@ def write_case(scenario: str, wake_model: str, result: dict, software_versions: 
         "turbine_locations_d": TURBINE_LOCATIONS_D[scenario],
         "turbine_yaw_deg": result["yaw_angles"],
         "software": software_names,
+        "model_configuration": result["model_configuration"],
         "xsection_labels": list(result["xsections"].keys()),
         "xsection_locations_d": result["xsection_locations_d"],
         "has_contour": bool(result["planes"]),

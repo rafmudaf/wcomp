@@ -12,6 +12,10 @@ const dataBase = `${base}dataset/cases/${caseData.id}`;
 const otherScenario = caseData.scenario === 'four_turbine' ? 'one_turbine' : 'four_turbine';
 const siblingId = `${otherScenario}__${caseData.wake_model}`;
 const scenarioLabels = { one_turbine: 'one turbine', four_turbine: 'four turbines' };
+const formatValue = (value) => typeof value === 'string' ? value : JSON.stringify(value);
+const formatParameters = (parameters) => Object.entries(parameters)
+  .map(([name, value]) => `${name} = ${formatValue(value)}`)
+  .join(', ');
 ---
 <Layout title={`${caseData.wake_model} (${caseData.scenario})`}>
   <p><a href={base}>&larr; All comparisons</a></p>
@@ -27,6 +31,43 @@ const scenarioLabels = { one_turbine: 'one turbine', four_turbine: 'four turbine
       View the {scenarioLabels[otherScenario]} scenario for this wake model &rarr;
     </a>
   </p>
+
+  <section>
+    <h2>Model parameters and implementation notes</h2>
+    <p>
+      The windIO inputs and their software-specific mappings are listed below. Matching
+      literature-model names do not imply identical solver, rotor-averaging, superposition,
+      turbulence, induction, or yaw treatments.
+    </p>
+    <h3>windIO case inputs</h3>
+    <ul class="parameter-list">
+      {caseData.model_configuration.inputs.map((model) => (
+        <li>
+          <strong>{model.category}: {model.name}</strong>
+          <span>{formatParameters(model.parameters)}</span>
+        </li>
+      ))}
+    </ul>
+    <div class="implementation-grid">
+      {caseData.model_configuration.implementations.map((implementation) => (
+        <article class="implementation-card">
+          <h3>{implementation.software}</h3>
+          <ul class="parameter-list">
+            {implementation.models.map((model) => (
+              <li>
+                <strong>{model.category}: {model.name}</strong>
+                <span>
+                  {formatParameters(model.parameters) || 'No separately configured parameters'}
+                </span>
+              </li>
+            ))}
+          </ul>
+          {implementation.notes.map((note) => <p>{note}</p>)}
+        </article>
+      ))}
+    </div>
+    {caseData.model_configuration.notes.map((note) => <p class="comparison-note"><strong>Caveat:</strong> {note}</p>)}
+  </section>
 
   <section>
     <h2>Layout &amp; sample locations</h2>
@@ -351,4 +392,42 @@ const scenarioLabels = { one_turbine: 'one turbine', four_turbine: 'four turbine
     renderCharts();
     renderMetricsTable();
   </script>
+
+  <style>
+    .implementation-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1rem;
+      margin: 1rem 0;
+    }
+    .implementation-card {
+      border: 1px solid #e5e7eb;
+      border-radius: 8px;
+      padding: 0.25rem 1rem 0.75rem;
+    }
+    .implementation-card h3 {
+      margin-bottom: 0.5rem;
+    }
+    .implementation-card p {
+      font-size: 0.9rem;
+    }
+    .parameter-list {
+      padding-left: 1.25rem;
+    }
+    .parameter-list li {
+      margin: 0.35rem 0;
+    }
+    .parameter-list span {
+      display: block;
+      color: #4b5563;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      font-size: 0.85rem;
+      margin-top: 0.1rem;
+    }
+    .comparison-note {
+      border-left: 4px solid #d97706;
+      background: #fffbeb;
+      padding: 0.75rem 1rem;
+    }
+  </style>
 </Layout>

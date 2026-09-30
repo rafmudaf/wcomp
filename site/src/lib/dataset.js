@@ -48,6 +48,15 @@ export function getModels() {
  * @property {number[]} turbine_locations_d
  * @property {number[]} turbine_yaw_deg
  * @property {string[]} software
+ * @property {{
+ *   inputs: Array<{category: string, name: string, parameters: Record<string, unknown>}>,
+ *   implementations: Array<{
+ *     software: string,
+ *     models: Array<{category: string, name: string, parameters: Record<string, unknown>}>,
+ *     notes: string[]
+ *   }>,
+ *   notes: string[]
+ * }} model_configuration
  * @property {string[]} xsection_labels
  * @property {boolean} has_contour
  * @property {number} xsection_contour_location_d
