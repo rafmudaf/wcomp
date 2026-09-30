@@ -31,12 +31,12 @@ def _summarize(diff_values: np.ndarray, reference_values: np.ndarray) -> dict:
 
 
 def profile_metrics(a: WakeProfile, b: WakeProfile) -> dict:
-    """Compare two `WakeProfile`s sampled on the same grid."""
+    """Compare two `WakeProfile`s sampled at matching coordinates."""
     diff = a - b
     return _summarize(diff.values, a.values)
 
 
 def plane_metrics(a: WakePlane, b: WakePlane) -> dict:
-    """Compare two `WakePlane`s sampled on the same grid."""
+    """Compare two `WakePlane`s sampled at matching coordinates."""
     diff = a - b
     return _summarize(diff.values, a.values)
