@@ -62,6 +62,16 @@ WAKE_MODEL_CASES = {
 
 SCENARIOS = ["one_turbine", "four_turbine"]
 
+# Streamwise location (in rotor diameters from the origin) of the cross-section
+# contour plane, in the y-z plane, per scenario. 20D for four_turbine sits a few
+# diameters past the last turbine where the combined farm wake is developed; the
+# same distance on one_turbine is far enough downstream that the single wake has
+# mostly recovered to a near-uniform profile, so it uses a closer 5D instead.
+XSECTION_CONTOUR_LOCATION_D = {
+    "one_turbine": 5,
+    "four_turbine": 20,
+}
+
 # The full implementation matrix, including wake models that don't (yet) have an
 # example case wired up above. This is the source of truth for the frontend's
 # implementation-matrix page, replacing the hand-maintained markdown tables that
@@ -181,6 +191,17 @@ def compute_case(scenario: str, wake_model: str) -> dict:
             cls.LEGEND: instances[cls].horizontal_contour(wind_direction=270)
             for cls in spec["software"]
         }
+        vertical_planes = {
+            cls.LEGEND: instances[cls].vertical_contour(wind_direction=270)
+            for cls in spec["software"]
+        }
+        xsection_contour_location_d = XSECTION_CONTOUR_LOCATION_D[scenario]
+        xsection_contour_planes = {
+            cls.LEGEND: instances[cls].xsection_contour(
+                wind_direction=270, x_coordinate=xsection_contour_location_d * rotor_d
+            )
+            for cls in spec["software"]
+        }
 
     plt.close("all")  # discard the matplotlib figures created as a side effect above
     return {
@@ -193,6 +214,9 @@ def compute_case(scenario: str, wake_model: str) -> dict:
         "streamwise": streamwise,
         "xsections": xsections,
         "planes": planes,
+        "vertical_planes": vertical_planes,
+        "xsection_contour_planes": xsection_contour_planes,
+        "xsection_contour_location_d": xsection_contour_location_d,
     }
 
 
@@ -214,6 +238,7 @@ def write_case(scenario: str, wake_model: str, result: dict, software_versions: 
         "xsection_labels": list(result["xsections"].keys()),
         "xsection_locations_d": result["xsection_locations_d"],
         "has_contour": bool(result["planes"]),
+        "xsection_contour_location_d": result["xsection_contour_location_d"],
     })
 
     for name, profile in result["streamwise"].items():
@@ -223,6 +248,10 @@ def write_case(scenario: str, wake_model: str, result: dict, software_versions: 
             _write_json(case_dir / "software" / name / "xsections" / f"{label}.json", profile.to_dict(), compact=True)
     for name, plane in result["planes"].items():
         _write_json(case_dir / "software" / name / "contour.json", plane.to_dict(), compact=True)
+    for name, plane in result["vertical_planes"].items():
+        _write_json(case_dir / "software" / name / "contour_vertical.json", plane.to_dict(), compact=True)
+    for name, plane in result["xsection_contour_planes"].items():
+        _write_json(case_dir / "software" / name / "contour_xsection.json", plane.to_dict(), compact=True)
     for name in software_names:
         _write_json(case_dir / "software" / name / "meta.json", {
             "version": software_versions.get(name, "unknown"),
@@ -247,6 +276,18 @@ def write_case(scenario: str, wake_model: str, result: dict, software_versions: 
             "pair": [a, b],
             "target": "contour",
             **plane_metrics(result["planes"][a], result["planes"][b]),
+        })
+    for a, b in combinations(result["vertical_planes"].keys(), 2):
+        metrics.append({
+            "pair": [a, b],
+            "target": "contour_vertical",
+            **plane_metrics(result["vertical_planes"][a], result["vertical_planes"][b]),
+        })
+    for a, b in combinations(result["xsection_contour_planes"].keys(), 2):
+        metrics.append({
+            "pair": [a, b],
+            "target": "contour_xsection",
+            **plane_metrics(result["xsection_contour_planes"][a], result["xsection_contour_planes"][b]),
         })
     _write_json(case_dir / "metrics.json", metrics)
 

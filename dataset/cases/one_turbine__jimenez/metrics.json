@@ -163,5 +163,71 @@
     "max_abs": 5.197115464286965,
     "mean_abs": 0.03635520627407133,
     "nrmse": 0.03254852957582007
+  },
+  {
+    "pair": [
+      "FLORIS",
+      "FOXES"
+    ],
+    "target": "contour_vertical",
+    "rmse": 1.670041198473856,
+    "max_abs": 8.25258527037963,
+    "mean_abs": 1.4093457449584337,
+    "nrmse": 0.15750102500015487
+  },
+  {
+    "pair": [
+      "FLORIS",
+      "PyWake"
+    ],
+    "target": "contour_vertical",
+    "rmse": 2.408090383137735,
+    "max_abs": 8.20229392608216,
+    "mean_abs": 2.0255595877719417,
+    "nrmse": 0.22710619593325343
+  },
+  {
+    "pair": [
+      "FOXES",
+      "PyWake"
+    ],
+    "target": "contour_vertical",
+    "rmse": 1.3583465686798275,
+    "max_abs": 5.197115464286965,
+    "mean_abs": 0.9081152267368116,
+    "nrmse": 0.2536618356190836
+  },
+  {
+    "pair": [
+      "FLORIS",
+      "FOXES"
+    ],
+    "target": "contour_xsection",
+    "rmse": 1.7076808552441722,
+    "max_abs": 7.770881902221596,
+    "mean_abs": 1.4445823706908856,
+    "nrmse": 0.16871542938764994
+  },
+  {
+    "pair": [
+      "FLORIS",
+      "PyWake"
+    ],
+    "target": "contour_xsection",
+    "rmse": 1.9891574287425473,
+    "max_abs": 7.770881902221596,
+    "mean_abs": 1.7034675290841066,
+    "nrmse": 0.19652474798164007
+  },
+  {
+    "pair": [
+      "FOXES",
+      "PyWake"
+    ],
+    "target": "contour_xsection",
+    "rmse": 0.7149060452716928,
+    "max_abs": 1.3642134933226568,
+    "mean_abs": 0.38584719424282704,
+    "nrmse": 0.5240426434505342
   }
 ]

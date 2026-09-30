@@ -49,7 +49,24 @@ const scenarioLabels = { one_turbine: 'one turbine', four_turbine: 'four turbine
   {caseData.has_contour && (
     <section>
       <h2>Horizontal contour</h2>
+      <p>X-Y plane at hub height.</p>
       <div id="chart-contour" class="chart"></div>
+    </section>
+  )}
+
+  {caseData.has_contour && (
+    <section>
+      <h2>Vertical contour</h2>
+      <p>X-Z plane at Y=0 (lateral centerline).</p>
+      <div id="chart-contour-vertical" class="chart"></div>
+    </section>
+  )}
+
+  {caseData.has_contour && (
+    <section>
+      <h2>Cross-section contour</h2>
+      <p>Y-Z plane at X={caseData.xsection_contour_location_d}D.</p>
+      <div id="chart-contour-xsection" class="chart"></div>
     </section>
   )}
 
@@ -142,68 +159,75 @@ const scenarioLabels = { one_turbine: 'one turbine', four_turbine: 'four turbine
       }
 
       if (hasContour) {
-        const planes = await loadPerSoftware('contour.json');
-        const present = software.filter((name) => planes[name]);
-        const traces = present.map((name, i) => {
-          const plane = planes[name];
-          const suffix = i === 0 ? '' : String(i + 1);
-          return {
-            type: 'scattergl',
-            mode: 'markers',
-            x: plane.x1,
-            y: plane.x2,
-            marker: {
-              color: plane.values,
-              colorscale: 'RdBu',
-              reversescale: true,
-              cmin: 0,
-              cmax: windSpeed,
-              size: 4,
-              colorbar: i === present.length - 1 ? { title: 'm/s' } : undefined,
-            },
-            name,
-            xaxis: `x${suffix}`,
-            yaxis: `y${suffix}`,
-          };
-        });
-
-        // The wake domain is far wider (streamwise) than it is tall (crosswind), so
-        // stack one panel per software (rather than side-by-side) and size each row's
-        // height from the data's real aspect ratio, then lock x/y to equal scale.
-        const containerWidth = document.getElementById('chart-contour').clientWidth || 1000;
-        const aspect = Math.max(
-          ...present.map((name) => {
-            const plane = planes[name];
-            const xRange = Math.max(...plane.x1) - Math.min(...plane.x1);
-            const yRange = Math.max(...plane.x2) - Math.min(...plane.x2);
-            return xRange / yRange;
-          })
-        );
-        const rowHeight = Math.min(420, Math.max(140, containerWidth / aspect));
-
-        const layout = {
-          template: 'plotly_white',
-          height: (rowHeight + 50) * present.length + 40,
-          showlegend: false,
-          margin: { t: 30, b: 40, l: 55, r: 20 },
-          grid: { rows: present.length, columns: 1, pattern: 'independent', ygap: 0.25 },
-          annotations: present.map((name, i) => ({
-            text: name,
-            showarrow: false,
-            xref: `x${i === 0 ? '' : i + 1} domain`,
-            yref: `y${i === 0 ? '' : i + 1} domain`,
-            x: 0.5,
-            y: 1.1,
-          })),
-        };
-        present.forEach((name, i) => {
-          const suffix = i === 0 ? '' : String(i + 1);
-          layout[`xaxis${suffix}`] = { constrain: 'domain' };
-          layout[`yaxis${suffix}`] = { scaleanchor: `x${suffix}`, scaleratio: 1 };
-        });
-
-        Plotly.newPlot('chart-contour', traces, layout, { responsive: true });
+        await renderContour('chart-contour', 'contour.json', 'X (m)', 'Y (m)');
+        await renderContour('chart-contour-vertical', 'contour_vertical.json', 'X (m)', 'Z (m)');
+        await renderContour('chart-contour-xsection', 'contour_xsection.json', 'Y (m)', 'Z (m)');
       }
+    }
+
+    async function renderContour(divId, pathSuffix, xlabel, ylabel) {
+      const planes = await loadPerSoftware(pathSuffix);
+      const present = software.filter((name) => planes[name]);
+      if (present.length === 0) return;
+      const traces = present.map((name, i) => {
+        const plane = planes[name];
+        const suffix = i === 0 ? '' : String(i + 1);
+        return {
+          type: 'scattergl',
+          mode: 'markers',
+          x: plane.x1,
+          y: plane.x2,
+          marker: {
+            color: plane.values,
+            colorscale: 'RdBu',
+            reversescale: true,
+            cmin: 0,
+            cmax: windSpeed,
+            size: 4,
+            colorbar: i === present.length - 1 ? { title: 'm/s' } : undefined,
+          },
+          name,
+          xaxis: `x${suffix}`,
+          yaxis: `y${suffix}`,
+        };
+      });
+
+      // The wake domain is far wider (streamwise) than it is tall (crosswind), so
+      // stack one panel per software (rather than side-by-side) and size each row's
+      // height from the data's real aspect ratio, then lock x/y to equal scale.
+      const containerWidth = document.getElementById(divId).clientWidth || 1000;
+      const aspect = Math.max(
+        ...present.map((name) => {
+          const plane = planes[name];
+          const xRange = Math.max(...plane.x1) - Math.min(...plane.x1);
+          const yRange = Math.max(...plane.x2) - Math.min(...plane.x2);
+          return xRange / yRange;
+        })
+      );
+      const rowHeight = Math.min(420, Math.max(140, containerWidth / aspect));
+
+      const layout = {
+        template: 'plotly_white',
+        height: (rowHeight + 50) * present.length + 40,
+        showlegend: false,
+        margin: { t: 30, b: 40, l: 55, r: 20 },
+        grid: { rows: present.length, columns: 1, pattern: 'independent', ygap: 0.25 },
+        annotations: present.map((name, i) => ({
+          text: name,
+          showarrow: false,
+          xref: `x${i === 0 ? '' : i + 1} domain`,
+          yref: `y${i === 0 ? '' : i + 1} domain`,
+          x: 0.5,
+          y: 1.1,
+        })),
+      };
+      present.forEach((name, i) => {
+        const suffix = i === 0 ? '' : String(i + 1);
+        layout[`xaxis${suffix}`] = { constrain: 'domain', title: xlabel };
+        layout[`yaxis${suffix}`] = { scaleanchor: `x${suffix}`, scaleratio: 1, title: ylabel };
+      });
+
+      Plotly.newPlot(divId, traces, layout, { responsive: true });
     }
 
     function renderLayoutDiagram() {

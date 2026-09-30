@@ -17,6 +17,7 @@ from foxes.models.wake_models.wind import JensenWake
 from foxes.models.wake_models.wind import Bastankhah2014
 from foxes.models.wake_models.wind import Bastankhah2016
 from foxes.models.wake_models.wind import TurbOParkWake
+from foxes.models.wake_deflections import JimenezDeflection
 
 from windIO import load_yaml
 from .base_interface import WCompBase
@@ -64,14 +65,12 @@ WAKE_MODEL_MAPPING = {
     },
 
     # Deflection model
-    # "jimenez": {
-    #     "model_ref": ,
-    #     "parameters": {
-    #         "alpha": "alpha",
-    #         "beta": "beta",
-    #         "k": "k",
-    #     }
-    # }
+    "jimenez": {
+        "model_ref": JimenezDeflection,
+        "parameters": {
+            "beta": "beta",
+        }
+    },
     "bastankhah2016_deflection": {
         "model_ref": "",
         "parameters": {
@@ -336,28 +335,38 @@ class WCompFoxes(WCompBase):
             for t in farm.turbines:
                 t.add_model("kTI")
 
-        if wes_analysis["wake_model"]["deflection"]["name"] is not None:
-            # NOTE: foxes supports only one deflection model, so there's no need to parse the
-            # deflection model settings from windIO.
-            # Check the name, and error if it isn't Bastankhah2016
-            if wes_analysis["wake_model"]["deflection"]["name"] != "bastankhah2016_deflection":
-                raise ValueError("foxes supports only Bastankhah2016 for the deflection model.")
+        deflection_name = wes_analysis["wake_model"]["deflection"]["name"]
+        wake_deflection = "no_deflection"
+        if deflection_name is not None:
+            # Bastankhah2016 computes yaw deflection internally from YAWM (no explicit
+            # wake_deflection model needed); other velocity models (e.g. jensen) need one
+            # of foxes' standalone wake_deflection models layered on top, e.g. Jimenez.
+            if deflection_name not in ("bastankhah2016_deflection", "jimenez"):
+                raise ValueError(
+                    f"foxes supports only Bastankhah2016 and Jimenez for the deflection model, got '{deflection_name}'."
+                )
 
-            # _deflection_model_mapping = WAKE_MODEL_MAPPING[wes_analysis["wake_model"]["deflection"]["name"]]
-            # _deflection_model = _deflection_model_mapping["model_ref"]
-            # _deflection_model_parameters = {
-            #     k: wes_analysis["wake_model"]["deflection"]["parameters"][v]
-            #     for k, v in _deflection_model_mapping["parameters"].items()
-            # }
-            # _deflection_model = _deflection_model(**_deflection_model_parameters)
             mbook.turbine_models["set_yawm"] = foxes.models.turbine_models.SetFarmVars()
             mbook.turbine_models["set_yawm"].add_var(FV.YAWM, -yaw_angles)
             for t in farm.turbines:
                 t.insert_model(0, "set_yawm")
                 t.insert_model(1, "yawm2yaw")
-            wake_frame="rotor_wd"
             # TODO: How to set axial_induction=Betz for deflection
             # Does it need to be set for deflection?
+
+            if deflection_name == "jimenez":
+                _deflection_model_mapping = WAKE_MODEL_MAPPING[deflection_name]
+                _deflection_model = _deflection_model_mapping["model_ref"]
+                _deflection_model_parameters = {
+                    k: wes_analysis["wake_model"]["deflection"]["parameters"][v]
+                    for k, v in _deflection_model_mapping["parameters"].items()
+                }
+                # rotate=False: only shift the wake path (windIO has no equivalent
+                # parameter), keep wind_superposition consistent with other cases.
+                mbook.wake_deflections[deflection_name] = _deflection_model(
+                    rotate=False, **_deflection_model_parameters
+                )
+                wake_deflection = deflection_name
 
         mbook.wake_models[wake_model_name] = _velocity_model(
             **_velocity_model_parameters,
@@ -371,6 +380,7 @@ class WCompFoxes(WCompBase):
             wake_models=[wake_model_name],
             rotor_model="grid16",
             wake_frame="rotor_wd",
+            wake_deflection=wake_deflection,
             partial_wakes="rotor_points",
             mbook=mbook,
             verbosity=0,
@@ -562,6 +572,38 @@ class WCompFoxes(WCompBase):
         )
         return plane
     
+    def vertical_contour(self, wind_direction: float) -> WakePlane:
+        x_min = float(np.min(self.farm_results.X)) - 2 * self.rotor_diameter
+        x_max = float(np.max(self.farm_results.X)) + 10 * self.rotor_diameter
+        z_min = 0.001
+        z_max = 6 * self.hub_height
+
+        x, z = np.meshgrid(
+            np.linspace(x_min, x_max, int((x_max - x_min) / self.RESOLUTION_2D) + 1),
+            np.linspace(z_min, z_max, int((z_max - z_min) / self.RESOLUTION_2D) + 1),
+            indexing='ij'
+        )
+        points = np.stack(
+            [
+                x,
+                np.zeros_like(x),
+                z,
+            ],
+            axis=-1,
+        ).reshape(1, -1, 3)
+
+        point_results = self.algo.calc_points(self.farm_results, points)
+        u = point_results[FV.WS][0, :]
+
+        plane = WakePlane(x.flatten(), z.flatten(), u, "y")
+        plot_plane(
+            plane,
+            # cmap='Blues_r',
+            # color_bar=True,
+            clevels=100
+        )
+        return plane
+
     def xsection_contour(self, wind_direction: float, x_coordinate: float) -> WakePlane:
         y_min = float(np.min(self.farm_results.Y)) - 2 * self.rotor_diameter
         y_max = float(np.max(self.farm_results.Y)) + 2 * self.rotor_diameter

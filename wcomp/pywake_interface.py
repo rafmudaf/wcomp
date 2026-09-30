@@ -352,6 +352,36 @@ class WCompPyWake(WCompBase):
         )
         return plane
 
+    def vertical_contour(self, wind_direction: float) -> WakePlane:
+        x_min = float(np.min(self.sim_res.x)) - 2 * self.rotor_diameter
+        x_max = float(np.max(self.sim_res.x)) + 10 * self.rotor_diameter
+        z_min = 0.001
+        z_max = 6 * self.hub_height
+
+        grid = XZGrid(
+            y=0.0,
+            x=np.linspace(x_min, x_max, int((x_max - x_min) / self.RESOLUTION_2D) + 1),
+            z=np.linspace(z_min, z_max, int((z_max - z_min) / self.RESOLUTION_2D) + 1),
+        )
+        flow_map = self.sim_res.flow_map(wd=wind_direction, grid=grid)
+
+        # For an XZ-plane flow map, py_wake's `.X`/`.Y` FlowMap properties don't
+        # expose usable x/z grids (`.Y` holds the constant crossstream coordinate,
+        # not height) -- pull the "x"/"h" xarray coordinates directly instead, and
+        # build matching meshgrids so x/z/u all flatten in the same order.
+        da = flow_map.WS_eff.isel(y=0, wd=0, ws=0)
+        x, z = np.meshgrid(da["x"].values, da["h"].values)
+        u = da.to_numpy()
+
+        plane = WakePlane(x.flatten(), z.flatten(), u.flatten(), "y")
+        plot_plane(
+            plane,
+            # cmap='Blues_r',
+            # color_bar=True,
+            clevels=100
+        )
+        return plane
+
     def xsection_contour(self, wind_direction: float, x_coordinate: float) -> WakePlane:
         y_min = float(np.min(self.sim_res.y)) - 2 * self.rotor_diameter
         y_max = float(np.max(self.sim_res.y)) + 2 * self.rotor_diameter
@@ -365,11 +395,15 @@ class WCompPyWake(WCompBase):
         )
         flow_map = self.sim_res.flow_map(wd=wind_direction, grid=grid)
 
-        y = flow_map.Y.flatten()
-        z = flow_map.Z.flatten()
-        u = flow_map.WS_eff.to_numpy().flatten()
+        # For a YZ-plane flow map, py_wake's `.Z` FlowMap property doesn't exist
+        # (only `.X`/`.Y` are defined) -- pull the "y"/"h" xarray coordinates
+        # directly instead, and build matching meshgrids so y/z/u all flatten in
+        # the same order.
+        da = flow_map.WS_eff.isel(x=0, wd=0, ws=0)
+        y, z = np.meshgrid(da["y"].values, da["h"].values)
+        u = da.to_numpy()
 
-        plane = WakePlane(y, z, u, "x")
+        plane = WakePlane(y.flatten(), z.flatten(), u.flatten(), "x")
         plot_plane(
             plane,
             # cmap='Blues_r',

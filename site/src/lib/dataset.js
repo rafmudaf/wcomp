@@ -50,6 +50,7 @@ export function getModels() {
  * @property {string[]} software
  * @property {string[]} xsection_labels
  * @property {boolean} has_contour
+ * @property {number} xsection_contour_location_d
  */
 
 /** @param {string} caseId @returns {CaseSummary} */

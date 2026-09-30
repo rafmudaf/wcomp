@@ -407,6 +407,36 @@ class WCompFloris(WCompBase):
         )
         return plane
 
+    def vertical_contour(self, wind_direction: float) -> WakePlane:
+        coordinates = np.array([
+            (x, y, self.hub_height)
+            for x, y in list(zip(self.fmodel.layout_x, self.fmodel.layout_y))
+        ])
+        _x, _, _ = coordinates.T
+        x_min = float(np.min(_x)) - 2 * self.rotor_diameter
+        x_max = float(np.max(_x)) + 10 * self.rotor_diameter
+        z_min = 0.001
+        z_max = 6 * self.hub_height
+        x, z = np.meshgrid(
+            np.linspace(x_min, x_max, int((x_max - x_min) / self.RESOLUTION_2D) + 1),
+            np.linspace(z_min, z_max, int((z_max - z_min) / self.RESOLUTION_2D) + 1),
+            indexing='ij'
+        )
+        x = x.flatten()
+        z = z.flatten()
+        y = np.zeros_like(x)
+
+        u = self.fmodel.sample_flow_at_points(x, y, z)[0]
+
+        plane = WakePlane(x, z, u, "y")
+        plot_plane(
+            plane,
+            # cmap='Blues_r',
+            # color_bar=True,
+            clevels=100
+        )
+        return plane
+
     def xsection_contour(self, wind_direction: float, x_coordinate: float) -> WakePlane:
         coordinates = np.array([
             (x, y, self.hub_height)

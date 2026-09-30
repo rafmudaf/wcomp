@@ -304,6 +304,59 @@ class WCompBase(ABC):
         """
         raise NotImplementedError("WCompBase.horizontal_contour")
 
+    def vertical_contour(self, wind_direction: float) -> WakePlane:
+        """
+        This function produces a contour plot of the velocity in the x-z plane where
+        x is streamwise and z is vertical. The contour is located at the lateral
+        centerline, y=0. The extent of the sample plane should be:
+
+        - x min: 2 rotor diameters upstream of the most upstream turbine
+        - x max: 10 rotor diameters downstream of the most downstream turbine
+        - z min: z=0.0
+        - z max: 6 * hub height
+
+        To implement this function, the subclass should produce a plane of the u-component of
+        velocities with the required bounds. The {py:class}`wcomp.plotting.WakePlane`
+        class should be used to store the data. Then, the {py:meth}`wcomp.plotting.plot_plane`
+        function should be used to produce the plot. A sample implementation is shown below.
+
+        Args:
+            wind_direction (float): Incoming wind direction in degrees with West at 270 degrees.
+
+        Raises:
+            NotImplementedError: This function must be implemented in a subclass
+
+        Returns:
+            WakePlane: The plane of wake data
+
+        Example:
+            .. code-block:: python
+
+                # Call the wake model to produce the velocities at the sample line
+                u, v, w = wake_model(...)           # Note v and w are not used
+                x, y, z = wake_model.get_points()   # Get the coordinates of the sample points
+
+                # Create a WakePlane object to store the data
+                plane = WakePlane(
+                    x,      # If 2d array, use x.flatten()
+                    z,      # ^ ^ ^
+                    u,
+                    "y",
+                )
+
+                # Plot the plane
+                plot_plane(
+                    plane,
+                    color=self.LINE_PLOT_COLOR,
+                    marker=self.LINE_PLOT_MARKER,
+                    linestyle=self.LINE_PLOT_LINESTYLE,
+                    label=self.LEGEND
+                )
+
+                return plane
+        """
+        raise NotImplementedError("WCompBase.vertical_contour")
+
     def xsection_contour(self, wind_direction: float, x_coordinate: float) -> WakePlane:
         """
         This function produces a contour plot of the velocity in the y-z plane where

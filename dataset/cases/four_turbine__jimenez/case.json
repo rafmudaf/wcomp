@@ -37,5 +37,6 @@
     "5D_past_last_turbine": 20,
     "10D_past_last_turbine": 25
   },
-  "has_contour": true
+  "has_contour": true,
+  "xsection_contour_location_d": 20
 }
