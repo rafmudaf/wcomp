@@ -17,7 +17,7 @@ from foxes.models.wake_models.wind import JensenWake
 from foxes.models.wake_models.wind import Bastankhah2014
 from foxes.models.wake_models.wind import Bastankhah2016
 from foxes.models.wake_models.wind import TurbOParkWake
-from foxes.models.wake_deflections import JimenezDeflection
+from foxes.models.wake_deflections import Bastankhah2016Deflection, JimenezDeflection
 
 from windIO import load_yaml
 from .base_interface import WCompBase
@@ -338,9 +338,9 @@ class WCompFoxes(WCompBase):
         deflection_name = wes_analysis["wake_model"]["deflection"]["name"]
         wake_deflection = "no_deflection"
         if deflection_name is not None:
-            # Bastankhah2016 computes yaw deflection internally from YAWM (no explicit
-            # wake_deflection model needed); other velocity models (e.g. jensen) need one
-            # of foxes' standalone wake_deflection models layered on top, e.g. Jimenez.
+            # Bastankhah2016 uses a standalone FOXES deflection model that shares
+            # the velocity model's common calculations; other velocity models
+            # (e.g. jensen) use a different standalone model layered on top.
             if deflection_name not in ("bastankhah2016_deflection", "jimenez"):
                 raise ValueError(
                     f"foxes supports only Bastankhah2016 and Jimenez for the deflection model, got '{deflection_name}'."
@@ -354,7 +354,12 @@ class WCompFoxes(WCompBase):
             # TODO: How to set axial_induction=Betz for deflection
             # Does it need to be set for deflection?
 
-            if deflection_name == "jimenez":
+            if deflection_name == "bastankhah2016_deflection":
+                mbook.wake_deflections[deflection_name] = Bastankhah2016Deflection(
+                    induction="Betz"
+                )
+                wake_deflection = deflection_name
+            else:
                 _deflection_model_mapping = WAKE_MODEL_MAPPING[deflection_name]
                 _deflection_model = _deflection_model_mapping["model_ref"]
                 _deflection_model_parameters = {

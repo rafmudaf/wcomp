@@ -44,9 +44,9 @@ MODEL_NOTES = {
             "four input coefficients."
         ),
         "FOXES": (
-            "Yaw deflection is internal to Bastankhah2016. The duplicated windIO "
-            "deflection parameters are not read; the velocity-block parameters govern "
-            "the calculation."
+            "Uses FOXES' Bastankhah2016Deflection model with Betz induction. The "
+            "duplicated windIO deflection parameters are not read; the velocity-block "
+            "parameters govern the calculation."
         ),
     },
     "jimenez": {
@@ -100,7 +100,7 @@ def _implementation_model(software: str, category: str, model: dict) -> dict:
             "jensen": "JensenWake",
             "bastankhah2014": "Bastankhah2014",
             "bastankhah2016": "Bastankhah2016",
-            "bastankhah2016_deflection": "internal Bastankhah2016 yaw deflection",
+            "bastankhah2016_deflection": "Bastankhah2016Deflection",
             "jimenez": "JimenezDeflection",
             "turbopark": "TurbOParkWake",
         }
