@@ -1,0 +1,271 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import { getRotorAverageComparison } from '../../lib/dataset.js';
+
+const comparison = getRotorAverageComparison();
+const base = import.meta.env.BASE_URL;
+const formatNumber = (value) => value.toFixed(6);
+const formatPercent = (value) => `${(100 * value).toFixed(2)}%`;
+---
+<Layout title="Rotor velocity averaging comparison">
+  <p><a href={base}>&larr; All comparisons</a></p>
+  <h1>Rotor velocity averaging</h1>
+  <p>
+    This comparison passes the same rotor-plane velocity fields to the installed FLORIS,
+    FOXES, and PyWake packages and compares the outputs of their native rotor sampling and
+    averaging implementations. It does not compare wake-model physics, turbine curves,
+    superposition, or induction.
+  </p>
+  <p>{comparison.coordinates}</p>
+  <p class="comparison-note"><strong>Execution:</strong> {comparison.execution}</p>
+
+  <section>
+    <h2>Methods used by each software</h2>
+    <div class="method-grid">
+      {comparison.methods.map((method) => (
+        <article class="method-card">
+          <h3>{method.software}</h3>
+          <p class="method-name">{method.method}</p>
+          <dl>
+            <dt>Samples</dt>
+            <dd>{method.sample_count}</dd>
+            <dt>Aggregation</dt>
+            <dd>{method.aggregation}</dd>
+          </dl>
+          <p>{method.sampling}</p>
+          <p class="implementation-note">{method.implementation}</p>
+        </article>
+      ))}
+    </div>
+    <div id="rotor-sampling-chart" class="chart"></div>
+  </section>
+
+  <section>
+    <h2>A ladder of test cases</h2>
+    <p>
+      Rather than jumping straight to a waked rotor, the comparison walks through four
+      velocity fields of increasing difficulty. Each step adds exactly one new way for a
+      coarse stencil to go wrong, so a deviation can be attributed to a specific cause
+      instead of to the case as a whole.
+    </p>
+    <ol class="ladder">
+      {comparison.cases.map((item) => (
+        <li><strong>{item.name}</strong> &mdash; <code>{item.formula}</code></li>
+      ))}
+    </ol>
+    <p class="comparison-note"><strong>Reference:</strong> {comparison.reference}</p>
+  </section>
+
+  {comparison.cases.map((item, caseIndex) => (
+    <section>
+      <h2>{caseIndex + 1}. {item.name}</h2>
+      <p><code>{item.formula}</code></p>
+      <p>{item.description}</p>
+      {item.analytic_area_average !== null && (
+        <p><strong>Exact area average:</strong> {item.analytic_area_average}</p>
+      )}
+      <div class="case-layout">
+        <div id={`rotor-field-${item.key}`} class="chart field-chart"></div>
+        <table>
+          <thead>
+            <tr>
+              <th>Software</th>
+              <th>Points</th>
+              <th>Rotor average</th>
+              <th>Dense reference</th>
+              <th>Absolute error</th>
+              <th>Relative error</th>
+            </tr>
+          </thead>
+          <tbody>
+            {item.results.map((result) => (
+              <tr>
+                <td><strong>{result.software}</strong></td>
+                <td>{result.sample_count}</td>
+                <td>{formatNumber(result.rotor_average)}</td>
+                <td>{formatNumber(result.reference_average)}</td>
+                <td>{formatNumber(result.absolute_error)}</td>
+                <td>{formatPercent(result.relative_error)}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </section>
+  ))}
+
+  <section>
+    <h2>Errors across the ladder</h2>
+    <p>
+      Because FLORIS uses a cubic mean while FOXES and PyWake use arithmetic averaging in
+      these configurations, each error is measured against a dense-disk reference with
+      matching aggregation semantics rather than against a single shared number.
+    </p>
+    <div id="rotor-result-chart" class="chart"></div>
+  </section>
+
+  <section>
+    <h2>How to interpret this comparison</h2>
+    <ul>
+      <li>Every case uses one identical velocity field; differences come only from sampling and averaging.</li>
+      <li>Uniform inflow is exact for all three methods, which confirms that each set of weights is normalized.</li>
+      <li>
+        Linear shear is exact for FOXES and PyWake because their stencils are symmetric about hub
+        height. FLORIS deviates here purely because a cubic mean is nonlinear, not because of where
+        it samples.
+      </li>
+      <li>
+        The quadratic case separates the methods by radial reach. PyWake samples only out to
+        <code>r/R = 1/3</code> and FLORIS only to <code>r/R = 0.5</code>, so both miss the slower
+        tip flow and read high. FOXES spans the full disk and lands slightly low because its corner
+        cells carry weight just beyond the rim.
+      </li>
+      <li>
+        The offset Gaussian is the only case that is neither symmetric nor resolvable by a handful
+        of points, which is why it is the most representative of partially waked operation.
+      </li>
+      <li>These results isolate quadrature error and are not a ranking of full wake-model accuracy.</li>
+    </ul>
+  </section>
+
+  <script define:vars={{ comparison }}>
+    const colors = { FLORIS: '#2ca02c', FOXES: '#d62728', PyWake: '#1f77b4' };
+
+    const samplingTraces = comparison.methods.map((method, index) => ({
+      x: method.nodes_y,
+      y: method.nodes_z,
+      text: method.weights.map((weight) => `Weight: ${weight.toFixed(5)}`),
+      hovertemplate: 'y/R=%{x:.3f}<br>z/R=%{y:.3f}<br>%{text}<extra></extra>',
+      mode: 'markers',
+      name: method.software,
+      marker: {
+        color: colors[method.software],
+        opacity: 0.8,
+        size: method.weights.map((weight) => 10 + 45 * weight),
+      },
+      xaxis: `x${index === 0 ? '' : index + 1}`,
+      yaxis: `y${index === 0 ? '' : index + 1}`,
+    }));
+
+    const axis = {
+      range: [-1.15, 1.15],
+      constrain: 'domain',
+      zeroline: true,
+      gridcolor: '#e5e7eb',
+    };
+    const shapes = comparison.methods.map((_, index) => ({
+      type: 'circle',
+      xref: `x${index === 0 ? '' : index + 1}`,
+      yref: `y${index === 0 ? '' : index + 1}`,
+      x0: -1,
+      x1: 1,
+      y0: -1,
+      y1: 1,
+      line: { color: '#6b7280', width: 1 },
+    }));
+
+    Plotly.newPlot(
+      'rotor-sampling-chart',
+      samplingTraces,
+      {
+        grid: { rows: 1, columns: 3, pattern: 'independent' },
+        xaxis: { ...axis, title: 'FLORIS y/R' },
+        yaxis: { ...axis, scaleanchor: 'x', title: 'z/R' },
+        xaxis2: { ...axis, title: 'FOXES y/R' },
+        yaxis2: { ...axis, scaleanchor: 'x2' },
+        xaxis3: { ...axis, title: 'PyWake y/R' },
+        yaxis3: { ...axis, scaleanchor: 'x3' },
+        shapes,
+        showlegend: false,
+        height: 360,
+        margin: { t: 20, b: 50, l: 45, r: 15 },
+      },
+      { responsive: true }
+    );
+
+    for (const item of comparison.cases) {
+      Plotly.newPlot(
+        `rotor-field-${item.key}`,
+        [{
+          type: 'heatmap',
+          x: item.field.axis,
+          y: item.field.axis,
+          z: item.field.values,
+          colorscale: 'Viridis',
+          colorbar: { title: 'U/U∞' },
+          hovertemplate: 'y/R=%{x:.2f}<br>z/R=%{y:.2f}<br>U/U∞=%{z:.4f}<extra></extra>',
+        }],
+        {
+          xaxis: { title: 'y/R', constrain: 'domain' },
+          yaxis: { title: 'z/R', scaleanchor: 'x' },
+          height: 320,
+          margin: { t: 20, b: 45, l: 50, r: 10 },
+        },
+        { responsive: true }
+      );
+    }
+
+    Plotly.newPlot(
+      'rotor-result-chart',
+      comparison.methods.map((method) => ({
+        type: 'bar',
+        name: method.software,
+        x: comparison.cases.map((item) => item.name),
+        y: comparison.cases.map(
+          (item) =>
+            item.results.find((result) => result.software === method.software).absolute_error
+        ),
+        marker: { color: colors[method.software] },
+        hovertemplate: `${method.software}<br>%{x}<br>Absolute error: %{y:.6f}<extra></extra>`,
+      })),
+      {
+        barmode: 'group',
+        yaxis: { title: 'Absolute error in U/U∞', rangemode: 'tozero' },
+        height: 380,
+        margin: { t: 30, b: 70, l: 65, r: 20 },
+      },
+      { responsive: true }
+    );
+  </script>
+
+  <style>
+    .method-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1rem;
+    }
+    .method-card {
+      border: 1px solid #e5e7eb;
+      border-radius: 8px;
+      padding: 1rem;
+    }
+    .method-card h3 { margin-top: 0; }
+    .method-name { color: #4338ca; font-weight: 700; }
+    .method-card dl {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 0.25rem 0.75rem;
+    }
+    .method-card dt { font-weight: 700; }
+    .method-card dd { margin: 0; }
+    .implementation-note { color: #4b5563; font-size: 0.9rem; }
+    .comparison-note {
+      border-left: 3px solid #6366f1;
+      background: #eef2ff;
+      padding: 0.75rem 1rem;
+    }
+    .ladder li { margin-bottom: 0.35rem; }
+    .case-layout {
+      display: grid;
+      grid-template-columns: minmax(280px, 1fr) minmax(320px, 1.4fr);
+      gap: 1.25rem;
+      align-items: center;
+    }
+    @media (max-width: 900px) {
+      .case-layout { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 700px) {
+      table { display: block; overflow-x: auto; }
+    }
+  </style>
+</Layout>
