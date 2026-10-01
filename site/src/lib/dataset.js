@@ -25,6 +25,47 @@ export function getManifest() {
 }
 
 /**
+ * @returns {{
+ *   coordinates: string,
+ *   execution: string,
+ *   reference: string,
+ *   methods: Array<{
+ *     software: string,
+ *     method: string,
+ *     sample_count: number,
+ *     sampling: string,
+ *     aggregation: string,
+ *     implementation: string,
+ *     nodes_y: number[],
+ *     nodes_z: number[],
+ *     weights: number[]
+ *   }>,
+ *   cases: Array<{
+ *     key: string,
+ *     name: string,
+ *     formula: string,
+ *     description: string,
+ *     analytic_area_average: number | null,
+ *     field: {axis: number[], values: Array<Array<number | null>>},
+ *     results: Array<{
+ *       case: string,
+ *       software: string,
+ *       method: string,
+ *       sample_count: number,
+ *       aggregation: string,
+ *       rotor_average: number,
+ *       reference_average: number,
+ *       absolute_error: number,
+ *       relative_error: number
+ *     }>
+ *   }>
+ * }}
+ */
+export function getRotorAverageComparison() {
+  return readJson('rotor_average.json');
+}
+
+/**
  * @typedef {Object} ModelEntry
  * @property {string} name
  * @property {string} category

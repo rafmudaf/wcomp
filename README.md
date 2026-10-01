@@ -67,6 +67,15 @@ dataset of solver outputs, decoupled from the site build itself.
    This writes JSON results for every wake-model/scenario combination to `dataset/` at the
    repo root, which is committed to version control as the site's source of truth.
 
+   To generate the rotor averaging comparison data specifically, run:
+
+   ```bash
+   python -m wcomp.rotor_average --output dataset/rotor_average.json
+   ```
+
+   This writes the rotor-averaging comparison dataset consumed by
+   `site/src/pages/compare/rotor-averaging.astro`.
+
    To regenerate only a subset, pass one or more selectors like a software name
    or wake-model name. Software selectors match any listed software, wake-model
    selectors match any listed wake model, and mixing the two narrows the output

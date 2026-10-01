@@ -36,6 +36,15 @@ const modelCategories = [
     {manifest.software_versions.FLORIS}, FOXES {manifest.software_versions.FOXES}, and PyWake
     {manifest.software_versions.PyWake}.
   </p>
+  <h2>Framework details</h2>
+  <div class="case-grid">
+    <a class="case-card" href={`${base}compare/rotor-averaging/`}>
+      <strong>Rotor velocity averaging</strong>
+      <div><span class="tag">numerics</span></div>
+      <div>FLORIS, FOXES, PyWake</div>
+    </a>
+  </div>
+
   <h2>Case comparisons</h2>
   {[...byScenario.entries()].map(([scenario, scenarioCases]) => (
     <section>
