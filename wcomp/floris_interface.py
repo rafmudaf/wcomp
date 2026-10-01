@@ -233,6 +233,8 @@ class WCompFloris(WCompBase):
             k: wes_analysis["wake_model"]["velocity"]["parameters"][v]
             for k, v in _velocity_model_mapping["parameters"].items()
         }
+        if _velocity_model == "turboparkgauss":
+            _velocity_model_parameters["include_mirror_wake"] = False
         if wes_analysis["wake_model"]["deflection"]["name"] is not None:
             _deflection_model_mapping = WAKE_MODEL_MAPPING[wes_analysis["wake_model"]["deflection"]["name"]]
             _deflection_model = _deflection_model_mapping["model_ref"]
