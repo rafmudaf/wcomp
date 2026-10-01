@@ -6,8 +6,14 @@ under `dataset/` at the repo root, decoupled from how the frontend is built.
 
 Run with (inside the `wcomp` conda environment):
     python -m wcomp.dataset
+
+To regenerate only a subset of the dataset:
+    python -m wcomp.dataset floris
+    python -m wcomp.dataset jensen
+    python -m wcomp.dataset floris foxes turbopark
 """
 
+import argparse
 import json
 from datetime import datetime, timezone
 from itertools import combinations
@@ -62,6 +68,14 @@ WAKE_MODEL_CASES = {
 }
 
 SCENARIOS = ["one_turbine", "four_turbine"]
+
+SOFTWARE_FILTERS = {
+    "floris": WCompFloris,
+    "foxes": WCompFoxes,
+    "pywake": WCompPyWake,
+}
+
+VALID_SELECTORS = sorted({*SOFTWARE_FILTERS, *WAKE_MODEL_CASES})
 
 # Streamwise location (in rotor diameters from the origin) of the cross-section
 # contour plane, in the y-z plane, per scenario. 20D for four_turbine sits a few
@@ -299,24 +313,85 @@ def write_case(scenario: str, wake_model: str, result: dict, software_versions: 
     return case_id
 
 
-def generate_all() -> None:
+def _case_matches_selectors(wake_model: str, selectors: set[str]) -> bool:
+    if not selectors:
+        return True
+
+    wake_model_selectors = selectors.intersection(WAKE_MODEL_CASES)
+    software_selectors = selectors.intersection(SOFTWARE_FILTERS)
+
+    if wake_model_selectors and wake_model not in wake_model_selectors:
+        return False
+
+    if software_selectors and not any(
+        cls.LEGEND.lower() in software_selectors for cls in WAKE_MODEL_CASES[wake_model]["software"]
+    ):
+        return False
+
+    if wake_model_selectors or software_selectors:
+        return True
+
+    return False
+
+
+def generate(selectors: set[str] | None = None) -> None:
     software_versions = _software_versions()
     case_ids = []
     for scenario in SCENARIOS:
-        for wake_model in WAKE_MODEL_CASES:
-            print(f"Computing {scenario}/{wake_model}...")
-            result = compute_case(scenario, wake_model)
-            case_ids.append(write_case(scenario, wake_model, result, software_versions))
+        for selected_wake_model in WAKE_MODEL_CASES:
+            if selectors is not None and not _case_matches_selectors(selected_wake_model, selectors):
+                continue
+            print(f"Computing {scenario}/{selected_wake_model}...")
+            result = compute_case(scenario, selected_wake_model)
+            case_ids.append(write_case(scenario, selected_wake_model, result, software_versions))
+
+    if not case_ids:
+        raise ValueError("No cases matched the requested selectors.")
+
+    manifest_cases = case_ids
+    if selectors is not None:
+        manifest_path = DATASET_ROOT / "manifest.json"
+        if manifest_path.exists():
+            with open(manifest_path) as f:
+                existing_manifest = json.load(f)
+            existing_cases = existing_manifest.get("cases", [])
+            manifest_cases = list(dict.fromkeys([*existing_cases, *case_ids]))
 
     _write_json(DATASET_ROOT / "models.json", MODEL_REGISTRY)
     _write_json(DATASET_ROOT / "manifest.json", {
         "generated_at": datetime.now(timezone.utc).isoformat(),
         "wcomp_version": __version__,
         "software_versions": software_versions,
-        "cases": case_ids,
+        "cases": manifest_cases,
     })
-    print(f"Wrote {len(case_ids)} cases to {DATASET_ROOT}")
+    print(f"Wrote {len(case_ids)} case(s) to {DATASET_ROOT}")
+
+
+def main(argv: list[str] | None = None) -> None:
+    parser = argparse.ArgumentParser(description="Generate the wcomp dataset.")
+    parser.add_argument(
+        "selectors",
+        nargs="*",
+        metavar="selector",
+        help=(
+            "Optional software and/or wake-model selectors, e.g. floris jensen turbopark. "
+            "Multiple software selectors match any listed software; multiple wake-model "
+            "selectors match any listed wake model; mixing the two narrows to their intersection. "
+            "When downselecting, existing manifest cases are preserved and regenerated cases are merged in."
+        ),
+    )
+    args = parser.parse_args(argv)
+
+    selectors = {selector.lower() for selector in args.selectors}
+    invalid = sorted(selectors.difference(VALID_SELECTORS))
+    if invalid:
+        parser.error(
+            f"unrecognized selector(s): {', '.join(invalid)}. "
+            f"Choose from: {', '.join(VALID_SELECTORS)}"
+        )
+
+    generate(selectors=selectors or None)
 
 
 if __name__ == "__main__":
-    generate_all()
+    main()

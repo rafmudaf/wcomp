@@ -67,6 +67,18 @@ dataset of solver outputs, decoupled from the site build itself.
    This writes JSON results for every wake-model/scenario combination to `dataset/` at the
    repo root, which is committed to version control as the site's source of truth.
 
+   To regenerate only a subset, pass one or more selectors like a software name
+   or wake-model name. Software selectors match any listed software, wake-model
+   selectors match any listed wake model, and mixing the two narrows the output
+   to cases that satisfy both. When downselecting, the manifest keeps previously
+   listed cases and merges in any regenerated cases:
+
+   ```bash
+   python -m wcomp.dataset floris
+   python -m wcomp.dataset jensen
+   python -m wcomp.dataset floris foxes turbopark
+   ```
+
 2. Run the site locally (requires Node.js 20+):
 
    ```bash
