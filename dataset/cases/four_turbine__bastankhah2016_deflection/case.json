@@ -94,14 +94,14 @@
           },
           {
             "category": "deflection",
-            "name": "internal Bastankhah2016 yaw deflection",
+            "name": "Bastankhah2016Deflection",
             "parameters": {}
           }
         ],
         "notes": [
           "Uses Betz induction, quadratic wind-speed superposition, grid16 rotor sampling, rotor-point partial wakes, and the rotor_wd wake frame. No separate wake-added turbulence model is configured.",
           "The ka and kb inputs configure a separate kTI turbine model; the wake model receives k=None so expansion is supplied by that turbine model.",
-          "Yaw deflection is internal to Bastankhah2016. The duplicated windIO deflection parameters are not read; the velocity-block parameters govern the calculation."
+          "Uses FOXES' Bastankhah2016Deflection model with Betz induction. The duplicated windIO deflection parameters are not read; the velocity-block parameters govern the calculation."
         ]
       }
     ],
