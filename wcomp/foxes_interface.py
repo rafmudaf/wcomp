@@ -550,15 +550,14 @@ class WCompFoxes(WCompBase):
         y_max = float(np.max(self.farm_results.Y)) + 2 * self.rotor_diameter
 
         o = FlowPlots2D(self.algo, self.farm_results)
-        u, grid_data = o.get_mean_data_xy(
+        params, u, grid_data = o.get_mean_data_xy(
+            var="WS",
             resolution=self.RESOLUTION_2D,
-            variables=["WS"],
             xmin=x_min,
             xmax=x_max,
             ymin=y_min,
             ymax=y_max,
             z=self.hub_height,
-            ret_grid=True,
             data_format="numpy",
         )
 
@@ -566,7 +565,8 @@ class WCompFoxes(WCompBase):
         x = grid_points[0, :, 0]
         y = grid_points[0, :, 1]
         # z = grid_points[0, :, 2]
-        u = u[:,:,0].flatten()
+        # foxes >=1.7 may include FV.WD alongside the requested var, so look up its index
+        u = u[:, :, params["variables"].index("WS")].flatten()
 
         plane = WakePlane(x, y, u, "z")
         plot_plane(

@@ -1,9 +1,9 @@
 {
-  "generated_at": "2026-09-30T21:11:30.354882+00:00",
+  "generated_at": "2026-10-01T16:07:16.621544+00:00",
   "wcomp_version": "0.1.0",
   "software_versions": {
     "FLORIS": "4.6.6",
-    "FOXES": "1.6.2",
+    "FOXES": "v1.9.3",
     "PyWake": "2.6.21.dev30+g7b7ffbca8"
   },
   "cases": [
