@@ -1,5 +1,6 @@
 {
   "coordinates": "All sampling coordinates are normalized by rotor radius R.",
+  "execution": "Each common velocity field is passed to the installed framework's native rotor-grid and rotor-averaging implementation. No framework result is calculated by a wcomp replacement formula.",
   "reference": "128-point Gauss-Legendre radial integration with 720 azimuthal points. Each software result is compared with a dense-disk reference using the same aggregation semantics.",
   "methods": [
     {
@@ -8,7 +9,7 @@
       "sample_count": 9,
       "sampling": "Nine equal-weight points on a square spanning -0.5R to 0.5R in the lateral and vertical directions.",
       "aggregation": "cubic mean of velocity",
-      "implementation": "wcomp/floris_interface.py selects solver type turbine_grid with turbine_grid_points=3. FLORIS TurbineGrid uses average_method=cubic-mean.",
+      "implementation": "Executed with FLORIS TurbineGrid(grid_resolution=3) and FLORIS average_velocity using the grid's native average_method.",
       "nodes_y": [
         -0.5,
         -0.5,
@@ -47,9 +48,9 @@
       "software": "FOXES",
       "method": "GridRotor (grid16)",
       "sample_count": 16,
-      "sampling": "Sixteen cell-center points on a 4 x 4 square spanning the rotor. Weights are the numerically evaluated overlap of each cell with the disk; the four corner cell centers lie just outside the disk but retain partial-cell weight.",
+      "sampling": "Sixteen cell-center points on a 4 x 4 square spanning the rotor. Weights are evaluated by FOXES from each cell's overlap with the disk; the four corner cell centers lie outside the disk but retain partial-cell weight.",
       "aggregation": "weighted arithmetic mean of velocity",
-      "implementation": "wcomp/foxes_interface.py selects rotor_model=grid16 and partial_wakes=rotor_points. Its CpCtFromTwo turbine uses FOXES REWS, the weighted arithmetic rotor-effective wind speed.",
+      "implementation": "Executed with FOXES ModelBook grid16 and GridRotor.eval_rpoint_results, requesting FOXES' native REWS output.",
       "nodes_y": [
         -0.75,
         -0.75,
@@ -111,7 +112,7 @@
       "sample_count": 4,
       "sampling": "Four equal-weight points at (+/-R/3, +/-R/3) in the rotor plane.",
       "aggregation": "weighted arithmetic mean of velocity",
-      "implementation": "wcomp/pywake_interface.py passes GridRotorAvg() to PropagateDownwind. PyWake evaluates wake deficit at each node and takes their arithmetic mean; for uniform ambient inflow this is equivalent to averaging velocity.",
+      "implementation": "Executed with PyWake GridRotorAvg.__call__. PyWake averages the supplied deficit at its native rotor nodes; the comparison converts that result back to normalized velocity.",
       "nodes_y": [
         -0.3333333333333333,
         0.3333333333333333,
@@ -27512,10 +27513,10 @@
           "method": "TurbineGrid (3 x 3)",
           "sample_count": 9,
           "aggregation": "cubic mean of velocity",
-          "rotor_average": 0.9359808254776311,
+          "rotor_average": 0.935980825477631,
           "reference_average": 0.952786267041659,
-          "absolute_error": 0.016805441564027968,
-          "relative_error": 0.0176382071670783
+          "absolute_error": 0.01680544156402808,
+          "relative_error": 0.017638207167078413
         },
         {
           "case": "partial_wake",
