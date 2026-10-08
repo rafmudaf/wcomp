@@ -149,3 +149,11 @@ export function getCaseSummary(caseId) {
 export function getAllCases() {
   return getManifest().cases.map((id) => ({ id, ...getCaseSummary(id) }));
 }
+
+/**
+ * @param {string} caseId
+ * @returns {Array<{pair: string[], target: string, rmse: number, max_abs: number, mean_abs: number, nrmse: number}>}
+ */
+export function getCaseMetrics(caseId) {
+  return readJson(`cases/${caseId}/metrics.json`);
+}

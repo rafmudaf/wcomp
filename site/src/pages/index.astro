@@ -1,6 +1,13 @@
 ---
 import Layout from '../layouts/Layout.astro';
-import { getAllCases, getManifest, getModels } from '../lib/dataset.js';
+import {
+  getAllCases,
+  getCaseMetrics,
+  getManifest,
+  getModels,
+  getRotorAverageComparison,
+  getTurbinePerformanceComparison,
+} from '../lib/dataset.js';
 
 const manifest = getManifest();
 const cases = getAllCases();
@@ -23,6 +30,53 @@ const modelCategories = [
   { key: 'velocity', label: 'Velocity models' },
   { key: 'deflection', label: 'Deflection models' },
 ];
+
+const modelLabels = {
+  jensen: 'Jensen',
+  jimenez: 'Jimenez',
+  bastankhah2014: 'Bastankhah 2014',
+  bastankhah2016: 'Bastankhah 2016',
+  bastankhah2016_deflection: 'Bastankhah 2016 deflection',
+  turbopark: 'TurbOPark',
+};
+const modelLabel = (c) => modelLabels[c.wake_model] ?? c.wake_model;
+const pct = (value, digits = 1) => `${(value * 100).toFixed(digits)}%`;
+const sci = (value) => value.toExponential(0);
+
+// Framework TLDR: rotor-averaging case with the widest spread between software
+// and turbine-curve agreement, both read from the dataset.
+const rotor = getRotorAverageComparison();
+const widestRotorCase = rotor.cases
+  .map((item) => {
+    const sorted = [...item.results].sort((a, b) => a.relative_error - b.relative_error);
+    return { item, best: sorted[0], worst: sorted[sorted.length - 1] };
+  })
+  .sort((a, b) => (b.worst.relative_error - b.best.relative_error) - (a.worst.relative_error - a.best.relative_error))[0];
+
+const turbine = getTurbinePerformanceComparison();
+const maxOf = (key) => Math.max(...turbine.results.map((r) => r[key]));
+const clippedCtSoftware = [...turbine.results].sort((a, b) => b.max_abs_ct_error - a.max_abs_ct_error)[0];
+
+// Case TLDR: streamwise-profile RMSE for every software pair in every case.
+const streamwiseRows = cases.flatMap((c) =>
+  getCaseMetrics(c.id)
+    .filter((m) => m.target === 'streamwise')
+    .map((m) => ({ c, pair: m.pair.join(' vs '), rmse: m.rmse, nrmse: m.nrmse })),
+);
+const worstRow = [...streamwiseRows].sort((a, b) => b.nrmse - a.nrmse)[0];
+const maxRmse = (scenario, model) => Math.max(
+  ...streamwiseRows.filter((r) => r.c.scenario === scenario && r.c.wake_model === model).map((r) => r.rmse),
+);
+const growth = [...new Set(cases.map((c) => c.wake_model))]
+  .filter((model) => model !== worstRow.c.wake_model)
+  .map((model) => ({
+    model,
+    one: maxRmse('one_turbine', model),
+    four: maxRmse('four_turbine', model),
+  }))
+  .sort((a, b) => (b.four - b.one) - (a.four - a.one))[0];
+const growthOne = cases.find((c) => c.scenario === 'one_turbine' && c.wake_model === growth.model);
+const growthFour = cases.find((c) => c.scenario === 'four_turbine' && c.wake_model === growth.model);
 ---
 <Layout title="WComp - Wake model implementations compared">
   <h1>Wake model comparisons</h1>
@@ -37,6 +91,18 @@ const modelCategories = [
     {manifest.software_versions.PyWake}.
   </p>
   <h2>Framework details</h2>
+  <ul class="tldr">
+    <li>
+      Rotor averaging is the largest source of framework differences. On the{" "}<a href={`${base}compare/rotor-averaging/#${widestRotorCase.item.key}`}>{widestRotorCase.item.name.toLowerCase()}</a>{" "}field the rotor-average error ranges from {pct(widestRotorCase.best.relative_error)} ({widestRotorCase.best.software})
+      to {pct(widestRotorCase.worst.relative_error)} ({widestRotorCase.worst.software}).
+    </li>
+    <li>
+      Power and thrust tables are reproduced essentially exactly
+      (power within {sci(maxOf('max_abs_power_error_in_range_kw'))} kW, Ct within {sci(maxOf('max_abs_ct_error_in_range'))} in range).
+      The one visible difference is{" "}<a href={`${base}compare/turbine-performance/#thrust-coefficient`}>{clippedCtSoftware.software}'s Ct</a>,
+      which is clipped by {sci(clippedCtSoftware.max_abs_ct_error)} outside the cut-in/cut-out range.
+    </li>
+  </ul>
   <div class="case-grid">
     <a class="case-card" href={`${base}compare/rotor-averaging/`}>
       <strong>Rotor velocity averaging</strong>
@@ -51,6 +117,14 @@ const modelCategories = [
   </div>
 
   <h2>Case comparisons</h2>
+  <ul class="tldr">
+    <li>
+      The largest streamwise disagreement is{" "}<a href={`${base}compare/${worstRow.c.id}/#streamwise`}>{modelLabel(worstRow.c)} with {scenarioLabels[worstRow.c.scenario].toLowerCase()}</a>,{" "}{worstRow.pair}: {worstRow.rmse.toFixed(2)} m/s RMSE ({pct(worstRow.nrmse)} NRMSE).
+    </li>
+    <li>
+      Differences grow with turbine count. {modelLabel(growthOne)} goes from{" "}<a href={`${base}compare/${growthOne.id}/#streamwise`}>{growth.one.toFixed(2)} m/s</a> RMSE (max over software pairs) with one turbine to{" "}<a href={`${base}compare/${growthFour.id}/#streamwise`}>{growth.four.toFixed(2)} m/s</a> with four.
+    </li>
+  </ul>
   {[...byScenario.entries()].map(([scenario, scenarioCases]) => (
     <section>
       <h3>{scenarioLabels[scenario] ?? scenario}</h3>
@@ -99,3 +173,13 @@ const modelCategories = [
     </section>
   ))}
 </Layout>
+
+<style>
+  .tldr {
+    background: #f9fafb;
+    margin: 1rem 0;
+    padding: 0.6rem 1rem 0.6rem 2rem;
+    font-size: 0.95rem;
+  }
+  .tldr li + li { margin-top: 0.4rem; }
+</style>

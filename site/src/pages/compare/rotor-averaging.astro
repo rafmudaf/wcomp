@@ -56,7 +56,7 @@ const formatPercent = (value) => `${(100 * value).toFixed(2)}%`;
   </section>
 
   {comparison.cases.map((item, caseIndex) => (
-    <section>
+    <section id={item.key}>
       <h2>{caseIndex + 1}. {item.name}</h2>
       <p><code>{item.formula}</code></p>
       <p>{item.description}</p>
