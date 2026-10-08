@@ -53,49 +53,38 @@ git clone https://github.com/rafmudaf/wcomp
 pip install -e wcomp
 ```
 
-## Wake model comparison website
+# Wake model comparison website
 
 The comparison website (https://rafmudaf.github.io/wcomp/) is generated from a versioned
 dataset of solver outputs, decoupled from the site build itself.
 
 1. Generate the dataset (requires `wcomp` installed per Installation above):
 
-   ```bash
-   python -m wcomp.dataset
-   ```
+   | Dataset component | Command | Output |
+   | --- | --- | --- |
+   | Full wake-model/scenario dataset | `python -m wcomp.dataset` | `dataset/` |
+   | Rotor-averaging comparison dataset | `python -m wcomp.rotor_average --output dataset/rotor_average.json` | `dataset/rotor_average.json` |
+   | Turbine-performance comparison dataset | `python -m wcomp.turbine_performance --output dataset/turbine_performance.json` | `dataset/turbine_performance.json` |
 
-   This writes JSON results for every wake-model/scenario combination to `dataset/` at the
-   repo root, which is committed to version control as the site's source of truth.
+   The full dataset writes JSON results for every wake-model/scenario combination to
+   `dataset/` at the repo root, which is committed to version control as the site's
+   source of truth.
 
-   To generate the rotor averaging comparison data specifically, run:
-
-   ```bash
-   python -m wcomp.rotor_average --output dataset/rotor_average.json
-   ```
-
-   This writes the rotor-averaging comparison dataset consumed by
-   `site/src/pages/compare/rotor-averaging.astro`.
-
-   To generate the turbine performance comparison data specifically, run:
-
-   ```bash
-   python -m wcomp.turbine_performance --output dataset/turbine_performance.json
-   ```
-
-   This writes the turbine-performance dataset consumed by
-   `site/src/pages/compare/turbine-performance.astro`.
-
-   To regenerate only a subset, pass one or more selectors like a software name
-   or wake-model name. Software selectors match any listed software, wake-model
-   selectors match any listed wake model, and mixing the two narrows the output
-   to cases that satisfy both. When downselecting, the manifest keeps previously
-   listed cases and merges in any regenerated cases:
+   To regenerate only a subset of the full wake model dataset, pass one or more selectors like
+   a software name or wake-model name. Software selectors match any listed software,
+   wake-model selectors match any listed wake model, and mixing the two narrows the
+   output to cases that satisfy both. When downselecting, the manifest keeps
+   previously listed cases and merges in any regenerated cases:
 
    ```bash
    python -m wcomp.dataset floris
    python -m wcomp.dataset jensen
    python -m wcomp.dataset floris foxes turbopark
    ```
+
+   The rotor-averaging and turbine-performance commands write the comparison datasets
+   consumed by `site/src/pages/compare/rotor-averaging.astro` and
+   `site/src/pages/compare/turbine-performance.astro`, respectively.
 
 2. Run the site locally (requires Node.js 20+):
 
@@ -116,7 +105,7 @@ dataset of solver outputs, decoupled from the site build itself.
    deploys this automatically on push to `main` -- it has no Python/solver dependencies,
    since the dataset is generated locally and committed rather than regenerated in CI.
 
-## Architecture and Design
+# WComp Architecture and Design
 
 The `wcomp` framework is meant to be simple and flexible. At it's core, it is three
 district components:
