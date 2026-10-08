@@ -1,6 +1,5 @@
 {
   "coordinates": "All sampling coordinates are normalized by rotor radius R.",
-  "execution": "Each common velocity field is passed to the installed framework's native rotor-grid and rotor-averaging implementation. No framework result is calculated by a wcomp replacement formula.",
   "reference": "128-point Gauss-Legendre radial integration with 720 azimuthal points. Each software result is compared with a dense-disk reference using the same aggregation semantics.",
   "methods": [
     {
