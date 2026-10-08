@@ -66,6 +66,43 @@ export function getRotorAverageComparison() {
 }
 
 /**
+ * @returns {{
+ *   turbine: {
+ *     name: string,
+ *     rotor_diameter: number,
+ *     hub_height: number,
+ *     air_density: number,
+ *     cut_in: number,
+ *     cut_out: number,
+ *     rated_power_kw: number,
+ *     curve: {wind_speeds: number[], power_kw: number[], ct: number[]}
+ *   },
+ *   setup: string,
+ *   execution: string,
+ *   reference: string,
+ *   wind_speeds: number[],
+ *   reference_curves: {power_kw: number[], ct: number[]},
+ *   results: Array<{
+ *     software: string,
+ *     turbine_model: string,
+ *     inputs: string,
+ *     interpolation: string,
+ *     out_of_range: string,
+ *     implementation: string,
+ *     power_kw: number[],
+ *     ct: number[],
+ *     max_abs_power_error_kw: number,
+ *     max_abs_ct_error: number,
+ *     max_abs_power_error_in_range_kw: number,
+ *     max_abs_ct_error_in_range: number
+ *   }>
+ * }}
+ */
+export function getTurbinePerformanceComparison() {
+  return readJson('turbine_performance.json');
+}
+
+/**
  * @typedef {Object} ModelEntry
  * @property {string} name
  * @property {string} category

@@ -76,6 +76,15 @@ dataset of solver outputs, decoupled from the site build itself.
    This writes the rotor-averaging comparison dataset consumed by
    `site/src/pages/compare/rotor-averaging.astro`.
 
+   To generate the turbine performance comparison data specifically, run:
+
+   ```bash
+   python -m wcomp.turbine_performance --output dataset/turbine_performance.json
+   ```
+
+   This writes the turbine-performance dataset consumed by
+   `site/src/pages/compare/turbine-performance.astro`.
+
    To regenerate only a subset, pass one or more selectors like a software name
    or wake-model name. Software selectors match any listed software, wake-model
    selectors match any listed wake model, and mixing the two narrows the output

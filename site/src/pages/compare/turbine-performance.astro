@@ -1,0 +1,322 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import { getTurbinePerformanceComparison } from '../../lib/dataset.js';
+
+const comparison = getTurbinePerformanceComparison();
+const { turbine } = comparison;
+const base = import.meta.env.BASE_URL;
+
+const selectedWindSpeeds = [2.0, 3.0, 5.0, 8.0, 10.0, 11.0, 15.0, 20.0, 25.0, 26.0];
+const selectedIndices = selectedWindSpeeds.map((speed) =>
+  comparison.wind_speeds.findIndex((value) => Math.abs(value - speed) < 1e-9)
+);
+const formatPower = (value) => value.toFixed(2);
+const formatCt = (value) => value.toFixed(5);
+const formatError = (value) => (value < 1e-6 ? '< 1e-6' : value.toPrecision(3));
+---
+<Layout title="Turbine power and thrust comparison">
+  <p><a href={base}>&larr; All comparisons</a></p>
+  <h1>Turbine power and thrust</h1>
+  <p>
+    This comparison gives FLORIS, FOXES, and PyWake the same wind turbine power curve and thrust
+    coefficient curve, then asks each package to evaluate the turbine over a sweep of wind speeds.
+    It isolates the turbine model: the flow is uniform and there are no wakes, shear, or yaw, so
+    any difference comes from how each software ingests and evaluates the curves.
+  </p>
+  <p>{comparison.setup}</p>
+
+  <section>
+    <h2>Common turbine definition</h2>
+    <dl class="turbine-facts">
+      <dt>Turbine</dt><dd>{turbine.name}</dd>
+      <dt>Rotor diameter</dt><dd>{turbine.rotor_diameter} m</dd>
+      <dt>Hub height</dt><dd>{turbine.hub_height} m</dd>
+      <dt>Air density</dt><dd>{turbine.air_density} kg/m³</dd>
+      <dt>Tabulated range</dt><dd>{turbine.cut_in.toFixed(1)} to {turbine.cut_out.toFixed(1)} m/s ({turbine.curve.wind_speeds.length} points)</dd>
+      <dt>Peak power</dt><dd>{turbine.rated_power_kw.toFixed(0)} kW</dd>
+    </dl>
+    <p>
+      The curves are the IEA 15 MW power coefficient and thrust coefficient used by the wake cases.
+      The power curve in kW is derived once from the power coefficient at the reference air density,
+      <code>P = ½ ρ A U³ Cp</code>, so that every software receives the same power and Ct tables on
+      the same wind speed grid.
+    </p>
+    <div id="turbine-curve-chart" class="chart"></div>
+  </section>
+
+  <section>
+    <h2>How each software ingests the curves</h2>
+    <p>{comparison.execution}</p>
+    <div class="method-grid">
+      {comparison.results.map((result) => (
+        <article class="method-card">
+          <h3>{result.software}</h3>
+          <p class="method-name">{result.turbine_model}</p>
+          <dl>
+            <dt>Inputs</dt>
+            <dd>{result.inputs}</dd>
+            <dt>Interpolation</dt>
+            <dd>{result.interpolation}</dd>
+            <dt>Outside range</dt>
+            <dd>{result.out_of_range}</dd>
+          </dl>
+          <p class="implementation-note">{result.implementation}</p>
+        </article>
+      ))}
+    </div>
+  </section>
+
+  <section>
+    <h2>Power</h2>
+    <p>
+      Each software's power at every wind speed in the sweep. The three curves coincide, so each is
+      drawn with a different line style on top of the common input points.
+    </p>
+    <div id="power-chart" class="chart"></div>
+    <p class="chart-caption">
+      Power error: each software's power minus the common curve, interpolated to the same wind speed.
+    </p>
+    <div id="power-error-chart" class="chart"></div>
+  </section>
+
+  <section>
+    <h2>Thrust coefficient</h2>
+    <p>
+      The thrust coefficient returned by each software. Inside the tabulated range all three agree
+      with the common curve; they differ only in what they report outside it.
+    </p>
+    <div id="ct-chart" class="chart"></div>
+    <p class="chart-caption">
+      Ct error: each software's thrust coefficient minus the common curve, interpolated to the same wind speed.
+    </p>
+    <div id="ct-error-chart" class="chart"></div>
+  </section>
+
+  <section>
+    <h2>Selected wind speeds</h2>
+    <div class="table-scroll">
+      <table>
+        <thead>
+          <tr>
+            <th rowspan="2">Wind speed (m/s)</th>
+            <th colspan="3">Power (kW)</th>
+            <th colspan="3">Thrust coefficient</th>
+          </tr>
+          <tr>
+            {[0, 1].map(() => comparison.results.map((result) => <th>{result.software}</th>))}
+          </tr>
+        </thead>
+        <tbody>
+          {selectedIndices.map((index) => (
+            <tr>
+              <td>{comparison.wind_speeds[index].toFixed(1)}</td>
+              {comparison.results.map((result) => <td>{formatPower(result.power_kw[index])}</td>)}
+              {comparison.results.map((result) => <td>{formatCt(result.ct[index])}</td>)}
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section>
+    <h2>Error against the common curve</h2>
+    <p class="comparison-note"><strong>Reference:</strong> {comparison.reference}</p>
+    <div class="table-scroll">
+      <table>
+        <thead>
+          <tr>
+            <th>Software</th>
+            <th>Max power error, tabulated range (kW)</th>
+            <th>Max power error, all speeds (kW)</th>
+            <th>Max Ct error, tabulated range</th>
+            <th>Max Ct error, all speeds</th>
+          </tr>
+        </thead>
+        <tbody>
+          {comparison.results.map((result) => (
+            <tr>
+              <td><strong>{result.software}</strong></td>
+              <td>{formatError(result.max_abs_power_error_in_range_kw)}</td>
+              <td>{formatError(result.max_abs_power_error_kw)}</td>
+              <td>{formatError(result.max_abs_ct_error_in_range)}</td>
+              <td>{formatError(result.max_abs_ct_error)}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section>
+    <h2>How to interpret this comparison</h2>
+    <ul>
+      <li>
+        Power agrees to floating-point precision across the full sweep, including the zero power
+        below cut-in and above cut-out. With linear interpolation of the same table, no
+        disagreement is expected.
+      </li>
+      <li>
+        The only disagreement is the thrust coefficient outside the tabulated range. FOXES and
+        PyWake report zero, while FLORIS clips Ct to a floor of 0.0001.
+      </li>
+      <li>
+        PyWake holds the end values of a tabular curve unless a cut-in and cut-out wind speed are
+        given. They are set to the ends of the common curve here so that all three treat the idle
+        turbine alike.
+      </li>
+      <li>
+        This comparison uses the reference air density throughout. It does not test air density
+        corrections, yaw or tilt losses, or rotor-averaged wind speeds in sheared or waked flow.
+      </li>
+    </ul>
+  </section>
+
+  <script define:vars={{ comparison }}>
+    const colors = { FLORIS: '#2ca02c', FOXES: '#d62728', PyWake: '#1f77b4' };
+    const styles = {
+      FLORIS: { dash: 'solid', width: 6 },
+      FOXES: { dash: 'dash', width: 3.5 },
+      PyWake: { dash: 'dot', width: 2 },
+    };
+    const speeds = comparison.wind_speeds;
+    const curve = comparison.turbine.curve;
+
+    const lineTraces = (key, unit) =>
+      comparison.results.map((result) => ({
+        x: speeds,
+        y: result[key],
+        mode: 'lines',
+        name: result.software,
+        line: { color: colors[result.software], ...styles[result.software] },
+        hovertemplate: `${result.software}<br>%{x:.1f} m/s<br>%{y:.4f} ${unit}<extra></extra>`,
+      }));
+
+    const inputTrace = (key, name) => ({
+      x: curve.wind_speeds,
+      y: curve[key],
+      mode: 'markers',
+      name,
+      marker: { color: '#111827', size: 5, symbol: 'circle-open' },
+      hovertemplate: `${name}<br>%{x:.2f} m/s<br>%{y:.4f}<extra></extra>`,
+    });
+
+    const layout = (yTitle, height = 380) => ({
+      xaxis: { title: 'Wind speed (m/s)', range: [0, 30] },
+      yaxis: { title: yTitle, rangemode: 'tozero' },
+      height,
+      margin: { t: 20, b: 55, l: 70, r: 20 },
+      legend: { orientation: 'h', y: 1.12 },
+    });
+    const config = { responsive: true };
+
+    Plotly.newPlot(
+      'turbine-curve-chart',
+      [
+        {
+          x: curve.wind_speeds,
+          y: curve.power_kw,
+          mode: 'lines+markers',
+          name: 'Power (kW)',
+          line: { color: '#111827' },
+          marker: { size: 5 },
+        },
+        {
+          x: curve.wind_speeds,
+          y: curve.ct,
+          mode: 'lines+markers',
+          name: 'Ct',
+          yaxis: 'y2',
+          line: { color: '#ea580c' },
+          marker: { size: 5 },
+        },
+      ],
+      {
+        xaxis: { title: 'Wind speed (m/s)', range: [0, 30] },
+        yaxis: { title: 'Power (kW)', rangemode: 'tozero' },
+        yaxis2: {
+          title: 'Thrust coefficient',
+          overlaying: 'y',
+          side: 'right',
+          range: [0, 1],
+        },
+        height: 360,
+        margin: { t: 20, b: 55, l: 70, r: 60 },
+        legend: { orientation: 'h', y: 1.12 },
+      },
+      config
+    );
+
+    Plotly.newPlot(
+      'power-chart',
+      [...lineTraces('power_kw', 'kW'), inputTrace('power_kw', 'Common curve')],
+      layout('Power (kW)'),
+      config
+    );
+    Plotly.newPlot(
+      'ct-chart',
+      [...lineTraces('ct', ''), inputTrace('ct', 'Common curve')],
+      { ...layout('Thrust coefficient'), yaxis: { title: 'Thrust coefficient', range: [0, 1] } },
+      config
+    );
+    const errorTraces = (key, reference) =>
+      comparison.results.map((result) => ({
+        x: speeds,
+        y: result[key].map((value, index) => value - reference[index]),
+        mode: 'lines',
+        name: result.software,
+        line: { color: colors[result.software], ...styles[result.software] },
+        hovertemplate: `${result.software}<br>%{x:.1f} m/s<br>%{y:.3e}<extra></extra>`,
+      }));
+    const errorLayout = (yTitle) => ({
+      ...layout(yTitle, 300),
+      yaxis: { title: yTitle, exponentformat: 'e', zeroline: true },
+    });
+
+    Plotly.newPlot(
+      'power-error-chart',
+      errorTraces('power_kw', comparison.reference_curves.power_kw),
+      errorLayout('Power error (kW)'),
+      config
+    );
+    Plotly.newPlot(
+      'ct-error-chart',
+      errorTraces('ct', comparison.reference_curves.ct),
+      errorLayout('Ct error'),
+      config
+    );
+  </script>
+
+  <style>
+    .turbine-facts {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 0.25rem 1rem;
+    }
+    .turbine-facts dt { font-weight: 700; }
+    .turbine-facts dd { margin: 0; }
+    .method-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1rem;
+    }
+    .method-card {
+      border: 1px solid #e5e7eb;
+      border-radius: 8px;
+      padding: 1rem;
+    }
+    .method-card h3 { margin-top: 0; }
+    .method-name { color: #4338ca; font-weight: 700; }
+    .method-card dl { margin: 0; }
+    .method-card dt { font-weight: 700; margin-top: 0.5rem; }
+    .method-card dd { margin: 0; }
+    .implementation-note { color: #4b5563; font-size: 0.9rem; }
+    .comparison-note {
+      border-left: 3px solid #6366f1;
+      background: #eef2ff;
+      padding: 0.75rem 1rem;
+    }
+    .table-scroll { overflow-x: auto; }
+    .chart-caption { color: #4b5563; font-size: 0.9rem; margin-bottom: 0; }
+  </style>
+</Layout>
