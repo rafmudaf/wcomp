@@ -1,6 +1,6 @@
 ---
 import Layout from '../../layouts/Layout.astro';
-import { getAllCases } from '../../lib/dataset.js';
+import { getAllCases, getCaseMetrics } from '../../lib/dataset.js';
 
 export function getStaticPaths() {
   return getAllCases().map((c) => ({ params: { case: c.id }, props: { caseData: c } }));
@@ -16,6 +16,100 @@ const formatValue = (value) => typeof value === 'string' ? value : JSON.stringif
 const formatParameters = (parameters) => Object.entries(parameters)
   .map(([name, value]) => `${name} = ${formatValue(value)}`)
   .join(', ');
+
+// Pairwise metrics are read at build time so the numbers quoted in the interpretation
+// below always match the table.
+const metrics = getCaseMetrics(caseData.id);
+const pairLabel = (m) => m.pair.join(' vs ');
+const metricsFor = (id) => getCaseMetrics(id).filter((m) => m.target === 'streamwise');
+const streamwise = metricsFor(caseData.id).sort((a, b) => a.rmse - b.rmse);
+const closest = streamwise[0];
+const furthest = streamwise[streamwise.length - 1];
+const AGREE_RMSE = 0.005;
+const allAgree = furthest.rmse < AGREE_RMSE;
+
+function xsectionLabelsOrdered(c) {
+  return [...c.xsection_labels].sort((a, b) => c.xsection_locations_d[a] - c.xsection_locations_d[b]);
+}
+
+// Cross-section RMSE (m/s) for the pair that disagrees most, ordered by distance downstream.
+const xsectionTrend = xsectionLabelsOrdered(caseData).map((label) => {
+  const row = metrics.find((m) => m.target === `xsection:${label}` && pairLabel(m) === pairLabel(furthest));
+  return { label, row };
+}).filter((entry) => entry.row);
+
+const contourRows = metrics.filter((m) => m.target === 'contour');
+const spikyContour = contourRows
+  .filter((m) => m.max_abs > 10 * m.rmse)
+  .sort((a, b) => b.max_abs - a.max_abs)[0];
+
+// Cases whose only change from a baseline case is the added yaw/deflection model.
+const undeflectedModel = { jimenez: 'jensen', bastankhah2016_deflection: 'bastankhah2016' }[caseData.wake_model];
+const undeflectedLabel = { jensen: 'Jensen', bastankhah2016: 'Bastankhah 2016' }[undeflectedModel];
+const undeflected = undeflectedModel
+  ? metricsFor(`${caseData.scenario}__${undeflectedModel}`)
+  : null;
+const maxRmse = (rows) => Math.max(...rows.map((m) => m.rmse));
+
+const formatRmse = (value) => value.toFixed(value < 0.1 ? 3 : 2);
+const formatPercent = (value) => `${(100 * value).toFixed(1)}%`;
+
+// Observations about each wake model that hold for the committed dataset. `all` applies to both
+// scenarios; the others to one scenario only. Causes are given as candidates, not conclusions,
+// because these cases do not isolate individual model components.
+const modelGuidance = {
+  jensen: {
+    all: [
+      'The Jensen deficit is a top hat: it drops from the full deficit to zero at the wake edge, so two grid points on either side of the edge can differ by several m/s. Expect large maximum errors in the contours even when the RMSE is small.',
+    ],
+    one_turbine: [
+      'The three profiles coincide, so the Jensen deficit and its expansion rate are implemented consistently for a single wake.',
+    ],
+    four_turbine: [
+      'Downstream of the last turbine FOXES and PyWake coincide in every cross-section while FLORIS departs from both. Because the one-turbine scenario agrees exactly, the cause is more likely in how waked turbines are handled, such as the thrust computed from a rotor-averaged waked inflow (see the rotor velocity averaging comparison), than in the deficit equation.',
+    ],
+  },
+  jimenez: {
+    all: [
+      'The Jensen top-hat deficit makes the contour maximum errors sensitive to which side of the wake edge a grid point falls on, so judge overall agreement by RMSE.',
+      'FLORIS maps the Jim\u00e9nez coefficient as kd = beta / 2 (see the implementation notes above). Beyond that mapping, each package applies yaw to the thrust coefficient differently, which scales the deflection and is a leading candidate for the remaining separation.',
+    ],
+    four_turbine: [
+      'Which software stands apart depends on the plane. At 4D past the first (yawed) turbine FLORIS and FOXES agree closely while PyWake differs from both. Downstream of the last turbine FOXES and PyWake nearly coincide while FLORIS differs.',
+    ],
+  },
+  bastankhah2014: {
+    all: [
+      'The Gaussian deficit has no sharp edge, so the largest contour errors are confined to a few points at the rotor plane rather than along a wake boundary.',
+    ],
+    one_turbine: [
+      'FOXES and PyWake agree closely for a single wake, so the separation in the four-turbine scenario appears with wake interaction rather than from the deficit equation.',
+    ],
+  },
+  bastankhah2016: {
+    all: [
+      'FLORIS and FOXES already differ with a single turbine, so the formulation of one wake (for example how the ka and kb coefficients set the expansion) matters. FLORIS also adds wake turbulence, which FOXES does not configure, and that can further change the expansion of downstream wakes.',
+    ],
+  },
+  bastankhah2016_deflection: {
+    all: [
+      'FLORIS and FOXES already differ with a single turbine, so the formulation of one wake (for example how the ka and kb coefficients set the expansion) matters. FLORIS also adds wake turbulence, which FOXES does not configure, and that can further change the expansion of downstream wakes.',
+    ],
+  },
+  turbopark: {
+    all: [
+      'TurbOPark depends on the local turbulence intensity. FLORIS adds wake turbulence with Crespo-Hern\u00e1ndez while FOXES and PyWake configure none.',
+    ],
+    one_turbine: [
+      'With a single turbine all three agree along the profiles, so the TurbOPark deficit is consistent for one wake.',
+    ],
+    four_turbine: [
+      'FLORIS separates from both FOXES and PyWake, which stay close to each other. Wake-added turbulence only matters when wakes overlap, so it is a leading candidate; this page does not isolate it.',
+    ],
+  },
+};
+const guidance = modelGuidance[caseData.wake_model] ?? {};
+const guidanceItems = [...(guidance.all ?? []), ...(guidance[caseData.scenario] ?? [])];
 ---
 <Layout title={`${caseData.wake_model} (${caseData.scenario})`}>
   <p><a href={base}>&larr; All comparisons</a></p>
@@ -127,6 +221,68 @@ const formatParameters = (parameters) => Object.entries(parameters)
       </thead>
       <tbody></tbody>
     </table>
+  </section>
+
+  <section>
+    <h2>How to interpret this comparison</h2>
+    <ul>
+      <li>
+        {allAgree ? (
+          <>
+            Along the hub-height streamwise line every software pair agrees to within
+            {' '}{AGREE_RMSE} m/s RMSE (largest: {pairLabel(furthest)}, {formatRmse(furthest.rmse)} m/s). For this
+            configuration the streamwise profiles are equivalent at plotting precision.
+          </>
+        ) : (
+          <>
+            {streamwise.length === 1 ? (
+              <>Along the hub-height streamwise line {pairLabel(furthest)} differ by</>
+            ) : (
+              <>
+                Along the hub-height streamwise line the closest pair is {pairLabel(closest)}{' '}
+                ({formatRmse(closest.rmse)} m/s RMSE{closest.nrmse !== null ? `, ${formatPercent(closest.nrmse)} NRMSE` : ''}) and
+                the furthest is {pairLabel(furthest)}, at
+              </>
+            )}
+            {' '}{formatRmse(furthest.rmse)} m/s RMSE{furthest.nrmse !== null ? ` (${formatPercent(furthest.nrmse)} NRMSE)` : ''}.
+            For scale, the free-stream wind speed is {caseData.wind_speed} m/s.
+          </>
+        )}
+      </li>
+      {!allAgree && xsectionTrend.length > 1 && (
+        <li>
+          For {pairLabel(furthest)}, cross-section RMSE is
+          {' '}{xsectionTrend.map(({ label, row }) => `${formatRmse(row.rmse)} m/s at ${label.replaceAll('_', ' ')}`).join(', ')}.
+          NRMSE is normalized by the range of the first-listed software's own values in that plot, so it can
+          rise with distance even as RMSE falls, because the wake profile becomes shallower.
+        </li>
+      )}
+      {spikyContour && (
+        <li>
+          The horizontal contour shows how a small RMSE can hide a large maximum error: {pairLabel(spikyContour)} has an RMSE of
+          {' '}{formatRmse(spikyContour.rmse)} m/s but a maximum of {formatRmse(spikyContour.max_abs)} m/s. Those maxima come from a
+          small fraction of grid points, found at the rotor plane (X = 0) or at the sharp edge of a wake, where
+          the packages disagree about whether a point is inside the wake. Use RMSE for overall agreement and
+          the maximum to locate where to look.
+        </li>
+      )}
+      {undeflected && (
+        <li>
+          Compared with the same scenario without yaw ({undeflectedLabel}), the largest streamwise RMSE between any pair goes from
+          {' '}{formatRmse(maxRmse(undeflected))} to {formatRmse(maxRmse(streamwise))} m/s. A similar value means the separation comes mostly from
+          the underlying velocity model; a clearly larger value points to the deflection and yaw-thrust treatment.
+        </li>
+      )}
+      {guidanceItems.map((text) => <li>{text}</li>)}
+      <li>
+        A value of 0.0000 means the two packages agree at the precision shown in the table.
+      </li>
+      <li>
+        These metrics measure how consistently the packages implement the same inputs. They are not errors against
+        measurements, so close agreement does not show that a wake model is accurate, and differences should be read
+        together with the implementation notes above.
+      </li>
+    </ul>
   </section>
 
   <script

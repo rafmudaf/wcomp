@@ -6,10 +6,12 @@ from typing import Callable
 
 import foxes.variables as FV
 import numpy as np
-from floris.core.grid import TurbineGrid
+from floris.core.grid import TurbineCubatureGrid
 from floris.core.rotor_velocity import average_velocity as floris_average_velocity
 from foxes.models.model_book import ModelBook
-from py_wake.rotor_avg_models import GridRotorAvg
+from py_wake.rotor_avg_models import CGIRotorAvg
+
+from .dataset_validation import validate_dataset_document
 
 
 Profile = Callable[[np.ndarray, np.ndarray], np.ndarray]
@@ -60,43 +62,43 @@ class RotorAverageResult:
 
 
 def _floris_rotor_average_method() -> RotorAverageMethod:
-    """Build the configured FLORIS grid and execute FLORIS' native average."""
+    """Build the configured FLORIS cubature grid and execute FLORIS' native average."""
     rotor_radius = 1.0
     hub_height = 1.0
     grid_resolution = 3
-    grid = TurbineGrid(
+    grid = TurbineCubatureGrid(
         turbine_coordinates=[np.array([0.0, 0.0, hub_height])],
         turbine_diameters=np.array([2.0 * rotor_radius]),
         wind_directions=np.array([270.0]),
         grid_resolution=grid_resolution,
     )
-    nodes_y = np.asarray(grid.y_sorted) / rotor_radius
-    nodes_z = (np.asarray(grid.z_sorted) - hub_height) / rotor_radius
+    nodes_y = np.asarray(grid.y_sorted).ravel() / rotor_radius
+    nodes_z = (np.asarray(grid.z_sorted).ravel() - hub_height) / rotor_radius
+    weights = np.asarray(grid.cubature_weights).ravel()
 
     def evaluate(profile: Profile) -> float:
         velocities = profile(nodes_y, nodes_z)
         result = floris_average_velocity(
-            velocities,
+            velocities.reshape(1, 1, 1, -1),
             method=grid.average_method,
             cubature_weights=grid.cubature_weights,
         )
         return float(np.asarray(result).item())
 
-    sample_count = nodes_y.size
     return RotorAverageMethod(
         software="FLORIS",
         method=f"{type(grid).__name__} ({grid_resolution} x {grid_resolution})",
         sampling=(
-            "Nine equal-weight points on a square spanning -0.5R to 0.5R "
-            "in the lateral and vertical directions."
+            "Nine cubature points spanning the rotor disk with FLORIS' native "
+            "linear-cubature quadrature."
         ),
         aggregation=f"{grid.average_method.replace('-', ' ')} of velocity",
-        nodes_y=tuple(float(value) for value in nodes_y.ravel()),
-        nodes_z=tuple(float(value) for value in nodes_z.ravel()),
-        weights=(1.0 / sample_count,) * sample_count,
+        nodes_y=tuple(float(value) for value in nodes_y),
+        nodes_z=tuple(float(value) for value in nodes_z),
+        weights=tuple(float(weight) for weight in weights),
         implementation=(
-            "Executed with FLORIS TurbineGrid(grid_resolution=3) and FLORIS "
-            "average_velocity using the grid's native average_method."
+            "Executed with FLORIS TurbineCubatureGrid(grid_resolution=3) and FLORIS "
+            "average_velocity using the grid's native average_method and cubature weights."
         ),
         evaluator=evaluate,
     )
@@ -149,8 +151,8 @@ def _foxes_rotor_average_method() -> RotorAverageMethod:
 
 
 def _pywake_rotor_average_method() -> RotorAverageMethod:
-    """Build GridRotorAvg and execute PyWake's native deficit averaging."""
-    rotor = GridRotorAvg()
+    """Build CGIRotorAvg(n=9) and execute PyWake's native deficit averaging."""
+    rotor = CGIRotorAvg(n=9)
     nodes_y = np.asarray(rotor.nodes_x)
     nodes_z = np.asarray(rotor.nodes_y)
     weights = getattr(rotor, "nodes_weight", None)
@@ -176,14 +178,14 @@ def _pywake_rotor_average_method() -> RotorAverageMethod:
 
     return RotorAverageMethod(
         software="PyWake",
-        method=type(rotor).__name__,
-        sampling="Four equal-weight points at (+/-R/3, +/-R/3) in the rotor plane.",
+        method="CGIRotorAvg(n=9)",
+        sampling="Nine quadrature points in the rotor plane with built-in CGI weights.",
         aggregation="weighted arithmetic mean of velocity",
         nodes_y=tuple(float(value) for value in nodes_y),
         nodes_z=tuple(float(value) for value in nodes_z),
         weights=tuple(float(weight) for weight in weights),
         implementation=(
-            "Executed with PyWake GridRotorAvg.__call__. PyWake averages the supplied "
+            "Executed with PyWake CGIRotorAvg.__call__. PyWake averages the supplied "
             "deficit at its native rotor nodes; the comparison converts that result back "
             "to normalized velocity."
         ),
@@ -439,8 +441,10 @@ def _main() -> None:
     args = parser.parse_args()
     if args.output:
         args.output.parent.mkdir(parents=True, exist_ok=True)
+        dataset = build_rotor_average_dataset()
+        validate_dataset_document(dataset, "RotorAverageDataset", str(args.output))
         args.output.write_text(
-            json.dumps(build_rotor_average_dataset(), indent=2) + "\n",
+            json.dumps(dataset, indent=2) + "\n",
             encoding="utf-8",
         )
     else:

@@ -4,43 +4,43 @@
   "methods": [
     {
       "software": "FLORIS",
-      "method": "TurbineGrid (3 x 3)",
+      "method": "TurbineCubatureGrid (3 x 3)",
       "sample_count": 9,
-      "sampling": "Nine equal-weight points on a square spanning -0.5R to 0.5R in the lateral and vertical directions.",
-      "aggregation": "cubic mean of velocity",
-      "implementation": "Executed with FLORIS TurbineGrid(grid_resolution=3) and FLORIS average_velocity using the grid's native average_method.",
+      "sampling": "Nine cubature points spanning the rotor disk with FLORIS' native linear-cubature quadrature.",
+      "aggregation": "linear cubature of velocity",
+      "implementation": "Executed with FLORIS TurbineCubatureGrid(grid_resolution=3) and FLORIS average_velocity using the grid's native average_method and cubature weights.",
       "nodes_y": [
-        -0.5,
-        -0.5,
-        -0.5,
+        -0.408248290463863,
+        -0.816496580927726,
+        -0.408248290463863,
         0.0,
         0.0,
         0.0,
-        0.5,
-        0.5,
-        0.5
+        0.408248290463863,
+        0.816496580927726,
+        0.408248290463863
       ],
       "nodes_z": [
-        -0.5,
+        0.7071067811865475,
         0.0,
-        0.5,
-        -0.5,
+        -0.7071067811865475,
         0.0,
-        0.5,
-        -0.5,
         0.0,
-        0.5
+        0.0,
+        -0.7071067811865475,
+        0.0,
+        0.7071067811865475
       ],
       "weights": [
-        0.1111111111111111,
-        0.1111111111111111,
-        0.1111111111111111,
-        0.1111111111111111,
-        0.1111111111111111,
-        0.1111111111111111,
-        0.1111111111111111,
-        0.1111111111111111,
-        0.1111111111111111
+        0.125,
+        0.125,
+        0.125,
+        0.08333333333333333,
+        0.08333333333333333,
+        0.08333333333333333,
+        0.125,
+        0.125,
+        0.125
       ]
     },
     {
@@ -107,28 +107,43 @@
     },
     {
       "software": "PyWake",
-      "method": "GridRotorAvg",
-      "sample_count": 4,
-      "sampling": "Four equal-weight points at (+/-R/3, +/-R/3) in the rotor plane.",
+      "method": "CGIRotorAvg(n=9)",
+      "sample_count": 9,
+      "sampling": "Nine quadrature points in the rotor plane with built-in CGI weights.",
       "aggregation": "weighted arithmetic mean of velocity",
-      "implementation": "Executed with PyWake GridRotorAvg.__call__. PyWake averages the supplied deficit at its native rotor nodes; the comparison converts that result back to normalized velocity.",
+      "implementation": "Executed with PyWake CGIRotorAvg.__call__. PyWake averages the supplied deficit at its native rotor nodes; the comparison converts that result back to normalized velocity.",
       "nodes_y": [
-        -0.3333333333333333,
-        0.3333333333333333,
-        -0.3333333333333333,
-        0.3333333333333333
+        0.0,
+        -1.0,
+        1.0,
+        0.0,
+        0.0,
+        -0.5,
+        -0.5,
+        0.5,
+        0.5
       ],
       "nodes_z": [
-        -0.3333333333333333,
-        -0.3333333333333333,
-        0.3333333333333333,
-        0.3333333333333333
+        0.0,
+        0.0,
+        0.0,
+        -1.0,
+        1.0,
+        -0.5,
+        0.5,
+        -0.5,
+        0.5
       ],
       "weights": [
-        0.25,
-        0.25,
-        0.25,
-        0.25
+        0.16666666666666666,
+        0.041666666666666664,
+        0.041666666666666664,
+        0.041666666666666664,
+        0.041666666666666664,
+        0.16666666666666666,
+        0.16666666666666666,
+        0.16666666666666666,
+        0.16666666666666666
       ]
     }
   ],
@@ -6953,9 +6968,9 @@
         {
           "case": "uniform",
           "software": "FLORIS",
-          "method": "TurbineGrid (3 x 3)",
+          "method": "TurbineCubatureGrid (3 x 3)",
           "sample_count": 9,
-          "aggregation": "cubic mean of velocity",
+          "aggregation": "linear cubature of velocity",
           "rotor_average": 1.0,
           "reference_average": 1.0,
           "absolute_error": 0.0,
@@ -6975,8 +6990,8 @@
         {
           "case": "uniform",
           "software": "PyWake",
-          "method": "GridRotorAvg",
-          "sample_count": 4,
+          "method": "CGIRotorAvg(n=9)",
+          "sample_count": 9,
           "aggregation": "weighted arithmetic mean of velocity",
           "rotor_average": 1.0,
           "reference_average": 0.9999999999999999,
@@ -13805,13 +13820,13 @@
         {
           "case": "linear",
           "software": "FLORIS",
-          "method": "TurbineGrid (3 x 3)",
+          "method": "TurbineCubatureGrid (3 x 3)",
           "sample_count": 9,
-          "aggregation": "cubic mean of velocity",
-          "rotor_average": 1.006622709560113,
-          "reference_average": 1.0099016340499611,
-          "absolute_error": 0.003278924489848123,
-          "relative_error": 0.003246776101053333
+          "aggregation": "linear cubature of velocity",
+          "rotor_average": 1.0,
+          "reference_average": 1.0,
+          "absolute_error": 0.0,
+          "relative_error": 0.0
         },
         {
           "case": "linear",
@@ -13827,8 +13842,8 @@
         {
           "case": "linear",
           "software": "PyWake",
-          "method": "GridRotorAvg",
-          "sample_count": 4,
+          "method": "CGIRotorAvg(n=9)",
+          "sample_count": 9,
           "aggregation": "weighted arithmetic mean of velocity",
           "rotor_average": 1.0,
           "reference_average": 0.9999999999999999,
@@ -20657,13 +20672,13 @@
         {
           "case": "quadratic",
           "software": "FLORIS",
-          "method": "TurbineGrid (3 x 3)",
+          "method": "TurbineCubatureGrid (3 x 3)",
           "sample_count": 9,
-          "aggregation": "cubic mean of velocity",
-          "rotor_average": 0.9345293623739288,
-          "reference_average": 0.9036885658095781,
-          "absolute_error": 0.03084079656435068,
-          "relative_error": 0.0341276826234065
+          "aggregation": "linear cubature of velocity",
+          "rotor_average": 0.9111111111111109,
+          "reference_average": 0.8999999999999989,
+          "absolute_error": 0.01111111111111196,
+          "relative_error": 0.012345679012346638
         },
         {
           "case": "quadratic",
@@ -20679,13 +20694,13 @@
         {
           "case": "quadratic",
           "software": "PyWake",
-          "method": "GridRotorAvg",
-          "sample_count": 4,
+          "method": "CGIRotorAvg(n=9)",
+          "sample_count": 9,
           "aggregation": "weighted arithmetic mean of velocity",
-          "rotor_average": 0.9555555555555556,
+          "rotor_average": 0.9,
           "reference_average": 0.8999999999999988,
-          "absolute_error": 0.0555555555555568,
-          "relative_error": 0.06172839506172986
+          "absolute_error": 1.2212453270876722e-15,
+          "relative_error": 1.3569392523196377e-15
         }
       ]
     },
@@ -27509,13 +27524,13 @@
         {
           "case": "partial_wake",
           "software": "FLORIS",
-          "method": "TurbineGrid (3 x 3)",
+          "method": "TurbineCubatureGrid (3 x 3)",
           "sample_count": 9,
-          "aggregation": "cubic mean of velocity",
-          "rotor_average": 0.935980825477631,
-          "reference_average": 0.952786267041659,
-          "absolute_error": 0.01680544156402808,
-          "relative_error": 0.017638207167078413
+          "aggregation": "linear cubature of velocity",
+          "rotor_average": 0.9336531339020006,
+          "reference_average": 0.9461319333940307,
+          "absolute_error": 0.012478799492030124,
+          "relative_error": 0.013189280534338696
         },
         {
           "case": "partial_wake",
@@ -27531,13 +27546,13 @@
         {
           "case": "partial_wake",
           "software": "PyWake",
-          "method": "GridRotorAvg",
-          "sample_count": 4,
+          "method": "CGIRotorAvg(n=9)",
+          "sample_count": 9,
           "aggregation": "weighted arithmetic mean of velocity",
-          "rotor_average": 0.909610592345907,
+          "rotor_average": 0.9515277236004356,
           "reference_average": 0.9461319333940306,
-          "absolute_error": 0.036521341048123546,
-          "relative_error": 0.03860068533688704
+          "absolute_error": 0.005395790206405016,
+          "relative_error": 0.005702999778317237
         }
       ]
     }

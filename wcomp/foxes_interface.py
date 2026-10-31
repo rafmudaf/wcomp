@@ -375,7 +375,10 @@ class WCompFoxes(WCompBase):
 
         mbook.wake_models[wake_model_name] = _velocity_model(
             **_velocity_model_parameters,
-            superposition="ws_quadratic"
+            # Scale each deficit by the ambient (freestream) speed, matching FLORIS.
+            # The target-point ambient speed is used because the source turbine's
+            # ambient rotor-effective speed is reduced by yaw projection.
+            superposition="ws_quadratic_amb_target"
         )
         # mbook.print_toc(subset="wake_models")
 

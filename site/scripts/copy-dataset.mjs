@@ -5,6 +5,7 @@
 import { cpSync, existsSync, rmSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import path from 'node:path';
+import { validateDataset } from './validate-dataset.mjs';
 
 const siteRoot = path.resolve(fileURLToPath(import.meta.url), '..', '..');
 const source = path.join(siteRoot, '..', 'dataset');
@@ -18,6 +19,7 @@ if (!existsSync(source)) {
   process.exit(1);
 }
 
+validateDataset(source);
 rmSync(dest, { recursive: true, force: true });
 cpSync(source, dest, { recursive: true });
 console.log(`Copied dataset from ${source} to ${dest}`);

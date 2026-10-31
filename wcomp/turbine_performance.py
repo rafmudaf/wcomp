@@ -28,6 +28,7 @@ from py_wake.wind_turbines.power_ct_functions import PowerCtTabular
 from windIO import load_yaml
 
 from .cache import quiet
+from .dataset_validation import validate_dataset_document
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
 TURBINE_FILE = (
@@ -117,7 +118,7 @@ def evaluate_floris(turbine: CommonTurbine, wind_speeds: np.ndarray) -> dict[str
             "console": {"enable": False, "level": "WARNING"},
             "file": {"enable": False, "level": "WARNING"},
         },
-        "solver": {"type": "turbine_grid", "turbine_grid_points": 3},
+        "solver": {"type": "turbine_cubature_grid", "turbine_grid_points": 3},
         "farm": {
             "layout_x": [0.0],
             "layout_y": [0.0],
@@ -398,8 +399,10 @@ def _main() -> None:
     parser.add_argument("--output", type=Path, required=True, help="Write the site dataset as JSON.")
     args = parser.parse_args()
     args.output.parent.mkdir(parents=True, exist_ok=True)
+    dataset = build_turbine_performance_dataset()
+    validate_dataset_document(dataset, "TurbinePerformanceDataset", str(args.output))
     args.output.write_text(
-        json.dumps(build_turbine_performance_dataset(), indent=2) + "\n", encoding="utf-8"
+        json.dumps(dataset, indent=2) + "\n", encoding="utf-8"
     )
 
 

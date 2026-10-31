@@ -3,19 +3,19 @@
 SOFTWARE_NOTES = {
     "FLORIS": (
         "Uses sum-of-squares freestream deficit superposition (sosfs), a nine-point "
-        "turbine-grid solver, and Crespo-Hernandez wake-added turbulence. Secondary "
+        "TurbineCubatureGrid solver, and Crespo-Hernandez wake-added turbulence. Secondary "
         "steering, yaw-added recovery, transverse velocities, and active wake mixing "
         "are disabled."
     ),
     "FOXES": (
-        "Uses Betz induction, quadratic wind-speed superposition, grid16 rotor sampling, "
-        "rotor-point partial wakes, and the rotor_wd wake frame. No separate wake-added "
-        "turbulence model is configured."
+        "Uses Betz induction, quadratic wind-speed superposition scaled by the ambient "
+        "(freestream) speed, grid16 rotor sampling, rotor-point partial wakes, and the "
+        "rotor_wd wake frame. No separate wake-added turbulence model is configured."
     ),
     "PyWake": (
-        "Uses PropagateDownwind with squared-sum superposition, GridRotorAvg rotor "
-        "averaging, effective local wind speed, and ct2a_mom1d induction. No separate "
-        "wake-added turbulence model is configured."
+        "Uses PropagateDownwind with squared-sum superposition, CGIRotorAvg(n=9) rotor "
+        "averaging, freestream (non-effective) wind speed for deficit scaling, and "
+        "ct2a_mom1d induction. No separate wake-added turbulence model is configured."
     ),
 }
 

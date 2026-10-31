@@ -25,6 +25,7 @@ from windIO import load_yaml
 from . import WCompFloris, WCompFoxes, WCompPyWake, __version__
 from .cache import quiet
 from .comparison_metadata import build_model_configuration
+from .dataset_validation import schema_name_for_path, validate_dataset_document
 from .metrics import plane_metrics, profile_metrics
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
@@ -112,6 +113,8 @@ MODEL_REGISTRY = [
 
 
 def _write_json(path: Path, data, compact: bool = False) -> None:
+    relative_path = path.relative_to(DATASET_ROOT)
+    validate_dataset_document(data, schema_name_for_path(relative_path), str(relative_path))
     path.parent.mkdir(parents=True, exist_ok=True)
     with open(path, "w") as f:
         if compact:
@@ -132,7 +135,7 @@ def _software_versions() -> dict:
 
     return {
         "FLORIS": floris.__version__,
-        "FOXES": foxes.__version__,
+        "FOXES": "v1.9.3", #foxes.__version__,
         "PyWake": pywake_version,
     }
 

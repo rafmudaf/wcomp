@@ -122,11 +122,12 @@ class WCompPyWake(WCompBase):
             deflectionModel=_deflection_model,
             wake_deficitModel=_velocity_model(
                 **_velocity_model_parameters,
-                use_effective_ws=True,
+                # Scale each deficit by the freestream speed, matching FLORIS
+                use_effective_ws=False,
                 ct2a=ct2a_mom1d
             ),
             superpositionModel=SquaredSum(),
-            rotorAvgModel=GridRotorAvg()
+            rotorAvgModel=CGIRotorAvg(n=9)
         )
         self.sim_res = self.wfm(
             self.x,

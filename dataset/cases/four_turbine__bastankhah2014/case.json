@@ -47,7 +47,7 @@
           }
         ],
         "notes": [
-          "Uses Betz induction, quadratic wind-speed superposition, grid16 rotor sampling, rotor-point partial wakes, and the rotor_wd wake frame. No separate wake-added turbulence model is configured."
+          "Uses Betz induction, quadratic wind-speed superposition scaled by the ambient (freestream) speed, grid16 rotor sampling, rotor-point partial wakes, and the rotor_wd wake frame. No separate wake-added turbulence model is configured."
         ]
       },
       {
@@ -62,7 +62,7 @@
           }
         ],
         "notes": [
-          "Uses PropagateDownwind with squared-sum superposition, GridRotorAvg rotor averaging, effective local wind speed, and ct2a_mom1d induction. No separate wake-added turbulence model is configured.",
+          "Uses PropagateDownwind with squared-sum superposition, CGIRotorAvg(n=9) rotor averaging, freestream (non-effective) wind speed for deficit scaling, and ct2a_mom1d induction. No separate wake-added turbulence model is configured.",
           "Uses the lower-level BastankhahGaussianDeficit class rather than PyWake's Bastankhah_PorteAgel_2014 literature preset."
         ]
       }

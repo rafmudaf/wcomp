@@ -20,6 +20,7 @@ REQUIRED = [
     "numpy>=2.4",
     "windIO>=2",
     "matplotlib",
+    "jsonschema>=4.20",
 ]
 EXTRAS = {
     "docs": {

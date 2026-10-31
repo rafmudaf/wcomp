@@ -75,7 +75,7 @@ basic_dict = {
         'file': {'enable': False, 'level': 'WARNING'}
     },
     'solver': {
-        'type': 'turbine_grid', 'turbine_grid_points': 3
+        'type': 'turbine_cubature_grid', 'turbine_grid_points': 3
     },
     'farm': {
         'layout_x': [0.0, 630.0, 1260.0],

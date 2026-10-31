@@ -46,7 +46,7 @@
           }
         ],
         "notes": [
-          "Uses sum-of-squares freestream deficit superposition (sosfs), a nine-point turbine-grid solver, and Crespo-Hernandez wake-added turbulence. Secondary steering, yaw-added recovery, transverse velocities, and active wake mixing are disabled."
+          "Uses sum-of-squares freestream deficit superposition (sosfs), a nine-point TurbineCubatureGrid solver, and Crespo-Hernandez wake-added turbulence. Secondary steering, yaw-added recovery, transverse velocities, and active wake mixing are disabled."
         ]
       },
       {
@@ -66,7 +66,7 @@
           }
         ],
         "notes": [
-          "Uses Betz induction, quadratic wind-speed superposition, grid16 rotor sampling, rotor-point partial wakes, and the rotor_wd wake frame. No separate wake-added turbulence model is configured.",
+          "Uses Betz induction, quadratic wind-speed superposition scaled by the ambient (freestream) speed, grid16 rotor sampling, rotor-point partial wakes, and the rotor_wd wake frame. No separate wake-added turbulence model is configured.",
           "The ka and kb inputs configure a separate kTI turbine model; the wake model receives k=None so expansion is supplied by that turbine model."
         ]
       }
