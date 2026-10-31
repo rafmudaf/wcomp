@@ -1,0 +1,60 @@
+---
+import { getAlignments, pageUrl } from '../lib/dataset.js';
+
+interface Props {
+  alignment: string;
+  // Path of the current page relative to the alignment root, e.g. 'compare/rotor-averaging/'.
+  pagePath: string;
+}
+const { alignment, pagePath } = Astro.props;
+const base = import.meta.env.BASE_URL;
+const alignments = getAlignments();
+---
+<nav class="alignment-toggle" aria-label="Solver configuration">
+  <span class="alignment-toggle-label">Configuration</span>
+  {alignments.map((item) => (
+    <a
+      href={pageUrl(base, item.id, pagePath)}
+      class:list={[{ active: item.id === alignment }]}
+      aria-current={item.id === alignment ? 'page' : undefined}
+      data-alignment-link
+    >{item.label}</a>
+  ))}
+</nav>
+<script is:inline>
+  // Carry the section anchor over so the toggle keeps the reader at the same place.
+  const links = document.querySelectorAll('[data-alignment-link]');
+  const base = Array.from(links, (link) => link.getAttribute('href'));
+  const syncHash = () => links.forEach((link, i) => { link.href = base[i] + location.hash; });
+  syncHash();
+  window.addEventListener('hashchange', syncHash);
+</script>
+<style>
+  .alignment-toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: 0;
+    margin-left: auto;
+    border: 1px solid #d1d5db;
+    border-radius: 999px;
+    overflow: hidden;
+    font-size: 0.9rem;
+  }
+  .alignment-toggle-label {
+    padding: 0.25rem 0.75rem;
+    color: #6b7280;
+    background: #f9fafb;
+    border-right: 1px solid #d1d5db;
+  }
+  .alignment-toggle a {
+    padding: 0.25rem 0.9rem;
+    color: #2563eb;
+    text-decoration: none;
+    margin: 0;
+  }
+  .alignment-toggle a.active {
+    background: #2563eb;
+    color: #fff;
+    font-weight: 600;
+  }
+</style>

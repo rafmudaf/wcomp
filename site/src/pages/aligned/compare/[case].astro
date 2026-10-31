@@ -1,0 +1,11 @@
+---
+import CasePage from '../../../components/CasePage.astro';
+import { getAllCases } from '../../../lib/dataset.js';
+
+export function getStaticPaths() {
+  return getAllCases('aligned').map((c) => ({ params: { case: c.id }, props: { caseData: c } }));
+}
+
+const { caseData } = Astro.props;
+---
+<CasePage alignment="aligned" caseData={caseData} />

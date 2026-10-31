@@ -12,16 +12,58 @@ function readJson(relativePath) {
 }
 
 /**
+ * @typedef {Object} Alignment
+ * @property {string} id
+ * @property {string} label
+ * @property {string} description
+ * @property {Array<{name: string} & Record<string, string>>} settings  one row per setting, one column per software
+ * @property {Array<{software: string, note: string}>} residual_differences
+ * @property {string[]} cases
+ */
+
+/**
  * @typedef {Object} Manifest
  * @property {string} generated_at
  * @property {string} wcomp_version
  * @property {Record<string, string>} software_versions
- * @property {string[]} cases
+ * @property {Alignment[]} alignments
  */
 
 /** @returns {Manifest} */
 export function getManifest() {
   return readJson('manifest.json');
+}
+
+/** The alignment shown at the site root; every other alignment lives under `<id>/`. */
+export const DEFAULT_ALIGNMENT = 'default';
+
+/** @returns {Alignment[]} */
+export function getAlignments() {
+  return getManifest().alignments;
+}
+
+/** @param {string} alignment @returns {Alignment} */
+export function getAlignment(alignment) {
+  const found = getAlignments().find((item) => item.id === alignment);
+  if (!found) throw new Error(`Unknown alignment '${alignment}'`);
+  return found;
+}
+
+/**
+ * URL of a page in an alignment. `pagePath` is relative to the alignment root,
+ * e.g. '' (home) or 'compare/rotor-averaging/'. The default alignment keeps the
+ * site-root URLs; others are prefixed with their id.
+ * @param {string} base
+ * @param {string} alignment
+ * @param {string} [pagePath]
+ */
+export function pageUrl(base, alignment, pagePath = '') {
+  return `${base}${alignment === DEFAULT_ALIGNMENT ? '' : `${alignment}/`}${pagePath}`;
+}
+
+/** URL (under `base`) of an alignment's copied dataset files, used by client-side fetches. */
+export function datasetUrl(base, alignment) {
+  return `${base}dataset/${alignment}`;
 }
 
 /**
@@ -61,8 +103,8 @@ export function getManifest() {
  *   }>
  * }}
  */
-export function getRotorAverageComparison() {
-  return readJson('rotor_average.json');
+export function getRotorAverageComparison(alignment) {
+  return readJson(`${alignment}/rotor_average.json`);
 }
 
 /**
@@ -98,8 +140,8 @@ export function getRotorAverageComparison() {
  *   }>
  * }}
  */
-export function getTurbinePerformanceComparison() {
-  return readJson('turbine_performance.json');
+export function getTurbinePerformanceComparison(alignment) {
+  return readJson(`${alignment}/turbine_performance.json`);
 }
 
 /**
@@ -140,20 +182,21 @@ export function getModels() {
  * @property {number} xsection_contour_location_d
  */
 
-/** @param {string} caseId @returns {CaseSummary} */
-export function getCaseSummary(caseId) {
-  return readJson(`cases/${caseId}/case.json`);
+/** @param {string} alignment @param {string} caseId @returns {CaseSummary} */
+export function getCaseSummary(alignment, caseId) {
+  return readJson(`${alignment}/cases/${caseId}/case.json`);
 }
 
-/** @returns {Array<{id: string} & CaseSummary>} */
-export function getAllCases() {
-  return getManifest().cases.map((id) => ({ id, ...getCaseSummary(id) }));
+/** @param {string} alignment @returns {Array<{id: string} & CaseSummary>} */
+export function getAllCases(alignment) {
+  return getAlignment(alignment).cases.map((id) => ({ id, ...getCaseSummary(alignment, id) }));
 }
 
 /**
+ * @param {string} alignment
  * @param {string} caseId
  * @returns {Array<{pair: string[], target: string, rmse: number, max_abs: number, mean_abs: number, nrmse: number}>}
  */
-export function getCaseMetrics(caseId) {
-  return readJson(`cases/${caseId}/metrics.json`);
+export function getCaseMetrics(alignment, caseId) {
+  return readJson(`${alignment}/cases/${caseId}/metrics.json`);
 }

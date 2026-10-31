@@ -1,0 +1,52 @@
+---
+import { getAlignment } from '../lib/dataset.js';
+
+interface Props {
+  alignment: string;
+}
+const { alignment } = Astro.props;
+const { label, description, settings, residual_differences } = getAlignment(alignment);
+const softwareNames = Object.keys(settings[0]).filter((key) => key !== 'name');
+---
+<aside class="alignment-banner" data-alignment={alignment}>
+  <p><strong>{label} configuration.</strong> {description}</p>
+  <details>
+    <summary>Solver settings in this view</summary>
+    <table>
+      <thead>
+        <tr><th>Setting</th>{softwareNames.map((name) => <th>{name}</th>)}</tr>
+      </thead>
+      <tbody>
+        {settings.map((row) => (
+          <tr>
+            <td>{row.name}</td>
+            {softwareNames.map((name) => <td>{row[name]}</td>)}
+          </tr>
+        ))}
+      </tbody>
+    </table>
+    {residual_differences.length > 0 && (
+      <>
+        <p>Differences that remain in this view:</p>
+        <ul>
+          {residual_differences.map((item) => <li><strong>{item.software}:</strong> {item.note}</li>)}
+        </ul>
+      </>
+    )}
+  </details>
+</aside>
+<style>
+  .alignment-banner {
+    border: 1px solid #bfdbfe;
+    background: #eff6ff;
+    border-radius: 8px;
+    padding: 0.25rem 1rem;
+    margin: 0 0 1.5rem;
+    font-size: 0.92rem;
+  }
+  .alignment-banner[data-alignment='aligned'] {
+    border-color: #bbf7d0;
+    background: #f0fdf4;
+  }
+  summary { cursor: pointer; color: #2563eb; margin-bottom: 0.25rem; }
+</style>
