@@ -7,7 +7,8 @@ unwaked turbine in uniform flow is then simulated over a sweep of wind speeds,
 so every difference comes from the turbine model rather than the flow.
 
 Run with (inside the `wcomp` conda environment):
-    python -m wcomp.turbine_performance --output dataset/turbine_performance.json
+    python -m wcomp.turbine_performance --output dataset/aligned/turbine_performance.json --alignment aligned
+    python -m wcomp.turbine_performance            # writes every alignment under dataset/
 """
 
 import argparse
@@ -27,7 +28,14 @@ from py_wake.wind_turbines import WindTurbine
 from py_wake.wind_turbines.power_ct_functions import PowerCtTabular
 from windIO import load_yaml
 
+from .analysis_settings import floris_settings
 from .cache import quiet
+from .comparison_metadata import (
+    ALIGNMENT_IDS,
+    DEFAULT_ALIGNMENT,
+    load_alignment_analyses,
+    resolve_output_paths,
+)
 from .dataset_validation import validate_dataset_document
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
@@ -107,8 +115,16 @@ def get_sweep_wind_speeds(turbine: CommonTurbine) -> np.ndarray:
     return np.unique(np.concatenate([sweep, turbine.wind_speeds[[0, -1]]]))
 
 
-def evaluate_floris(turbine: CommonTurbine, wind_speeds: np.ndarray) -> dict[str, np.ndarray]:
-    """Run FLORIS with the common curves as a tabulated `power_thrust_table`."""
+def evaluate_floris(
+    turbine: CommonTurbine, wind_speeds: np.ndarray, analyses: dict | None = None
+) -> dict[str, np.ndarray]:
+    """Run FLORIS with the common curves as a tabulated `power_thrust_table`.
+
+    `analyses` is the case files' `attributes.analyses` block that sets the solver grid;
+    it defaults to the default alignment's.
+    """
+    if analyses is None:
+        analyses = load_alignment_analyses(DEFAULT_ALIGNMENT)
     n = wind_speeds.size
     config = {
         "name": "turbine performance",
@@ -118,7 +134,7 @@ def evaluate_floris(turbine: CommonTurbine, wind_speeds: np.ndarray) -> dict[str
             "console": {"enable": False, "level": "WARNING"},
             "file": {"enable": False, "level": "WARNING"},
         },
-        "solver": {"type": "turbine_cubature_grid", "turbine_grid_points": 3},
+        "solver": floris_settings(analyses).values["solver"],
         "farm": {
             "layout_x": [0.0],
             "layout_y": [0.0],
@@ -328,15 +344,20 @@ SOFTWARE_DESCRIPTIONS = {
 }
 
 
-def build_turbine_performance_dataset() -> dict[str, object]:
+def build_turbine_performance_dataset(alignment: str = DEFAULT_ALIGNMENT) -> dict[str, object]:
     """Build the static dataset consumed by the turbine-performance site page."""
+    analyses = load_alignment_analyses(alignment)
     turbine = get_common_turbine()
     wind_speeds = get_sweep_wind_speeds(turbine)
     reference = reference_curves(turbine, wind_speeds)
 
     results = []
     for software, evaluate in SOFTWARE_EVALUATORS.items():
-        values = evaluate(turbine, wind_speeds)
+        values = (
+            evaluate(turbine, wind_speeds, analyses)
+            if software == "FLORIS"
+            else evaluate(turbine, wind_speeds)
+        )
         power, ct = values["power_kw"], values["ct"]
         inside = (wind_speeds >= turbine.cut_in) & (wind_speeds <= turbine.cut_out)
         results.append(
@@ -396,14 +417,30 @@ def build_turbine_performance_dataset() -> dict[str, object]:
 
 def _main() -> None:
     parser = argparse.ArgumentParser(description="Compare turbine power and thrust curves.")
-    parser.add_argument("--output", type=Path, required=True, help="Write the site dataset as JSON.")
-    args = parser.parse_args()
-    args.output.parent.mkdir(parents=True, exist_ok=True)
-    dataset = build_turbine_performance_dataset()
-    validate_dataset_document(dataset, "TurbinePerformanceDataset", str(args.output))
-    args.output.write_text(
-        json.dumps(dataset, indent=2) + "\n", encoding="utf-8"
+    parser.add_argument(
+        "--output",
+        type=Path,
+        help=(
+            "Write the site dataset to this file (needs a single --alignment). Without it "
+            "the files go to dataset/<alignment>/turbine_performance.json."
+        ),
     )
+    parser.add_argument(
+        "--alignment",
+        choices=[*ALIGNMENT_IDS, "all"],
+        default="all",
+        help="Solver configuration to use (default: all).",
+    )
+    args = parser.parse_args()
+    try:
+        paths = resolve_output_paths(args.alignment, args.output, "turbine_performance.json")
+    except ValueError as error:
+        parser.error(str(error))
+    for alignment, path in paths.items():
+        path.parent.mkdir(parents=True, exist_ok=True)
+        dataset = build_turbine_performance_dataset(alignment)
+        validate_dataset_document(dataset, "TurbinePerformanceDataset", str(path))
+        path.write_text(json.dumps(dataset, indent=2) + "\n", encoding="utf-8")
 
 
 if __name__ == "__main__":

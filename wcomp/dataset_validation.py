@@ -6,6 +6,8 @@ from pathlib import Path, PurePosixPath
 
 from jsonschema import Draft202012Validator, FormatChecker
 
+from .comparison_metadata import ALIGNMENT_IDS
+
 SCHEMA_PATH = Path(__file__).resolve().parent.parent / "dataset" / "schema.json"
 
 
@@ -37,6 +39,10 @@ def schema_name_for_path(relative_path: str | Path) -> str:
         return "Manifest"
     if parts == ("models.json",):
         return "ModelRegistry"
+    # Everything else lives under dataset/<alignment>/.
+    if len(parts) < 2 or parts[0] not in ALIGNMENT_IDS:
+        raise ValueError(f"No dataset schema is defined for path: {relative_path}")
+    parts = parts[1:]
     if parts == ("rotor_average.json",):
         return "RotorAverageDataset"
     if parts == ("turbine_performance.json",):

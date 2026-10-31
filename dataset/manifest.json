@@ -1,23 +1,96 @@
 {
-  "generated_at": "2026-10-08T21:09:22.637076+00:00",
+  "generated_at": "2026-10-31T19:15:10.420658+00:00",
   "wcomp_version": "0.1.0",
   "software_versions": {
     "FLORIS": "4.6.6",
     "FOXES": "v1.9.3",
     "PyWake": "2.6.21.dev30+g7b7ffbca8"
   },
-  "cases": [
-    "one_turbine__jensen",
-    "one_turbine__bastankhah2014",
-    "one_turbine__bastankhah2016",
-    "one_turbine__bastankhah2016_deflection",
-    "one_turbine__jimenez",
-    "one_turbine__turbopark",
-    "four_turbine__jensen",
-    "four_turbine__bastankhah2014",
-    "four_turbine__bastankhah2016",
-    "four_turbine__bastankhah2016_deflection",
-    "four_turbine__jimenez",
-    "four_turbine__turbopark"
+  "alignments": [
+    {
+      "id": "default",
+      "label": "Default",
+      "description": "Each solver runs with its own legacy settings. Differences between the solvers therefore mix model differences with configuration differences such as how the rotor is sampled and which wind speed scales the wake deficit.",
+      "settings": [
+        {
+          "name": "Deficit reference wind speed",
+          "FLORIS": "Freestream (sosfs)",
+          "FOXES": "Local (ws_quadratic)",
+          "PyWake": "Local effective (use_effective_ws=True)"
+        },
+        {
+          "name": "Rotor grid",
+          "FLORIS": "TurbineGrid, 3 x 3 square",
+          "FOXES": "grid16, 4 x 4 cell centers",
+          "PyWake": "GridRotorAvg, 4 points"
+        },
+        {
+          "name": "Power / thrust averaging",
+          "FLORIS": "power cubic-mean, thrust cubic-mean",
+          "FOXES": "linear",
+          "PyWake": "linear"
+        }
+      ],
+      "residual_differences": [],
+      "cases": [
+        "one_turbine__jensen",
+        "one_turbine__bastankhah2014",
+        "one_turbine__bastankhah2016",
+        "one_turbine__bastankhah2016_deflection",
+        "one_turbine__jimenez",
+        "one_turbine__turbopark",
+        "four_turbine__jensen",
+        "four_turbine__bastankhah2014",
+        "four_turbine__bastankhah2016",
+        "four_turbine__bastankhah2016_deflection",
+        "four_turbine__jimenez",
+        "four_turbine__turbopark"
+      ]
+    },
+    {
+      "id": "aligned",
+      "label": "Aligned",
+      "description": "The solver settings that can be matched across the three packages are matched: the wake deficit is scaled by the freestream speed, rotor averaging is linear, and FLORIS and PyWake sample the rotor with a nine-point cubature. The remaining differences are listed below.",
+      "settings": [
+        {
+          "name": "Deficit reference wind speed",
+          "FLORIS": "Freestream (sosfs)",
+          "FOXES": "Freestream (ws_quadratic_amb_target)",
+          "PyWake": "Freestream (use_effective_ws=False)"
+        },
+        {
+          "name": "Rotor grid",
+          "FLORIS": "TurbineCubatureGrid, 9 points",
+          "FOXES": "grid16, 4 x 4 cell centers",
+          "PyWake": "CGIRotorAvg, 9 points"
+        },
+        {
+          "name": "Power / thrust averaging",
+          "FLORIS": "power linear-cubature, thrust linear-cubature",
+          "FOXES": "linear",
+          "PyWake": "linear"
+        }
+      ],
+      "residual_differences": [
+        {
+          "software": "FOXES",
+          "note": "FOXES keeps its grid16 rotor model; the requested cubature with 9 points rotor grid is not applied."
+        }
+      ],
+      "cases": [
+        "one_turbine__jensen",
+        "one_turbine__bastankhah2014",
+        "one_turbine__bastankhah2016",
+        "one_turbine__bastankhah2016_deflection",
+        "one_turbine__jimenez",
+        "one_turbine__turbopark",
+        "four_turbine__jensen",
+        "four_turbine__bastankhah2014",
+        "four_turbine__bastankhah2016",
+        "four_turbine__bastankhah2016_deflection",
+        "four_turbine__jimenez",
+        "four_turbine__turbopark"
+      ]
+    }
   ]
 }

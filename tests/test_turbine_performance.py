@@ -1,10 +1,12 @@
 import numpy as np
 import pytest
+from wcomp.comparison_metadata import ALIGNMENT_IDS, load_alignment_analyses
 from wcomp.dataset_validation import validate_dataset_document
 
 from wcomp.turbine_performance import (
     SOFTWARE_EVALUATORS,
     build_turbine_performance_dataset,
+    evaluate_floris,
     get_common_turbine,
     get_sweep_wind_speeds,
     reference_curves,
@@ -106,7 +108,20 @@ def test_thrust_coefficient_outside_the_range_differs_by_software(turbine, sweep
     assert np.allclose(results["FLORIS"]["ct"][outside], 1.0e-4)
 
 
-def test_site_dataset_describes_the_common_turbine_and_each_software(sweep):
+def test_floris_turbine_curves_do_not_depend_on_the_rotor_grid(turbine, sweep):
+    """Check the aligned FLORIS grid reproduces the default grid's power and Ct.
+
+    Question answered: in uniform flow, is the turbine-performance comparison the same
+    in both alignments, as the site page states?
+    """
+    default = evaluate_floris(turbine, sweep, load_alignment_analyses("default"))
+    aligned = evaluate_floris(turbine, sweep, load_alignment_analyses("aligned"))
+    for key in ("power_kw", "ct"):
+        assert np.allclose(default[key], aligned[key], rtol=1e-9, atol=1e-9), key
+
+
+@pytest.mark.parametrize("alignment", ALIGNMENT_IDS)
+def test_site_dataset_describes_the_common_turbine_and_each_software(sweep, alignment):
     """Check the structure of the dataset built for the turbine-performance site page.
 
     Builds the dataset and asserts its wind speeds equal the sweep, its
@@ -120,7 +135,7 @@ def test_site_dataset_describes_the_common_turbine_and_each_software(sweep):
     sweep, each solver's results and provenance, and the reference curves the
     page needs?
     """
-    dataset = build_turbine_performance_dataset()
+    dataset = build_turbine_performance_dataset(alignment)
     validate_dataset_document(dataset, "TurbinePerformanceDataset")
 
     assert dataset["wind_speeds"] == sweep.tolist()

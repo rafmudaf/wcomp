@@ -3,16 +3,20 @@ import path from 'node:path';
 import Ajv2020 from 'ajv/dist/2020.js';
 import addFormats from 'ajv-formats';
 
-function schemaNameForPath(relativePath) {
-  const parts = relativePath.split(path.sep);
+function schemaNameForPath(relativePath, alignmentIds) {
   if (relativePath === 'manifest.json') return 'Manifest';
   if (relativePath === 'models.json') return 'ModelRegistry';
-  if (relativePath === 'rotor_average.json') return 'RotorAverageDataset';
-  if (relativePath === 'turbine_performance.json') return 'TurbinePerformanceDataset';
+  // Everything else lives under dataset/<alignment>/.
+  const [alignment, ...parts] = relativePath.split(path.sep);
+  if (!alignmentIds.includes(alignment)) {
+    throw new Error(`No dataset schema is defined for path: ${relativePath}`);
+  }
+  const name = parts.at(-1);
+  if (parts.length === 1 && name === 'rotor_average.json') return 'RotorAverageDataset';
+  if (parts.length === 1 && name === 'turbine_performance.json') return 'TurbinePerformanceDataset';
   if (parts.length === 3 && parts[0] === 'cases' && parts[2] === 'case.json') return 'Case';
   if (parts.length === 3 && parts[0] === 'cases' && parts[2] === 'metrics.json') return 'Metrics';
   if (parts.length >= 5 && parts[0] === 'cases' && parts[2] === 'software') {
-    const name = parts.at(-1);
     if (name === 'meta.json') return 'SoftwareMetadata';
     if (['contour.json', 'contour_vertical.json', 'contour_xsection.json'].includes(name)) return 'WakePlane';
     if (name === 'streamwise.json' || parts.at(-2) === 'xsections') return 'WakeProfile';
@@ -76,6 +80,8 @@ function validateShape(document, schemaName, source) {
 
 export function validateDataset(datasetRoot) {
   const schema = JSON.parse(readFileSync(path.join(datasetRoot, 'schema.json'), 'utf8'));
+  const manifest = JSON.parse(readFileSync(path.join(datasetRoot, 'manifest.json'), 'utf8'));
+  const alignmentIds = manifest.alignments.map((alignment) => alignment.id);
   const ajv = new Ajv2020({ allErrors: true, strict: false });
   addFormats(ajv);
   const validators = new Map(
@@ -88,7 +94,7 @@ export function validateDataset(datasetRoot) {
 
   for (const { fullPath, relativePath } of walkJsonFiles(datasetRoot)) {
     if (relativePath === 'schema.json') continue;
-    const schemaName = schemaNameForPath(relativePath);
+    const schemaName = schemaNameForPath(relativePath, alignmentIds);
     const document = JSON.parse(readFileSync(fullPath, 'utf8'));
     const validate = validators.get(schemaName);
     if (!validate(document)) {

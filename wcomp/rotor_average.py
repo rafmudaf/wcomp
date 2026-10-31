@@ -6,11 +6,18 @@ from typing import Callable
 
 import foxes.variables as FV
 import numpy as np
-from floris.core.grid import TurbineCubatureGrid
+from floris.core.grid import TurbineCubatureGrid, TurbineGrid
 from floris.core.rotor_velocity import average_velocity as floris_average_velocity
 from foxes.models.model_book import ModelBook
-from py_wake.rotor_avg_models import CGIRotorAvg
+from py_wake.rotor_avg_models import CGIRotorAvg, GridRotorAvg, RotorCenter
 
+from .analysis_settings import floris_settings, foxes_settings, pywake_settings
+from .comparison_metadata import (
+    ALIGNMENT_IDS,
+    DEFAULT_ALIGNMENT,
+    load_alignment_analyses,
+    resolve_output_paths,
+)
 from .dataset_validation import validate_dataset_document
 
 
@@ -61,52 +68,71 @@ class RotorAverageResult:
     relative_error: float
 
 
-def _floris_rotor_average_method() -> RotorAverageMethod:
-    """Build the configured FLORIS cubature grid and execute FLORIS' native average."""
+def _floris_rotor_average_method(analyses: dict) -> RotorAverageMethod:
+    """Build the configured FLORIS grid and execute FLORIS' native average."""
+    solver = floris_settings(analyses).values["solver"]
+    is_cubature = solver["type"] == "turbine_cubature_grid"
+    grid_class = TurbineCubatureGrid if is_cubature else TurbineGrid
+    grid_resolution = solver["turbine_grid_points"]
     rotor_radius = 1.0
     hub_height = 1.0
-    grid_resolution = 3
-    grid = TurbineCubatureGrid(
+    grid = grid_class(
         turbine_coordinates=[np.array([0.0, 0.0, hub_height])],
         turbine_diameters=np.array([2.0 * rotor_radius]),
         wind_directions=np.array([270.0]),
         grid_resolution=grid_resolution,
+        **{
+            key: solver[key]
+            for key in ("power_average_method", "thrust_average_method")
+            if key in solver
+        },
     )
-    nodes_y = np.asarray(grid.y_sorted).ravel() / rotor_radius
-    nodes_z = (np.asarray(grid.z_sorted).ravel() - hub_height) / rotor_radius
-    weights = np.asarray(grid.cubature_weights).ravel()
+    # Keep FLORIS' own array shape: the cubature weights broadcast along axis 2.
+    grid_y = np.asarray(grid.y_sorted) / rotor_radius
+    grid_z = (np.asarray(grid.z_sorted) - hub_height) / rotor_radius
+    nodes_y, nodes_z = grid_y.ravel(), grid_z.ravel()
+    if is_cubature:
+        weights = np.asarray(grid.cubature_weights).ravel()
+        sampling = (
+            f"{nodes_y.size} cubature points spanning the rotor disk with FLORIS' native "
+            "cubature quadrature."
+        )
+        weights_note = " and cubature weights"
+    else:
+        weights = np.full(nodes_y.size, 1.0 / nodes_y.size)
+        sampling = (
+            f"{nodes_y.size} equal-weight points on a square spanning -0.5R to 0.5R "
+            "in the lateral and vertical directions."
+        )
+        weights_note = ""
 
     def evaluate(profile: Profile) -> float:
-        velocities = profile(nodes_y, nodes_z)
         result = floris_average_velocity(
-            velocities.reshape(1, 1, 1, -1),
-            method=grid.average_method,
-            cubature_weights=grid.cubature_weights,
+            profile(grid_y, grid_z),
+            method=grid.power_average_method,
+            cubature_weights=getattr(grid, "cubature_weights", None),
         )
         return float(np.asarray(result).item())
 
     return RotorAverageMethod(
         software="FLORIS",
         method=f"{type(grid).__name__} ({grid_resolution} x {grid_resolution})",
-        sampling=(
-            "Nine cubature points spanning the rotor disk with FLORIS' native "
-            "linear-cubature quadrature."
-        ),
-        aggregation=f"{grid.average_method.replace('-', ' ')} of velocity",
+        sampling=sampling,
+        aggregation=f"{grid.power_average_method.replace('-', ' ')} of velocity",
         nodes_y=tuple(float(value) for value in nodes_y),
         nodes_z=tuple(float(value) for value in nodes_z),
         weights=tuple(float(weight) for weight in weights),
         implementation=(
-            "Executed with FLORIS TurbineCubatureGrid(grid_resolution=3) and FLORIS "
-            "average_velocity using the grid's native average_method and cubature weights."
+            f"Executed with FLORIS {type(grid).__name__}(grid_resolution={grid_resolution}) "
+            f"and FLORIS average_velocity using the grid's native power_average_method{weights_note}."
         ),
         evaluator=evaluate,
     )
 
 
-def _foxes_rotor_average_method() -> RotorAverageMethod:
+def _foxes_rotor_average_method(analyses: dict) -> RotorAverageMethod:
     """Build FOXES grid16 and execute FOXES' native REWS calculation."""
-    rotor = ModelBook().rotor_models["grid16"]
+    rotor = ModelBook().rotor_models[foxes_settings(analyses).values["rotor_model"]]
     rotor.initialize(None)
     design_points = np.asarray(rotor.design_points())
     weights = np.asarray(rotor.rotor_point_weights())
@@ -150,9 +176,14 @@ def _foxes_rotor_average_method() -> RotorAverageMethod:
     )
 
 
-def _pywake_rotor_average_method() -> RotorAverageMethod:
-    """Build CGIRotorAvg(n=9) and execute PyWake's native deficit averaging."""
-    rotor = CGIRotorAvg(n=9)
+def _pywake_rotor_average_method(analyses: dict) -> RotorAverageMethod:
+    """Build the configured PyWake rotor model and execute its native deficit averaging."""
+    rotor_name, rotor_points = pywake_settings(analyses).values["rotor"]
+    rotor = {
+        "GridRotorAvg": GridRotorAvg,
+        "RotorCenter": RotorCenter,
+        "CGIRotorAvg": lambda: CGIRotorAvg(n=rotor_points),
+    }[rotor_name]()
     nodes_y = np.asarray(rotor.nodes_x)
     nodes_z = np.asarray(rotor.nodes_y)
     weights = getattr(rotor, "nodes_weight", None)
@@ -176,16 +207,21 @@ def _pywake_rotor_average_method() -> RotorAverageMethod:
         )
         return 1.0 - float(np.asarray(averaged_deficit).item())
 
+    sampling = (
+        f"{nodes_y.size} equal-weight points at (+/-R/3, +/-R/3) in the rotor plane."
+        if rotor_name == "GridRotorAvg"
+        else f"{nodes_y.size} quadrature points in the rotor plane with built-in CGI weights."
+    )
     return RotorAverageMethod(
         software="PyWake",
-        method="CGIRotorAvg(n=9)",
-        sampling="Nine quadrature points in the rotor plane with built-in CGI weights.",
+        method=f"CGIRotorAvg(n={rotor_points})" if rotor_name == "CGIRotorAvg" else rotor_name,
+        sampling=sampling,
         aggregation="weighted arithmetic mean of velocity",
         nodes_y=tuple(float(value) for value in nodes_y),
         nodes_z=tuple(float(value) for value in nodes_z),
         weights=tuple(float(weight) for weight in weights),
         implementation=(
-            "Executed with PyWake CGIRotorAvg.__call__. PyWake averages the supplied "
+            f"Executed with PyWake {rotor_name}.__call__. PyWake averages the supplied "
             "deficit at its native rotor nodes; the comparison converts that result back "
             "to normalized velocity."
         ),
@@ -193,12 +229,15 @@ def _pywake_rotor_average_method() -> RotorAverageMethod:
     )
 
 
-def get_rotor_average_methods() -> tuple[RotorAverageMethod, ...]:
-    """Instantiate the configured native rotor-average models."""
+def get_rotor_average_methods(
+    alignment: str = DEFAULT_ALIGNMENT,
+) -> tuple[RotorAverageMethod, ...]:
+    """Instantiate the native rotor-average models an alignment's case files configure."""
+    analyses = load_alignment_analyses(alignment)
     return (
-        _floris_rotor_average_method(),
-        _foxes_rotor_average_method(),
-        _pywake_rotor_average_method(),
+        _floris_rotor_average_method(analyses),
+        _foxes_rotor_average_method(analyses),
+        _pywake_rotor_average_method(analyses),
     )
 
 
@@ -314,9 +353,9 @@ def dense_disk_average(
 
     if "linear" in aggregation:
         return float(np.sum(area_weights * values) / np.sum(area_weights))
-    if aggregation == "cubic mean of velocity":
+    if aggregation.startswith("cubic"):
         return float(np.cbrt(np.sum(area_weights * values**3)))
-    if aggregation == "quadratic mean of velocity":
+    if aggregation.startswith("quadratic"):
         return float(np.sqrt(np.sum(area_weights * values**2)))
     if aggregation == "weighted arithmetic mean of velocity":
         return float(np.sum(area_weights * values))
@@ -326,12 +365,13 @@ def dense_disk_average(
 def compare_rotor_average_methods(
     case: RotorAverageCase | None = None,
     methods: tuple[RotorAverageMethod, ...] | None = None,
+    alignment: str = DEFAULT_ALIGNMENT,
 ) -> list[RotorAverageResult]:
     """Run the native framework methods on one common rotor-plane case."""
     if case is None:
         case = get_rotor_average_cases()[-1]
     if methods is None:
-        methods = get_rotor_average_methods()
+        methods = get_rotor_average_methods(alignment)
 
     references: dict[str, float] = {}
     results = []
@@ -360,10 +400,11 @@ def compare_rotor_average_methods(
 
 def build_rotor_average_plan(
     methods: tuple[RotorAverageMethod, ...] | None = None,
+    alignment: str = DEFAULT_ALIGNMENT,
 ) -> list[dict[str, object]]:
     """Return a serializable description of the configured methods."""
     if methods is None:
-        methods = get_rotor_average_methods()
+        methods = get_rotor_average_methods(alignment)
     return [
         {
             "software": method.software,
@@ -380,9 +421,9 @@ def build_rotor_average_plan(
     ]
 
 
-def build_rotor_average_dataset() -> dict[str, object]:
+def build_rotor_average_dataset(alignment: str = DEFAULT_ALIGNMENT) -> dict[str, object]:
     """Build the static dataset consumed by the rotor-averaging site page."""
-    methods = get_rotor_average_methods()
+    methods = get_rotor_average_methods(alignment)
     return {
         "coordinates": "All sampling coordinates are normalized by rotor radius R.",
         "reference": (
@@ -437,26 +478,48 @@ def format_rotor_average_summary(results: list[RotorAverageResult]) -> str:
 
 def _main() -> None:
     parser = argparse.ArgumentParser(description="Compare configured rotor-average methods.")
-    parser.add_argument("--output", type=Path, help="Write the site dataset as JSON.")
+    parser.add_argument(
+        "--output",
+        type=Path,
+        help="Write the site dataset to this file (needs a single --alignment).",
+    )
+    parser.add_argument(
+        "--write-dataset",
+        action="store_true",
+        help="Write the site dataset to dataset/<alignment>/rotor_average.json.",
+    )
+    parser.add_argument(
+        "--alignment",
+        choices=[*ALIGNMENT_IDS, "all"],
+        default="all",
+        help="Solver configuration to use (default: all).",
+    )
     args = parser.parse_args()
-    if args.output:
-        args.output.parent.mkdir(parents=True, exist_ok=True)
-        dataset = build_rotor_average_dataset()
-        validate_dataset_document(dataset, "RotorAverageDataset", str(args.output))
-        args.output.write_text(
-            json.dumps(dataset, indent=2) + "\n",
-            encoding="utf-8",
-        )
+    alignments = ALIGNMENT_IDS if args.alignment == "all" else (args.alignment,)
+    if args.output is not None or args.write_dataset:
+        try:
+            paths = resolve_output_paths(args.alignment, args.output, "rotor_average.json")
+        except ValueError as error:
+            parser.error(str(error))
+        for alignment, path in paths.items():
+            path.parent.mkdir(parents=True, exist_ok=True)
+            dataset = build_rotor_average_dataset(alignment)
+            validate_dataset_document(dataset, "RotorAverageDataset", str(path))
+            path.write_text(json.dumps(dataset, indent=2) + "\n", encoding="utf-8")
     else:
-        for case in get_rotor_average_cases():
-            print(f"## {case.name}")
+        for alignment in alignments:
+            print(f"# Alignment: {alignment}")
             print()
-            print(f"{case.formula}")
-            if case.analytic_area_average is not None:
-                print(f"Exact area average: {case.analytic_area_average}")
-            print()
-            print(format_rotor_average_summary(compare_rotor_average_methods(case)))
-            print()
+            methods = get_rotor_average_methods(alignment)
+            for case in get_rotor_average_cases():
+                print(f"## {case.name}")
+                print()
+                print(f"{case.formula}")
+                if case.analytic_area_average is not None:
+                    print(f"Exact area average: {case.analytic_area_average}")
+                print()
+                print(format_rotor_average_summary(compare_rotor_average_methods(case, methods)))
+                print()
 
 
 if __name__ == "__main__":

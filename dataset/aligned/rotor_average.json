@@ -6,9 +6,9 @@
       "software": "FLORIS",
       "method": "TurbineCubatureGrid (3 x 3)",
       "sample_count": 9,
-      "sampling": "Nine cubature points spanning the rotor disk with FLORIS' native linear-cubature quadrature.",
+      "sampling": "9 cubature points spanning the rotor disk with FLORIS' native cubature quadrature.",
       "aggregation": "linear cubature of velocity",
-      "implementation": "Executed with FLORIS TurbineCubatureGrid(grid_resolution=3) and FLORIS average_velocity using the grid's native average_method and cubature weights.",
+      "implementation": "Executed with FLORIS TurbineCubatureGrid(grid_resolution=3) and FLORIS average_velocity using the grid's native power_average_method and cubature weights.",
       "nodes_y": [
         -0.408248290463863,
         -0.816496580927726,
@@ -109,7 +109,7 @@
       "software": "PyWake",
       "method": "CGIRotorAvg(n=9)",
       "sample_count": 9,
-      "sampling": "Nine quadrature points in the rotor plane with built-in CGI weights.",
+      "sampling": "9 quadrature points in the rotor plane with built-in CGI weights.",
       "aggregation": "weighted arithmetic mean of velocity",
       "implementation": "Executed with PyWake CGIRotorAvg.__call__. PyWake averages the supplied deficit at its native rotor nodes; the comparison converts that result back to normalized velocity.",
       "nodes_y": [
@@ -20675,10 +20675,10 @@
           "method": "TurbineCubatureGrid (3 x 3)",
           "sample_count": 9,
           "aggregation": "linear cubature of velocity",
-          "rotor_average": 0.9111111111111109,
+          "rotor_average": 0.8999999999999999,
           "reference_average": 0.8999999999999989,
-          "absolute_error": 0.01111111111111196,
-          "relative_error": 0.012345679012346638
+          "absolute_error": 9.992007221626409e-16,
+          "relative_error": 1.110223024625158e-15
         },
         {
           "case": "quadratic",
@@ -27527,10 +27527,10 @@
           "method": "TurbineCubatureGrid (3 x 3)",
           "sample_count": 9,
           "aggregation": "linear cubature of velocity",
-          "rotor_average": 0.9336531339020006,
+          "rotor_average": 0.9453899852172586,
           "reference_average": 0.9461319333940307,
-          "absolute_error": 0.012478799492030124,
-          "relative_error": 0.013189280534338696
+          "absolute_error": 0.0007419481767720892,
+          "relative_error": 0.0007841910314880937
         },
         {
           "case": "partial_wake",

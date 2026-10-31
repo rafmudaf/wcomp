@@ -31,19 +31,20 @@ def test_downselect_preserves_existing_manifest_cases(tmp_path, monkeypatch):
     Points the dataset module at a temporary directory with a single scenario
     and a single FLORIS "jensen" wake model, and stubs out the computation and
     file writing so no real simulation runs. It pre-writes a `manifest.json`
-    that already lists "existing_case", then calls `generate(selectors={"jensen"})`.
-    It asserts the rewritten manifest lists the pre-existing case followed by
-    the newly generated "one_turbine__jensen" case.
+    that already lists "existing_case" (default) and "existing_aligned_case" (aligned),
+    then calls `generate(selectors={"jensen"}, alignments=["default"])`.
+    It asserts the default alignment lists the pre-existing case followed by the
+    newly generated "one_turbine__jensen" case, and the aligned alignment is untouched.
 
-    Question answered: when only a subset of cases is regenerated, does the
-    project keep the previously generated cases in the manifest instead of
+    Question answered: when only a subset of cases or one alignment is regenerated,
+    does the project keep the previously generated cases in the manifest instead of
     overwriting them?
     """
     monkeypatch.setattr(dataset, "DATASET_ROOT", tmp_path)
     monkeypatch.setattr(dataset, "SCENARIOS", ["one_turbine"])
     monkeypatch.setattr(dataset, "WAKE_MODEL_CASES", {"jensen": {"software": [dataset.WCompFloris]}})
     monkeypatch.setattr(dataset, "_software_versions", lambda: {"FLORIS": "1.0"})
-    monkeypatch.setattr(dataset, "compute_case", lambda scenario, wake_model: {
+    monkeypatch.setattr(dataset, "compute_case", lambda scenario, wake_model, alignment: {
         "streamwise": {"FLORIS": object()},
         "categories": [],
         "rotor_diameter": 1.0,
@@ -59,7 +60,9 @@ def test_downselect_preserves_existing_manifest_cases(tmp_path, monkeypatch):
         "xsection_contour_location_d": 0,
     })
     monkeypatch.setattr(
-        dataset, "write_case", lambda scenario, wake_model, result, software_versions: f"{scenario}__{wake_model}"
+        dataset,
+        "write_case",
+        lambda scenario, wake_model, result, software_versions, alignment: f"{scenario}__{wake_model}",
     )
 
     tmp_path.mkdir(parents=True, exist_ok=True)
@@ -69,12 +72,21 @@ def test_downselect_preserves_existing_manifest_cases(tmp_path, monkeypatch):
                 "generated_at": "2026-10-01T00:00:00Z",
                 "wcomp_version": "old",
                 "software_versions": {"FLORIS": "old"},
-                "cases": ["existing_case"],
+                "alignments": [
+                    {"id": "default", "cases": ["existing_case"]},
+                    {"id": "aligned", "cases": ["existing_aligned_case"]},
+                ],
             }
         )
     )
 
-    dataset.generate(selectors={"jensen"})
+    dataset.generate(selectors={"jensen"}, alignments=["default"])
 
-    manifest = json.loads((tmp_path / "manifest.json").read_text())
-    assert manifest["cases"] == ["existing_case", "one_turbine__jensen"]
+    alignments = {
+        item["id"]: item["cases"]
+        for item in json.loads((tmp_path / "manifest.json").read_text())["alignments"]
+    }
+    assert alignments == {
+        "default": ["existing_case", "one_turbine__jensen"],
+        "aligned": ["existing_aligned_case"],
+    }

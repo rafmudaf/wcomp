@@ -1,0 +1,79 @@
+[
+  {
+    "pair": [
+      "FOXES",
+      "PyWake"
+    ],
+    "target": "streamwise",
+    "rmse": 0.009799999999976947,
+    "max_abs": 0.03099032106957722,
+    "mean_abs": 0.0030990321069589034,
+    "nrmse": 0.001003172309380895
+  },
+  {
+    "pair": [
+      "FOXES",
+      "PyWake"
+    ],
+    "target": "xsection:1D_downstream",
+    "rmse": 0.01096154135852669,
+    "max_abs": 0.03091266791964742,
+    "mean_abs": 0.005483175868691301,
+    "nrmse": 0.0011248916010002574
+  },
+  {
+    "pair": [
+      "FOXES",
+      "PyWake"
+    ],
+    "target": "xsection:5D_downstream",
+    "rmse": 2.2061894264123475e-15,
+    "max_abs": 5.329070518200751e-15,
+    "mean_abs": 1.1990408665951691e-15,
+    "nrmse": 5.979943792216042e-16
+  },
+  {
+    "pair": [
+      "FOXES",
+      "PyWake"
+    ],
+    "target": "xsection:10D_downstream",
+    "rmse": 1.5587468005037626e-15,
+    "max_abs": 3.552713678800501e-15,
+    "mean_abs": 9.414691248821328e-16,
+    "nrmse": 8.908138634353943e-16
+  },
+  {
+    "pair": [
+      "FOXES",
+      "PyWake"
+    ],
+    "target": "contour",
+    "rmse": 0.19290315367897265,
+    "max_abs": 9.8,
+    "mean_abs": 0.006300421656176551,
+    "nrmse": 0.01974643899627019
+  },
+  {
+    "pair": [
+      "FOXES",
+      "PyWake"
+    ],
+    "target": "contour_vertical",
+    "rmse": 0.199132306597288,
+    "max_abs": 9.79628652937153,
+    "mean_abs": 0.006670203224797052,
+    "nrmse": 0.020389108164091552
+  },
+  {
+    "pair": [
+      "FOXES",
+      "PyWake"
+    ],
+    "target": "contour_xsection",
+    "rmse": 9.394500390463047e-16,
+    "max_abs": 6.217248937900877e-15,
+    "mean_abs": 2.7845868668032563e-16,
+    "nrmse": 2.5436143814069054e-16
+  }
+]

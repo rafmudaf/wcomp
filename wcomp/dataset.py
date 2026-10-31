@@ -11,6 +11,9 @@ To regenerate only a subset of the dataset:
     python -m wcomp.dataset floris
     python -m wcomp.dataset jensen
     python -m wcomp.dataset floris foxes turbopark
+
+To regenerate one alignment (default or aligned; both by default):
+    python -m wcomp.dataset --alignment aligned
 """
 
 import argparse
@@ -24,13 +27,18 @@ from windIO import load_yaml
 
 from . import WCompFloris, WCompFoxes, WCompPyWake, __version__
 from .cache import quiet
-from .comparison_metadata import build_model_configuration
+from .comparison_metadata import (
+    ALIGNMENT_IDS,
+    ALIGNMENTS,
+    CASE_ROOT,
+    DATASET_ROOT,
+    build_alignment_settings,
+    build_model_configuration,
+    get_alignment,
+    load_alignment_analyses,
+)
 from .dataset_validation import schema_name_for_path, validate_dataset_document
 from .metrics import plane_metrics, profile_metrics
-
-REPO_ROOT = Path(__file__).resolve().parent.parent
-CASE_ROOT = REPO_ROOT / "examples" / "cases_torque2024"
-DATASET_ROOT = REPO_ROOT / "dataset"
 
 # Scenario layouts, in rotor diameters downstream of the origin. The four-turbine
 # scenario matches the farm used by the previous Jupyter Book dashboard. Yaw is not
@@ -140,13 +148,14 @@ def _software_versions() -> dict:
     }
 
 
-def compute_case(scenario: str, wake_model: str) -> dict:
+def compute_case(scenario: str, wake_model: str, alignment: str) -> dict:
     """
     Run every software package integrated for a given (scenario, wake_model) pair
     and extract the plain data needed for the frontend comparison plots and metrics.
+    The alignment selects which of the case's windIO files configures the solvers.
     """
     spec = WAKE_MODEL_CASES[wake_model]
-    case_file = CASE_ROOT / scenario / wake_model / "wind_energy_system.yaml"
+    case_file = CASE_ROOT / scenario / wake_model / get_alignment(alignment)["yaml_file"]
     turbine_locations_d = TURBINE_LOCATIONS_D[scenario]
 
     with quiet():
@@ -163,7 +172,8 @@ def compute_case(scenario: str, wake_model: str) -> dict:
         # deflection model on top of it, so "velocity" and "deflection" are additive
         # tags rather than mutually exclusive categories. The case yaml always has a
         # `deflection` key, but its `name` is null/empty when no deflection is applied.
-        case_wake_model = case_yaml["attributes"]["analyses"]["wake_model"]
+        case_analyses = case_yaml["attributes"]["analyses"]
+        case_wake_model = case_analyses["wake_model"]
         categories = [
             category for category in ("velocity", "deflection")
             if (case_wake_model.get(category) or {}).get("name")
@@ -229,7 +239,7 @@ def compute_case(scenario: str, wake_model: str) -> dict:
         "yaw_angles": yaw_angles,
         "categories": categories,
         "model_configuration": build_model_configuration(
-            case_wake_model, [cls.LEGEND for cls in spec["software"]]
+            case_analyses, [cls.LEGEND for cls in spec["software"]]
         ),
         "xsection_locations_d": xsection_locations,
         "streamwise": streamwise,
@@ -241,12 +251,15 @@ def compute_case(scenario: str, wake_model: str) -> dict:
     }
 
 
-def write_case(scenario: str, wake_model: str, result: dict, software_versions: dict) -> str:
+def write_case(
+    scenario: str, wake_model: str, result: dict, software_versions: dict, alignment: str
+) -> str:
     case_id = f"{scenario}__{wake_model}"
-    case_dir = DATASET_ROOT / "cases" / case_id
+    case_dir = DATASET_ROOT / alignment / "cases" / case_id
     software_names = list(result["streamwise"].keys())
 
     _write_json(case_dir / "case.json", {
+        "alignment": alignment,
         "scenario": scenario,
         "wake_model": wake_model,
         "categories": result["categories"],
@@ -337,37 +350,65 @@ def _case_matches_selectors(wake_model: str, selectors: set[str]) -> bool:
     return False
 
 
-def generate(selectors: set[str] | None = None) -> None:
-    software_versions = _software_versions()
-    case_ids = []
-    for scenario in SCENARIOS:
-        for selected_wake_model in WAKE_MODEL_CASES:
-            if selectors is not None and not _case_matches_selectors(selected_wake_model, selectors):
-                continue
-            print(f"Computing {scenario}/{selected_wake_model}...")
-            result = compute_case(scenario, selected_wake_model)
-            case_ids.append(write_case(scenario, selected_wake_model, result, software_versions))
+def _existing_manifest_cases() -> dict[str, list[str]]:
+    manifest_path = DATASET_ROOT / "manifest.json"
+    if not manifest_path.exists():
+        return {}
+    with open(manifest_path) as f:
+        existing_manifest = json.load(f)
+    return {
+        alignment["id"]: alignment["cases"]
+        for alignment in existing_manifest.get("alignments", [])
+    }
 
-    if not case_ids:
+
+def generate(selectors: set[str] | None = None, alignments: list[str] | None = None) -> None:
+    alignment_ids = list(alignments or ALIGNMENT_IDS)
+    software_versions = _software_versions()
+    generated: dict[str, list[str]] = {}
+    for alignment in alignment_ids:
+        case_ids = []
+        for scenario in SCENARIOS:
+            for selected_wake_model in WAKE_MODEL_CASES:
+                if selectors is not None and not _case_matches_selectors(selected_wake_model, selectors):
+                    continue
+                print(f"Computing {alignment}/{scenario}/{selected_wake_model}...")
+                result = compute_case(scenario, selected_wake_model, alignment)
+                case_ids.append(
+                    write_case(scenario, selected_wake_model, result, software_versions, alignment)
+                )
+        generated[alignment] = case_ids
+
+    if not any(generated.values()):
         raise ValueError("No cases matched the requested selectors.")
 
-    manifest_cases = case_ids
-    if selectors is not None:
-        manifest_path = DATASET_ROOT / "manifest.json"
-        if manifest_path.exists():
-            with open(manifest_path) as f:
-                existing_manifest = json.load(f)
-            existing_cases = existing_manifest.get("cases", [])
-            manifest_cases = list(dict.fromkeys([*existing_cases, *case_ids]))
+    # Cases that were not regenerated (a downselect, or another alignment) stay listed.
+    existing = _existing_manifest_cases()
+    manifest_alignments = []
+    for alignment in ALIGNMENTS:
+        cases = list(dict.fromkeys([*existing.get(alignment["id"], []), *generated.get(alignment["id"], [])]))
+        if selectors is None and alignment["id"] in generated:
+            cases = generated[alignment["id"]]
+        if not cases:
+            continue
+        manifest_alignments.append({
+            "id": alignment["id"],
+            "label": alignment["label"],
+            "description": alignment["description"],
+            **build_alignment_settings(
+                load_alignment_analyses(alignment["id"]), list(software_versions)
+            ),
+            "cases": cases,
+        })
 
     _write_json(DATASET_ROOT / "models.json", MODEL_REGISTRY)
     _write_json(DATASET_ROOT / "manifest.json", {
         "generated_at": datetime.now(timezone.utc).isoformat(),
         "wcomp_version": __version__,
         "software_versions": software_versions,
-        "cases": manifest_cases,
+        "alignments": manifest_alignments,
     })
-    print(f"Wrote {len(case_ids)} case(s) to {DATASET_ROOT}")
+    print(f"Wrote {sum(len(ids) for ids in generated.values())} case(s) to {DATASET_ROOT}")
 
 
 def main(argv: list[str] | None = None) -> None:
@@ -383,6 +424,12 @@ def main(argv: list[str] | None = None) -> None:
             "When downselecting, existing manifest cases are preserved and regenerated cases are merged in."
         ),
     )
+    parser.add_argument(
+        "--alignment",
+        choices=[*ALIGNMENT_IDS, "all"],
+        default="all",
+        help="Which solver configuration to generate (default: all).",
+    )
     args = parser.parse_args(argv)
 
     selectors = {selector.lower() for selector in args.selectors}
@@ -393,7 +440,10 @@ def main(argv: list[str] | None = None) -> None:
             f"Choose from: {', '.join(VALID_SELECTORS)}"
         )
 
-    generate(selectors=selectors or None)
+    generate(
+        selectors=selectors or None,
+        alignments=None if args.alignment == "all" else [args.alignment],
+    )
 
 
 if __name__ == "__main__":
