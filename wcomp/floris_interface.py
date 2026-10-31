@@ -6,6 +6,7 @@ import numpy as np
 from floris.floris_model import FlorisModel
 from windIO import load_yaml
 
+from .analysis_settings import floris_settings
 from .base_interface import WCompBase
 from .output_struct import WakePlane, WakeProfile
 from .plotting import plot_plane, plot_profile
@@ -75,7 +76,7 @@ basic_dict = {
         'file': {'enable': False, 'level': 'WARNING'}
     },
     'solver': {
-        'type': 'turbine_cubature_grid', 'turbine_grid_points': 3
+        'type': 'turbine_grid', 'turbine_grid_points': 3
     },
     'farm': {
         'layout_x': [0.0, 630.0, 1260.0],
@@ -227,6 +228,7 @@ class WCompFloris(WCompBase):
         }
 
         wes_analysis = wes["attributes"]["analyses"]
+        new_dict["solver"] = floris_settings(wes_analysis).values["solver"]
         _velocity_model_mapping = WAKE_MODEL_MAPPING[wes_analysis["wake_model"]["velocity"]["name"]]
         _velocity_model = _velocity_model_mapping["model_ref"]
         _velocity_model_parameters = {

@@ -1,23 +1,114 @@
 """Human-readable wake-model configuration metadata for comparison pages."""
 
-SOFTWARE_NOTES = {
-    "FLORIS": (
-        "Uses sum-of-squares freestream deficit superposition (sosfs), a nine-point "
-        "TurbineCubatureGrid solver, and Crespo-Hernandez wake-added turbulence. Secondary "
-        "steering, yaw-added recovery, transverse velocities, and active wake mixing "
-        "are disabled."
-    ),
-    "FOXES": (
-        "Uses Betz induction, quadratic wind-speed superposition scaled by the ambient "
-        "(freestream) speed, grid16 rotor sampling, rotor-point partial wakes, and the "
-        "rotor_wd wake frame. No separate wake-added turbulence model is configured."
-    ),
-    "PyWake": (
-        "Uses PropagateDownwind with squared-sum superposition, CGIRotorAvg(n=9) rotor "
-        "averaging, freestream (non-effective) wind speed for deficit scaling, and "
-        "ct2a_mom1d induction. No separate wake-added turbulence model is configured."
-    ),
-}
+from pathlib import Path
+
+from windIO import load_yaml
+
+from .analysis_settings import (
+    SETTING_AVERAGING,
+    SETTING_DEFICIT,
+    SETTING_GRID,
+    SETTING_NAMES,
+    SETTINGS_RESOLVERS,
+)
+
+# Each alignment is a complete set of case files (`yaml_file` inside every case directory)
+# and a full copy of the dataset under `dataset/<id>/`.
+ALIGNMENTS = [
+    {
+        "id": "default",
+        "label": "Default",
+        "description": (
+            "Each solver runs with its own legacy settings. Differences between the solvers "
+            "therefore mix model differences with configuration differences such as how the "
+            "rotor is sampled and which wind speed scales the wake deficit."
+        ),
+        "yaml_file": "wind_energy_system.yaml",
+    },
+    {
+        "id": "aligned",
+        "label": "Aligned",
+        "description": (
+            "The solver settings that can be matched across the three packages are matched: "
+            "the wake deficit is scaled by the freestream speed, rotor averaging is linear, "
+            "and FLORIS and PyWake sample the rotor with a nine-point cubature. The "
+            "remaining differences are listed below."
+        ),
+        "yaml_file": "wind_energy_system_aligned.yaml",
+    },
+]
+ALIGNMENT_IDS = tuple(alignment["id"] for alignment in ALIGNMENTS)
+DEFAULT_ALIGNMENT = ALIGNMENT_IDS[0]
+
+CASE_ROOT = Path(__file__).resolve().parent.parent / "examples" / "cases_torque2024"
+DATASET_ROOT = Path(__file__).resolve().parent.parent / "dataset"
+# Every case shares one analyses block per alignment; a test enforces it.
+REFERENCE_CASE_DIR = CASE_ROOT / "one_turbine" / "jensen"
+
+
+def load_alignment_analyses(alignment_id: str) -> dict:
+    """The `attributes.analyses` block of the reference case for an alignment."""
+    case_file = REFERENCE_CASE_DIR / get_alignment(alignment_id)["yaml_file"]
+    return load_yaml(case_file)["attributes"]["analyses"]
+
+
+def get_alignment(alignment_id: str) -> dict:
+    for alignment in ALIGNMENTS:
+        if alignment["id"] == alignment_id:
+            return alignment
+    raise ValueError(f"Unknown alignment '{alignment_id}'. Choose from: {', '.join(ALIGNMENT_IDS)}")
+
+
+def resolve_output_paths(alignment: str, output: Path | None, filename: str) -> dict[str, Path]:
+    """Map each alignment a generator CLI was asked for to the file it writes."""
+    alignment_ids = ALIGNMENT_IDS if alignment == "all" else (get_alignment(alignment)["id"],)
+    if output is not None:
+        if len(alignment_ids) != 1:
+            raise ValueError("--output writes one file; choose a single --alignment.")
+        return {alignment_ids[0]: output}
+    return {alignment_id: DATASET_ROOT / alignment_id / filename for alignment_id in alignment_ids}
+
+
+def build_alignment_settings(analyses: dict, software_names: list[str]) -> dict:
+    """Settings table and unapplied-setting notes for one alignment's `analyses` block."""
+    resolved = {name: SETTINGS_RESOLVERS[name](analyses) for name in software_names}
+    return {
+        "settings": [
+            {"name": setting, **{name: resolved[name].summary[setting] for name in software_names}}
+            for setting in SETTING_NAMES
+        ],
+        "residual_differences": [
+            {"software": name, "note": note}
+            for name in software_names
+            for note in resolved[name].notes
+        ],
+    }
+
+
+def build_software_note(software: str, analyses: dict) -> str:
+    """Describe a solver's configuration from the settings actually applied."""
+    summary = SETTINGS_RESOLVERS[software](analyses).summary
+    deficit = summary[SETTING_DEFICIT].lower()
+    grid = summary[SETTING_GRID]
+    averaging = summary[SETTING_AVERAGING]
+    if software == "FLORIS":
+        return (
+            "Uses sum-of-squares freestream deficit superposition (sosfs), the "
+            f"{grid} rotor grid with {averaging} averaging, and Crespo-Hernandez "
+            "wake-added turbulence. Secondary steering, yaw-added recovery, transverse "
+            "velocities, and active wake mixing are disabled."
+        )
+    if software == "FOXES":
+        return (
+            f"Uses Betz induction, quadratic wind-speed superposition with a {deficit} "
+            f"deficit reference, {grid} rotor sampling, rotor-point partial wakes, and the "
+            "rotor_wd wake frame. No separate wake-added turbulence model is configured."
+        )
+    return (
+        "Uses PropagateDownwind with squared-sum superposition, "
+        f"{grid} rotor averaging, {deficit} deficit reference, and ct2a_mom1d induction. "
+        "No separate wake-added turbulence model is configured."
+    )
 
 MODEL_NOTES = {
     "jensen": {
@@ -153,8 +244,9 @@ def _implementation_model(software: str, category: str, model: dict) -> dict:
     }
 
 
-def build_model_configuration(wake_model: dict, software_names: list[str]) -> dict:
-    """Build display metadata from a case's windIO wake-model block."""
+def build_model_configuration(analyses: dict, software_names: list[str]) -> dict:
+    """Build display metadata from a case's windIO `attributes.analyses` block."""
+    wake_model = analyses["wake_model"]
     input_models = [
         {
             "category": category,
@@ -171,7 +263,8 @@ def build_model_configuration(wake_model: dict, software_names: list[str]) -> di
             _implementation_model(software, model["category"], model)
             for model in input_models
         ]
-        notes = [SOFTWARE_NOTES[software]]
+        notes = [build_software_note(software, analyses)]
+        notes.extend(SETTINGS_RESOLVERS[software](analyses).notes)
         notes.extend(
             MODEL_NOTES.get(model["name"], {}).get(software)
             for model in input_models

@@ -30,6 +30,7 @@ from py_wake.rotor_avg_models import (
 
 from windIO import load_yaml
 
+from .analysis_settings import pywake_settings
 from .base_interface import WCompBase
 from .output_struct import WakePlane, WakeProfile
 from .plotting import plot_plane, plot_profile
@@ -116,18 +117,25 @@ class WCompPyWake(WCompBase):
         else:
             _deflection_model = None
 
+        settings = pywake_settings(wes_analysis).values
+        rotor_name, rotor_points = settings["rotor"]
+        rotor_avg_model = {
+            "GridRotorAvg": GridRotorAvg,
+            "RotorCenter": RotorCenter,
+            "CGIRotorAvg": lambda: CGIRotorAvg(n=rotor_points),
+        }[rotor_name]()
+
         self.wfm = PropagateDownwind(
             site=self.site,
             windTurbines=self.wt,
             deflectionModel=_deflection_model,
             wake_deficitModel=_velocity_model(
                 **_velocity_model_parameters,
-                # Scale each deficit by the freestream speed, matching FLORIS
-                use_effective_ws=False,
+                use_effective_ws=settings["use_effective_ws"],
                 ct2a=ct2a_mom1d
             ),
             superpositionModel=SquaredSum(),
-            rotorAvgModel=CGIRotorAvg(n=9)
+            rotorAvgModel=rotor_avg_model
         )
         self.sim_res = self.wfm(
             self.x,

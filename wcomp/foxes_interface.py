@@ -20,6 +20,7 @@ from foxes.models.wake_models.wind import TurbOParkWake
 from foxes.models.wake_deflections import Bastankhah2016Deflection, JimenezDeflection
 
 from windIO import load_yaml
+from .analysis_settings import foxes_settings
 from .base_interface import WCompBase
 from .output_struct import WakePlane, WakeProfile
 from .plotting import plot_plane, plot_profile
@@ -373,12 +374,12 @@ class WCompFoxes(WCompBase):
                 )
                 wake_deflection = deflection_name
 
+        settings = foxes_settings(wes_analysis).values
         mbook.wake_models[wake_model_name] = _velocity_model(
             **_velocity_model_parameters,
-            # Scale each deficit by the ambient (freestream) speed, matching FLORIS.
-            # The target-point ambient speed is used because the source turbine's
-            # ambient rotor-effective speed is reduced by yaw projection.
-            superposition="ws_quadratic_amb_target"
+            # ws_quadratic_amb_target scales each deficit by the target point's ambient speed;
+            # the source turbine's ambient rotor-effective speed is reduced by yaw projection.
+            superposition=settings["superposition"]
         )
         # mbook.print_toc(subset="wake_models")
 
@@ -386,7 +387,7 @@ class WCompFoxes(WCompBase):
             farm,
             states,
             wake_models=[wake_model_name],
-            rotor_model="grid16",
+            rotor_model=settings["rotor_model"],
             wake_frame="rotor_wd",
             wake_deflection=wake_deflection,
             partial_wakes="rotor_points",
