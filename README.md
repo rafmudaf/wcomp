@@ -62,15 +62,36 @@ dataset of solver outputs, decoupled from the site build itself.
 
    | Dataset component | Command | Output |
    | --- | --- | --- |
-   | Full wake-model/scenario dataset | `python -m wcomp.dataset` | `dataset/` |
-   | Rotor-averaging comparison dataset | `python -m wcomp.rotor_average --output dataset/rotor_average.json` | `dataset/rotor_average.json` |
-   | Turbine-performance comparison dataset | `python -m wcomp.turbine_performance --output dataset/turbine_performance.json` | `dataset/turbine_performance.json` |
+   | Full wake-model/scenario dataset | `python -m wcomp.dataset` | `dataset/<alignment>/cases/` and `dataset/manifest.json` |
+   | Rotor-averaging comparison dataset | `python -m wcomp.rotor_average --write-dataset` | `dataset/<alignment>/rotor_average.json` |
+   | Turbine-performance comparison dataset | `python -m wcomp.turbine_performance` | `dataset/<alignment>/turbine_performance.json` |
 
    The full dataset writes JSON results for every wake-model/scenario combination to
    `dataset/` at the repo root, which is committed to version control as the site's
    source of truth.
 
-   To regenerate only a subset of the full wake model dataset, pass one or more selectors like
+   Every component is generated for two solver configurations ("alignments"):
+
+   - `default`: each solver runs with its own legacy settings, configured by each case's
+     `wind_energy_system.yaml`. This view is shown at the site root.
+   - `aligned`: the settings that can be matched across the packages are matched (freestream
+     deficit reference speed, linear rotor averaging, nine-point cubature for FLORIS and PyWake),
+     configured by each case's `wind_energy_system_aligned.yaml`. This view is shown under `/aligned/`.
+
+   The aligned files add `attributes.analyses.superposition` and
+   `attributes.analyses.rotor_averaging` to the default file, and nothing else. Keys that a case
+   file omits fall back to each solver's legacy behaviour; `wcomp/analysis_settings.py` is the
+   single place that maps the keys to FLORIS, FOXES, and PyWake settings and reports any setting
+   a solver cannot honour. Add `--alignment default` or `--alignment aligned` to any of the commands
+   above to generate one alignment only (the default is `all`).
+
+   The aligned settings need a FLORIS that reads `power_average_method` and `thrust_average_method`
+   from the `solver` block (branch `configurable-rotor-averaging`), and a windIO whose plant schema
+   describes `attributes.analyses` (branch `analyses-block`). Install both from those branches
+   (editable installs of the local checkouts work); the default alignment runs on upstream releases.
+
+   To regenerate only a subset of the full wake model dataset, pass one or more
+   selectors like
    a software name or wake-model name. Software selectors match any listed software,
    wake-model selectors match any listed wake model, and mixing the two narrows the
    output to cases that satisfy both. When downselecting, the manifest keeps
@@ -78,13 +99,13 @@ dataset of solver outputs, decoupled from the site build itself.
 
    ```bash
    python -m wcomp.dataset floris
-   python -m wcomp.dataset jensen
+   python -m wcomp.dataset jensen --alignment aligned
    python -m wcomp.dataset floris foxes turbopark
    ```
 
    The rotor-averaging and turbine-performance commands write the comparison datasets
-   consumed by `site/src/pages/compare/rotor-averaging.astro` and
-   `site/src/pages/compare/turbine-performance.astro`, respectively.
+   consumed by `site/src/components/RotorAveragingPage.astro` and
+   `site/src/components/TurbinePerformancePage.astro`, respectively.
 
 2. Run the site locally (requires Node.js 20+):
 

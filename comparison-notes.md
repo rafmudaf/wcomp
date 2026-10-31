@@ -261,3 +261,42 @@ wake edges would remove both from the metrics.
 FLORIS has mirrored wakes on by default. Disabled that in wcomp, but need to verify that the others
 are also not using mirrored wakes.
 
+# Default and aligned configurations
+
+The site shows every comparison in two configurations of the same cases. The solver
+settings come from each case's windIO file (`wind_energy_system.yaml` for the default view,
+`wind_energy_system_aligned.yaml` for the aligned view) and are mapped to the solvers by
+[`wcomp/analysis_settings.py`](../wcomp/analysis_settings.py).
+
+| Setting | Default | Aligned |
+| --- | --- | --- |
+| Deficit reference wind speed | FLORIS: freestream (`sosfs`, not configurable). FOXES: `ws_quadratic` (local). PyWake: `use_effective_ws=True` (local) | All three freestream: FOXES `ws_quadratic_amb_target`, PyWake `use_effective_ws=False` |
+| Rotor grid | FLORIS: `TurbineGrid` 3 x 3 square. FOXES: `grid16`. PyWake: `GridRotorAvg` (4 points) | FLORIS: `TurbineCubatureGrid`, 9 points. PyWake: `CGIRotorAvg(n=9)`. FOXES: `grid16` (residual) |
+| Power / thrust averaging | FLORIS: cubic mean. FOXES, PyWake: linear | Linear for all (FLORIS `linear-cubature`) |
+
+Shared by both views: FLORIS `kd = beta / 2` for Jimenez, TurbOPark mirror wakes disabled in
+FLORIS, and a constant vertical wind profile in FLORIS.
+
+Why two views: the packages differ both in the wake model and in numerical choices that
+the windIO input does not fix (rotor sampling, which wind speed scales a deficit). In the
+default view the differences between solvers mix the two. The aligned view removes the
+choices that can be matched, so what remains is closer to a difference in the wake models.
+
+What the aligned view showed (streamwise RMSE between software pairs):
+
+- FLORIS vs FOXES TurbOPark with four turbines falls from `1.29` to `0.23 m/s`, and Jensen
+  with four turbines from `0.26` to `0.00 m/s`. Most of the separation in those cases was
+  configuration, not model.
+- The Bastankhah 2016 differences with one turbine are unchanged (`0.77 m/s`), so they come
+  from the model formulation.
+- The Jimenez one-turbine FLORIS vs FOXES RMSE rises from `0.023` to `0.049 m/s`, so aligning
+  the settings does not improve this case; the yaw and deflection treatment is a candidate.
+- FOXES has no nine-point stencil, so it keeps `grid16` in both views. This is the one
+  residual setting difference and is listed on the aligned pages.
+
+FLORIS full-flow note: FLORIS' plane and point sampling (`calculate_*_plane`,
+`sample_flow_at_points`) first solves the turbines on a hidden `TurbineGrid`. That solve follows
+the `solver` block only when `power_average_method` or `thrust_average_method` is set; the
+aligned case files set both. Without them FLORIS uses its legacy 3 x 3 grid, as in the default
+view.
+
