@@ -1,0 +1,97 @@
+{
+  "alignment": "default",
+  "scenario": "four_turbine",
+  "wake_model": "bastankhah2016",
+  "categories": [
+    "velocity"
+  ],
+  "rotor_diameter": 240.0,
+  "hub_height": 150.0,
+  "wind_speed": 9.8,
+  "turbine_locations_d": [
+    0,
+    5,
+    10,
+    15
+  ],
+  "turbine_yaw_deg": [
+    0.0,
+    0.0,
+    0.0,
+    0.0
+  ],
+  "software": [
+    "FLORIS",
+    "FOXES"
+  ],
+  "model_configuration": {
+    "inputs": [
+      {
+        "category": "velocity",
+        "name": "bastankhah2016",
+        "parameters": {
+          "alpha": 0.58,
+          "beta": 0.077,
+          "ka": 0.3837,
+          "kb": 0.003678
+        }
+      }
+    ],
+    "implementations": [
+      {
+        "software": "FLORIS",
+        "models": [
+          {
+            "category": "velocity",
+            "name": "gauss",
+            "parameters": {
+              "alpha": 0.58,
+              "beta": 0.077,
+              "ka": 0.3837,
+              "kb": 0.003678
+            }
+          }
+        ],
+        "notes": [
+          "Uses sum-of-squares freestream deficit superposition (sosfs), the TurbineGrid, 3 x 3 square rotor grid with power cubic-mean, thrust cubic-mean averaging, and Crespo-Hernandez wake-added turbulence. Secondary steering, yaw-added recovery, transverse velocities, and active wake mixing are disabled."
+        ]
+      },
+      {
+        "software": "FOXES",
+        "models": [
+          {
+            "category": "velocity",
+            "name": "Bastankhah2016",
+            "parameters": {
+              "alpha": 0.58,
+              "beta": 0.077,
+              "kTI": 0.3837,
+              "kb": 0.003678,
+              "induction": "Betz",
+              "k": "from kTI turbine model"
+            }
+          }
+        ],
+        "notes": [
+          "Uses Betz induction, quadratic wind-speed superposition with a local (ws_quadratic) deficit reference, grid16, 4 x 4 cell centers rotor sampling, rotor-point partial wakes, and the rotor_wd wake frame. No separate wake-added turbulence model is configured.",
+          "The ka and kb inputs configure a separate kTI turbine model; the wake model receives k=None so expansion is supplied by that turbine model."
+        ]
+      }
+    ],
+    "notes": []
+  },
+  "xsection_labels": [
+    "4D_past_first_turbine",
+    "1D_past_last_turbine",
+    "5D_past_last_turbine",
+    "10D_past_last_turbine"
+  ],
+  "xsection_locations_d": {
+    "4D_past_first_turbine": 4,
+    "1D_past_last_turbine": 16,
+    "5D_past_last_turbine": 20,
+    "10D_past_last_turbine": 25
+  },
+  "has_contour": true,
+  "xsection_contour_location_d": 20
+}

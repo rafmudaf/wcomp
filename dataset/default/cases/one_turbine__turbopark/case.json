@@ -1,0 +1,95 @@
+{
+  "alignment": "default",
+  "scenario": "one_turbine",
+  "wake_model": "turbopark",
+  "categories": [
+    "velocity"
+  ],
+  "rotor_diameter": 240.0,
+  "hub_height": 150.0,
+  "wind_speed": 9.8,
+  "turbine_locations_d": [
+    0
+  ],
+  "turbine_yaw_deg": [
+    0.0
+  ],
+  "software": [
+    "FLORIS",
+    "FOXES",
+    "PyWake"
+  ],
+  "model_configuration": {
+    "inputs": [
+      {
+        "category": "velocity",
+        "name": "turbopark",
+        "parameters": {
+          "A": 0.04
+        }
+      }
+    ],
+    "implementations": [
+      {
+        "software": "FLORIS",
+        "models": [
+          {
+            "category": "velocity",
+            "name": "turboparkgauss",
+            "parameters": {
+              "A": 0.04
+            }
+          }
+        ],
+        "notes": [
+          "Uses sum-of-squares freestream deficit superposition (sosfs), the TurbineGrid, 3 x 3 square rotor grid with power cubic-mean, thrust cubic-mean averaging, and Crespo-Hernandez wake-added turbulence. Secondary steering, yaw-added recovery, transverse velocities, and active wake mixing are disabled."
+        ]
+      },
+      {
+        "software": "FOXES",
+        "models": [
+          {
+            "category": "velocity",
+            "name": "TurbOParkWake",
+            "parameters": {
+              "ka": 0.04,
+              "induction": "Betz"
+            }
+          }
+        ],
+        "notes": [
+          "Uses Betz induction, quadratic wind-speed superposition with a local (ws_quadratic) deficit reference, grid16, 4 x 4 cell centers rotor sampling, rotor-point partial wakes, and the rotor_wd wake frame. No separate wake-added turbulence model is configured."
+        ]
+      },
+      {
+        "software": "PyWake",
+        "models": [
+          {
+            "category": "velocity",
+            "name": "TurboGaussianDeficit",
+            "parameters": {
+              "A": 0.04
+            }
+          }
+        ],
+        "notes": [
+          "Uses PropagateDownwind with squared-sum superposition, GridRotorAvg, 4 points rotor averaging, local effective (use_effective_ws=true) deficit reference, and ct2a_mom1d induction. No separate wake-added turbulence model is configured.",
+          "Uses the lower-level TurboGaussianDeficit class rather than PyWake's Nygaard_2022 literature preset."
+        ]
+      }
+    ],
+    "notes": []
+  },
+  "xsection_labels": [
+    "1D_downstream",
+    "5D_downstream",
+    "10D_downstream"
+  ],
+  "xsection_locations_d": {
+    "1D_downstream": 1,
+    "5D_downstream": 5,
+    "10D_downstream": 10
+  },
+  "has_contour": true,
+  "xsection_contour_location_d": 5
+}

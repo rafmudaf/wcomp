@@ -1,0 +1,275 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width"><title>bastankhah2016_deflection (four_turbine) · wcomp</title><script async src="https://www.googletagmanager.com/gtag/js?id=G-7LZJG24QM5"></script><script>(function(){const GA_MEASUREMENT_ID = "G-7LZJG24QM5";
+
+      window.dataLayer = window.dataLayer || [];
+      function gtag() { dataLayer.push(arguments); }
+      gtag('js', new Date());
+      gtag('config', GA_MEASUREMENT_ID);
+    })();</script><script src="https://cdn.plot.ly/plotly-2.35.2.min.js"></script><style>.alignment-banner[data-astro-cid-er5wzi7d]{background:#eff6ff;border:1px solid #bfdbfe;border-radius:8px;margin:0 0 1.5rem;padding:.25rem 1rem;font-size:.92rem}.alignment-banner[data-astro-cid-er5wzi7d][data-alignment=aligned]{background:#f0fdf4;border-color:#bbf7d0}summary[data-astro-cid-er5wzi7d]{cursor:pointer;color:#2563eb;margin-bottom:.25rem}.alignment-toggle[data-astro-cid-kfsa4imb]{border:1px solid #d1d5db;border-radius:999px;align-items:center;gap:0;margin-left:auto;font-size:.9rem;display:inline-flex;overflow:hidden}.alignment-toggle-label[data-astro-cid-kfsa4imb]{color:#6b7280;background:#f9fafb;border-right:1px solid #d1d5db;padding:.25rem .75rem}.alignment-toggle[data-astro-cid-kfsa4imb] a[data-astro-cid-kfsa4imb]{color:#2563eb;margin:0;padding:.25rem .9rem;text-decoration:none}.alignment-toggle[data-astro-cid-kfsa4imb] a[data-astro-cid-kfsa4imb].active{color:#fff;background:#2563eb;font-weight:600}:root{color-scheme:light}body{color:#1f2937;margin:0;font-family:system-ui,-apple-system,BlinkMacSystemFont,sans-serif}header{border-bottom:1px solid #e5e7eb;align-items:baseline;gap:1.5rem;padding:1rem 2rem;display:flex}header a.brand{color:#1f2937;font-weight:700;text-decoration:none}header nav a{color:#2563eb;margin-right:1rem;text-decoration:none}main{max-width:1100px;margin:0 auto;padding:1.5rem 2rem 4rem}table{border-collapse:collapse;width:100%;margin:1rem 0}th,td{text-align:left;border:1px solid #e5e7eb;padding:.4rem .6rem;font-size:.9rem}th{background:#f9fafb}th.sortable{cursor:pointer;user-select:none}th.sortable:after{content:" ⇅";color:#9ca3af;font-size:.75em}.check-cell{text-align:center;width:5rem}.check{color:#15803d;font-size:1.1rem;font-weight:700}.chart{margin:1.5rem 0}.case-grid{grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:.75rem;margin:1rem 0 2rem;display:grid}.case-card{color:inherit;border:1px solid #e5e7eb;border-radius:8px;padding:.75rem 1rem;text-decoration:none;display:block}.case-card:hover{border-color:#2563eb}.tag{color:#4338ca;background:#eef2ff;border-radius:999px;margin-right:.25rem;padding:.1rem .5rem;font-size:.75rem;display:inline-block}
+.implementation-grid[data-astro-cid-cugzgk5f]{grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1rem;margin:1rem 0;display:grid}.implementation-card[data-astro-cid-cugzgk5f]{border:1px solid #e5e7eb;border-radius:8px;padding:.25rem 1rem .75rem}.implementation-card[data-astro-cid-cugzgk5f] h3[data-astro-cid-cugzgk5f]{margin-bottom:.5rem}.implementation-card[data-astro-cid-cugzgk5f] p[data-astro-cid-cugzgk5f]{font-size:.9rem}.parameter-list[data-astro-cid-cugzgk5f]{padding-left:1.25rem}.parameter-list[data-astro-cid-cugzgk5f] li[data-astro-cid-cugzgk5f]{margin:.35rem 0}.parameter-list[data-astro-cid-cugzgk5f] span[data-astro-cid-cugzgk5f]{color:#4b5563;margin-top:.1rem;font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;font-size:.85rem;display:block}.comparison-note[data-astro-cid-cugzgk5f]{background:#fffbeb;border-left:4px solid #d97706;padding:.75rem 1rem}
+</style></head><body><header><a class="brand" href="/wcomp/aligned/">wcomp</a><nav class="alignment-toggle" aria-label="Solver configuration" data-astro-cid-kfsa4imb><span class="alignment-toggle-label" data-astro-cid-kfsa4imb>Configuration</span><a href="/wcomp/compare/four_turbine__bastankhah2016_deflection/" data-alignment-link data-astro-cid-kfsa4imb>Default</a><a href="/wcomp/aligned/compare/four_turbine__bastankhah2016_deflection/" class="active" aria-current="page" data-alignment-link data-astro-cid-kfsa4imb>Aligned</a></nav><script>
+  // Carry the section anchor over so the toggle keeps the reader at the same place.
+  const links = document.querySelectorAll('[data-alignment-link]');
+  const base = Array.from(links, (link) => link.getAttribute('href'));
+  const syncHash = () => links.forEach((link, i) => { link.href = base[i] + location.hash; });
+  syncHash();
+  window.addEventListener('hashchange', syncHash);
+</script></header><main><aside class="alignment-banner" data-alignment="aligned" data-astro-cid-er5wzi7d><p data-astro-cid-er5wzi7d><strong data-astro-cid-er5wzi7d>Aligned configuration.</strong> The solver settings that can be matched across the three packages are matched: the wake deficit is scaled by the freestream speed, rotor averaging is linear, and FLORIS and PyWake sample the rotor with a nine-point cubature. The remaining differences are listed below.</p><details data-astro-cid-er5wzi7d><summary data-astro-cid-er5wzi7d>Solver settings in this view</summary><table data-astro-cid-er5wzi7d><thead data-astro-cid-er5wzi7d><tr data-astro-cid-er5wzi7d><th data-astro-cid-er5wzi7d>Setting</th><th data-astro-cid-er5wzi7d>FLORIS</th><th data-astro-cid-er5wzi7d>FOXES</th><th data-astro-cid-er5wzi7d>PyWake</th></tr></thead><tbody data-astro-cid-er5wzi7d><tr data-astro-cid-er5wzi7d><td data-astro-cid-er5wzi7d>Deficit reference wind speed</td><td data-astro-cid-er5wzi7d>Freestream (sosfs)</td><td data-astro-cid-er5wzi7d>Freestream (ws_quadratic_amb_target)</td><td data-astro-cid-er5wzi7d>Freestream (use_effective_ws=False)</td></tr><tr data-astro-cid-er5wzi7d><td data-astro-cid-er5wzi7d>Rotor grid</td><td data-astro-cid-er5wzi7d>TurbineCubatureGrid, 9 points</td><td data-astro-cid-er5wzi7d>grid16, 4 x 4 cell centers</td><td data-astro-cid-er5wzi7d>CGIRotorAvg, 9 points</td></tr><tr data-astro-cid-er5wzi7d><td data-astro-cid-er5wzi7d>Power / thrust averaging</td><td data-astro-cid-er5wzi7d>power linear-cubature, thrust linear-cubature</td><td data-astro-cid-er5wzi7d>linear</td><td data-astro-cid-er5wzi7d>linear</td></tr></tbody></table><p data-astro-cid-er5wzi7d>Differences that remain in this view:</p><ul data-astro-cid-er5wzi7d><li data-astro-cid-er5wzi7d><strong data-astro-cid-er5wzi7d>FOXES:</strong> FOXES keeps its grid16 rotor model; the requested cubature with 9 points rotor grid is not applied.</li></ul></details></aside><p data-astro-cid-cugzgk5f><a href="/wcomp/aligned/" data-astro-cid-cugzgk5f>&larr; All comparisons</a></p><h1 data-astro-cid-cugzgk5f>bastankhah2016_deflection <small data-astro-cid-cugzgk5f>&mdash; four turbines</small></h1><p data-astro-cid-cugzgk5f><span class="tag" data-astro-cid-cugzgk5f>velocity</span><span class="tag" data-astro-cid-cugzgk5f>deflection</span>Software: FLORIS, FOXES &middot; Rotor diameter 240 m &middot; Wind speed 9.8 m/s</p><p data-astro-cid-cugzgk5f><a href="/wcomp/aligned/compare/one_turbine__bastankhah2016_deflection/" data-astro-cid-cugzgk5f>View the one turbine scenario for this wake model &rarr;</a></p><section data-astro-cid-cugzgk5f><h2 data-astro-cid-cugzgk5f>Model parameters and implementation notes</h2><p data-astro-cid-cugzgk5f>The windIO inputs and their software-specific mappings are listed below. Matching literature-model names do not imply identical solver, rotor-averaging, superposition, turbulence, induction, or yaw treatments.</p><h3 data-astro-cid-cugzgk5f>windIO case inputs</h3><ul class="parameter-list" data-astro-cid-cugzgk5f><li data-astro-cid-cugzgk5f><strong data-astro-cid-cugzgk5f>velocity: bastankhah2016</strong><span data-astro-cid-cugzgk5f>alpha = 0.58, beta = 0.077, ka = 0.3837, kb = 0.003678</span></li><li data-astro-cid-cugzgk5f><strong data-astro-cid-cugzgk5f>deflection: bastankhah2016_deflection</strong><span data-astro-cid-cugzgk5f>alpha = 0.58, beta = 0.077, ka = 0.3837, kb = 0.003678</span></li></ul><div class="implementation-grid" data-astro-cid-cugzgk5f><article class="implementation-card" data-astro-cid-cugzgk5f><h3 data-astro-cid-cugzgk5f>FLORIS</h3><ul class="parameter-list" data-astro-cid-cugzgk5f><li data-astro-cid-cugzgk5f><strong data-astro-cid-cugzgk5f>velocity: gauss</strong><span data-astro-cid-cugzgk5f>alpha = 0.58, beta = 0.077, ka = 0.3837, kb = 0.003678</span></li><li data-astro-cid-cugzgk5f><strong data-astro-cid-cugzgk5f>deflection: gauss</strong><span data-astro-cid-cugzgk5f>alpha = 0.58, beta = 0.077, ka = 0.3837, kb = 0.003678</span></li></ul><p data-astro-cid-cugzgk5f>Uses sum-of-squares freestream deficit superposition (sosfs), the TurbineCubatureGrid, 9 points rotor grid with power linear-cubature, thrust linear-cubature averaging, and Crespo-Hernandez wake-added turbulence. Secondary steering, yaw-added recovery, transverse velocities, and active wake mixing are disabled.</p><p data-astro-cid-cugzgk5f>The gauss velocity and deflection models each receive their own copy of the four input coefficients.</p></article><article class="implementation-card" data-astro-cid-cugzgk5f><h3 data-astro-cid-cugzgk5f>FOXES</h3><ul class="parameter-list" data-astro-cid-cugzgk5f><li data-astro-cid-cugzgk5f><strong data-astro-cid-cugzgk5f>velocity: Bastankhah2016</strong><span data-astro-cid-cugzgk5f>alpha = 0.58, beta = 0.077, kTI = 0.3837, kb = 0.003678, induction = Betz, k = from kTI turbine model</span></li><li data-astro-cid-cugzgk5f><strong data-astro-cid-cugzgk5f>deflection: Bastankhah2016Deflection</strong><span data-astro-cid-cugzgk5f>No separately configured parameters</span></li></ul><p data-astro-cid-cugzgk5f>Uses Betz induction, quadratic wind-speed superposition with a freestream (ws_quadratic_amb_target) deficit reference, grid16, 4 x 4 cell centers rotor sampling, rotor-point partial wakes, and the rotor_wd wake frame. No separate wake-added turbulence model is configured.</p><p data-astro-cid-cugzgk5f>FOXES keeps its grid16 rotor model; the requested cubature with 9 points rotor grid is not applied.</p><p data-astro-cid-cugzgk5f>The ka and kb inputs configure a separate kTI turbine model; the wake model receives k=None so expansion is supplied by that turbine model.</p><p data-astro-cid-cugzgk5f>Uses FOXES&#39; Bastankhah2016Deflection model with Betz induction. The duplicated windIO deflection parameters are not read; the velocity-block parameters govern the calculation.</p></article></div><p class="comparison-note" data-astro-cid-cugzgk5f><strong data-astro-cid-cugzgk5f>Caveat:</strong> This is a coupled comparison: yaw-dependent thrust, velocity deficit, deflection, rotor averaging, and wake superposition can all contribute to differences. It does not isolate the deflection equation.</p></section><section data-astro-cid-cugzgk5f><h2 data-astro-cid-cugzgk5f>Layout &amp; sample locations</h2><p data-astro-cid-cugzgk5f>Turbine positions (bold, rotated by yaw angle where applicable) and the cross-section sample planes (dashed) used by the plots below.</p><div id="layout-diagram" data-astro-cid-cugzgk5f></div></section><section data-astro-cid-cugzgk5f><h2 id="streamwise" data-astro-cid-cugzgk5f>Streamwise velocity</h2><div id="chart-streamwise" class="chart" data-astro-cid-cugzgk5f></div></section><section data-astro-cid-cugzgk5f><h2 data-astro-cid-cugzgk5f>Cross-sections</h2><div id="chart-xsection-4D_past_first_turbine" class="chart" data-label="4D_past_first_turbine" data-astro-cid-cugzgk5f></div><div id="chart-xsection-1D_past_last_turbine" class="chart" data-label="1D_past_last_turbine" data-astro-cid-cugzgk5f></div><div id="chart-xsection-5D_past_last_turbine" class="chart" data-label="5D_past_last_turbine" data-astro-cid-cugzgk5f></div><div id="chart-xsection-10D_past_last_turbine" class="chart" data-label="10D_past_last_turbine" data-astro-cid-cugzgk5f></div></section><section data-astro-cid-cugzgk5f><h2 data-astro-cid-cugzgk5f>Horizontal contour</h2><p data-astro-cid-cugzgk5f>X-Y plane at hub height.</p><div id="chart-contour" class="chart" data-astro-cid-cugzgk5f></div></section><section data-astro-cid-cugzgk5f><h2 data-astro-cid-cugzgk5f>Vertical contour</h2><p data-astro-cid-cugzgk5f>X-Z plane at Y=0 (lateral centerline).</p><div id="chart-contour-vertical" class="chart" data-astro-cid-cugzgk5f></div></section><section data-astro-cid-cugzgk5f><h2 data-astro-cid-cugzgk5f>Cross-section contour</h2><p data-astro-cid-cugzgk5f>Y-Z plane at X=20D.</p><div id="chart-contour-xsection" class="chart" data-astro-cid-cugzgk5f></div></section><section data-astro-cid-cugzgk5f><h2 data-astro-cid-cugzgk5f>Effect of aligning the configuration</h2><p data-astro-cid-cugzgk5f>Streamwise RMSE for each software pair in both configurations of this case. The<a href="/wcomp/compare/four_turbine__bastankhah2016_deflection/" data-astro-cid-cugzgk5f>default</a> and<a href="/wcomp/aligned/compare/four_turbine__bastankhah2016_deflection/" data-astro-cid-cugzgk5f>aligned</a> views differ only in the solver settings listed at the top of the page.</p><table data-astro-cid-cugzgk5f><thead data-astro-cid-cugzgk5f><tr data-astro-cid-cugzgk5f><th data-astro-cid-cugzgk5f>Software pair</th><th data-astro-cid-cugzgk5f>Default RMSE (m/s)</th><th data-astro-cid-cugzgk5f>Aligned RMSE (m/s)</th></tr></thead><tbody data-astro-cid-cugzgk5f><tr data-astro-cid-cugzgk5f><td data-astro-cid-cugzgk5f>FLORIS vs FOXES</td><td data-astro-cid-cugzgk5f>1.3200</td><td data-astro-cid-cugzgk5f>1.2241</td></tr></tbody></table></section><section data-astro-cid-cugzgk5f><h2 data-astro-cid-cugzgk5f>Comparison metrics</h2><p data-astro-cid-cugzgk5f>Pairwise error between software for each plotted quantity. Click a column to sort.</p><table id="metrics-table" data-astro-cid-cugzgk5f><thead data-astro-cid-cugzgk5f><tr data-astro-cid-cugzgk5f><th class="sortable" data-key="pair" data-astro-cid-cugzgk5f>Software pair</th><th class="sortable" data-key="target" data-astro-cid-cugzgk5f>Target</th><th class="sortable" data-key="rmse" data-astro-cid-cugzgk5f>RMSE (m/s)</th><th class="sortable" data-key="max_abs" data-astro-cid-cugzgk5f>Max abs error (m/s)</th><th class="sortable" data-key="mean_abs" data-astro-cid-cugzgk5f>Mean abs error (m/s)</th><th class="sortable" data-key="nrmse" data-astro-cid-cugzgk5f>NRMSE</th></tr></thead><tbody data-astro-cid-cugzgk5f></tbody></table></section><section data-astro-cid-cugzgk5f><h2 data-astro-cid-cugzgk5f>How to interpret this comparison</h2><ul data-astro-cid-cugzgk5f><li data-astro-cid-cugzgk5f>Along the hub-height streamwise line FLORIS vs FOXES differ by 1.22 m/s RMSE (13.9% NRMSE). For scale, the free-stream wind speed is 9.8 m/s.</li><li data-astro-cid-cugzgk5f>For FLORIS vs FOXES, cross-section RMSE is 0.26 m/s at 4D past first turbine, 1.08 m/s at 1D past last turbine, 0.90 m/s at 5D past last turbine, 0.47 m/s at 10D past last turbine. NRMSE is normalized by the range of the first-listed software's own values in that plot, so it can rise with distance even as RMSE falls, because the wake profile becomes shallower.</li><li data-astro-cid-cugzgk5f>Compared with the same scenario without yaw (Bastankhah 2016), the largest streamwise RMSE between any pair goes from 1.29 to 1.22 m/s. A similar value means the separation comes mostly from the underlying velocity model; a clearly larger value points to the deflection and yaw-thrust treatment.</li><li data-astro-cid-cugzgk5f>FLORIS and FOXES already differ with a single turbine, so the formulation of one wake (for example how the ka and kb coefficients set the expansion) matters. FLORIS also adds wake turbulence, which FOXES does not configure, and that can further change the expansion of downstream wakes.</li><li data-astro-cid-cugzgk5f>Aligning the configuration does not change the single-turbine separation (FLORIS vs FOXES streamwise RMSE 0.66 m/s in the default view, 0.64 m/s aligned), so it is not a rotor-averaging or deficit-reference effect.</li><li data-astro-cid-cugzgk5f>A value of 0.0000 means the two packages agree at the precision shown in the table.</li><li data-astro-cid-cugzgk5f>These metrics measure how consistently the packages implement the same inputs. They are not errors against measurements, so close agreement does not show that a wake model is accurate, and differences should be read together with the implementation notes above.</li></ul></section><script>(function(){const dataBase = "/wcomp/dataset/aligned/cases/four_turbine__bastankhah2016_deflection";
+const software = ["FLORIS","FOXES"];
+const xsectionLabels = ["4D_past_first_turbine","1D_past_last_turbine","5D_past_last_turbine","10D_past_last_turbine"];
+const hasContour = true;
+const windSpeed = 9.8;
+const rotorDiameter = 240;
+const turbineLocationsD = [0,5,10,15];
+const turbineYawDeg = [10,10,0,0];
+const xsectionLocationsD = {"4D_past_first_turbine":4,"1D_past_last_turbine":16,"5D_past_last_turbine":20,"10D_past_last_turbine":25};
+
+    const COLORS = { FLORIS: '#2ca02c', FOXES: '#d62728', PyWake: '#1f77b4' };
+
+    async function fetchJson(path) {
+      const res = await fetch(path);
+      if (!res.ok) throw new Error(`Failed to fetch ${path}: ${res.status}`);
+      return res.json();
+    }
+
+    async function loadPerSoftware(pathSuffix) {
+      const entries = await Promise.all(
+        software.map(async (name) => {
+          try {
+            return [name, await fetchJson(`${dataBase}/software/${name}/${pathSuffix}`)];
+          } catch {
+            return [name, null];
+          }
+        })
+      );
+      return Object.fromEntries(entries);
+    }
+
+    function plotProfiles(divId, profiles, xlabel, ylabel) {
+      const traces = software
+        .filter((name) => profiles[name])
+        .map((name) => ({
+          x: profiles[name].x1,
+          y: profiles[name].values,
+          mode: 'lines',
+          name,
+          line: { color: COLORS[name], width: 2 },
+        }));
+      Plotly.newPlot(
+        divId,
+        traces,
+        {
+          template: 'plotly_white',
+          xaxis: { title: xlabel },
+          // Pin the velocity axis to [0, ambient wind speed] so every panel/case is
+          // visually comparable rather than autoscaled to each trace's own range.
+          yaxis: { title: ylabel, range: [0, windSpeed] },
+          margin: { t: 20, b: 40, l: 55, r: 20 },
+          height: 340,
+          legend: { orientation: 'h' },
+        },
+        { responsive: true }
+      );
+    }
+
+    async function renderCharts() {
+      const streamwise = await loadPerSoftware('streamwise.json');
+      plotProfiles('chart-streamwise', streamwise, 'X (m)', 'U (m/s)');
+
+      for (const label of xsectionLabels) {
+        const xsection = await loadPerSoftware(`xsections/${label}.json`);
+        plotProfiles(`chart-xsection-${label}`, xsection, 'Y (m)', 'U (m/s)');
+      }
+
+      if (hasContour) {
+        await renderContour('chart-contour', 'contour.json', 'X (m)', 'Y (m)');
+        await renderContour('chart-contour-vertical', 'contour_vertical.json', 'X (m)', 'Z (m)');
+        await renderContour('chart-contour-xsection', 'contour_xsection.json', 'Y (m)', 'Z (m)');
+      }
+    }
+
+    async function renderContour(divId, pathSuffix, xlabel, ylabel) {
+      const planes = await loadPerSoftware(pathSuffix);
+      const present = software.filter((name) => planes[name]);
+      if (present.length === 0) return;
+      const traces = present.map((name, i) => {
+        const plane = planes[name];
+        const suffix = i === 0 ? '' : String(i + 1);
+        return {
+          type: 'scattergl',
+          mode: 'markers',
+          x: plane.x1,
+          y: plane.x2,
+          marker: {
+            color: plane.values,
+            colorscale: 'RdBu',
+            reversescale: true,
+            cmin: 0,
+            cmax: windSpeed,
+            size: 4,
+            colorbar: i === present.length - 1 ? { title: 'm/s' } : undefined,
+          },
+          name,
+          xaxis: `x${suffix}`,
+          yaxis: `y${suffix}`,
+        };
+      });
+
+      // The wake domain is far wider (streamwise) than it is tall (crosswind), so
+      // stack one panel per software (rather than side-by-side) and size each row's
+      // height from the data's real aspect ratio, then lock x/y to equal scale.
+      const containerWidth = document.getElementById(divId).clientWidth || 1000;
+      const aspect = Math.max(
+        ...present.map((name) => {
+          const plane = planes[name];
+          const xRange = Math.max(...plane.x1) - Math.min(...plane.x1);
+          const yRange = Math.max(...plane.x2) - Math.min(...plane.x2);
+          return xRange / yRange;
+        })
+      );
+      const rowHeight = Math.min(420, Math.max(140, containerWidth / aspect));
+
+      const layout = {
+        template: 'plotly_white',
+        height: (rowHeight + 50) * present.length + 40,
+        showlegend: false,
+        margin: { t: 30, b: 40, l: 55, r: 20 },
+        grid: { rows: present.length, columns: 1, pattern: 'independent', ygap: 0.25 },
+        annotations: present.map((name, i) => ({
+          text: name,
+          showarrow: false,
+          xref: `x${i === 0 ? '' : i + 1} domain`,
+          yref: `y${i === 0 ? '' : i + 1} domain`,
+          x: 0.5,
+          y: 1.1,
+        })),
+      };
+      present.forEach((name, i) => {
+        const suffix = i === 0 ? '' : String(i + 1);
+        layout[`xaxis${suffix}`] = { constrain: 'domain', title: xlabel };
+        layout[`yaxis${suffix}`] = { scaleanchor: `x${suffix}`, scaleratio: 1, title: ylabel };
+      });
+
+      Plotly.newPlot(divId, traces, layout, { responsive: true });
+    }
+
+    function renderLayoutDiagram() {
+      const container = document.getElementById('layout-diagram');
+      const width = container.clientWidth || 900;
+      const height = 190;
+      const leftMargin = 50;
+      const rightMargin = 30;
+      const lastTurbineD = Math.max(...turbineLocationsD);
+      const xmin = -1 * rotorDiameter;
+      const xmax = (lastTurbineD + 20) * rotorDiameter;
+      const scale = (width - leftMargin - rightMargin) / (xmax - xmin);
+      const xPx = (distanceM) => leftMargin + (distanceM - xmin) * scale;
+
+      // Top to bottom: plane labels, the planes themselves (centered on the axis),
+      // turbines drawn on the axis, turbine labels, then the streamwise arrow. Each
+      // marker type gets its own horizontal band so nearby labels never collide.
+      const axisY = 78;
+      const planeLabelY = 16;
+      const planeTop = axisY - 42;
+      const planeBottom = axisY + 42;
+      const turbineTop = axisY - 16;
+      const turbineBottom = axisY + 16;
+      const turbineLabelY = planeBottom + 18;
+      const arrowY = turbineLabelY + 24;
+      const arrowLabelY = arrowY + 16;
+
+      const planes = Object.entries(xsectionLocationsD)
+        .map(([label, distanceD]) => {
+          const x = xPx(distanceD * rotorDiameter);
+          return `
+            <line x1="${x.toFixed(1)}" y1="${planeTop}" x2="${x.toFixed(1)}" y2="${planeBottom}"
+                  stroke="#2563eb" stroke-width="2.5" stroke-dasharray="6 5" />
+            <text x="${x.toFixed(1)}" y="${planeLabelY}" text-anchor="middle" class="plane-label">${distanceD}D</text>
+          `;
+        })
+        .join('');
+
+      const turbines = turbineLocationsD
+        .map((turbineD, i) => {
+          const x = xPx(turbineD * rotorDiameter);
+          const yaw = turbineYawDeg[i] ?? 0;
+          const rotate = yaw ? ` transform="rotate(${yaw} ${x.toFixed(1)} ${axisY})"` : '';
+          const label = `${turbineD}D` + (yaw ? ` (${yaw}\u00b0 yaw)` : '');
+          return `
+            <line x1="${x.toFixed(1)}" y1="${turbineTop}" x2="${x.toFixed(1)}" y2="${turbineBottom}"
+                  stroke="#111827" stroke-width="6" stroke-linecap="round"${rotate} />
+            <text x="${x.toFixed(1)}" y="${turbineLabelY}" text-anchor="middle" class="turbine-label">${label}</text>
+          `;
+        })
+        .join('');
+
+      const streamStart = xPx(xmin);
+      const streamEnd = xPx(xmax);
+      const streamMid = 0.5 * (streamStart + streamEnd);
+
+      container.innerHTML = `
+        <svg viewBox="0 0 ${width} ${height}" width="100%" role="img" aria-label="Turbine and sample-plane layout">
+          <defs>
+            <marker id="layout-arrow" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto" markerUnits="strokeWidth">
+              <path d="M 0 0 L 6 3 L 0 6 z" fill="#d97706" />
+            </marker>
+            <style>
+              .plane-label { font-size: 12px; font-weight: 600; fill: #2563eb; }
+              .turbine-label { font-size: 12px; font-weight: 600; fill: #111827; }
+              .caption { font-size: 11px; fill: #6b7280; }
+            </style>
+          </defs>
+          <rect x="0" y="0" width="${width}" height="${height}" rx="12" fill="#fafafa" stroke="#e5e7eb" />
+          ${planes}
+          <line x1="${leftMargin}" y1="${axisY}" x2="${width - rightMargin}" y2="${axisY}" stroke="#9ca3af" stroke-width="2" />
+          ${turbines}
+          <line x1="${streamStart.toFixed(1)}" y1="${arrowY}" x2="${streamEnd.toFixed(1)}" y2="${arrowY}"
+                stroke="#d97706" stroke-width="1.5" marker-start="url(#layout-arrow)" marker-end="url(#layout-arrow)" />
+          <text x="${streamMid.toFixed(1)}" y="${arrowLabelY}" text-anchor="middle" class="caption" fill="#d97706">Streamwise direction (X)</text>
+        </svg>
+      `;
+    }
+
+    function renderMetricsTable() {
+      const tbody = document.querySelector('#metrics-table tbody');
+      let sortKey = null;
+      let sortAsc = true;
+      let rows = [];
+
+      function render() {
+        tbody.innerHTML = '';
+        for (const row of rows) {
+          const tr = document.createElement('tr');
+          for (const value of [row.pair, row.target, row.rmse, row.max_abs, row.mean_abs, row.nrmse]) {
+            const td = document.createElement('td');
+            td.textContent = typeof value === 'number' ? value.toFixed(4) : (value ?? '\u2014');
+            tr.appendChild(td);
+          }
+          tbody.appendChild(tr);
+        }
+      }
+
+      document.querySelectorAll('#metrics-table th.sortable').forEach((th) => {
+        th.addEventListener('click', () => {
+          const key = th.dataset.key;
+          sortAsc = sortKey === key ? !sortAsc : true;
+          sortKey = key;
+          rows = [...rows].sort((a, b) => {
+            const av = a[key];
+            const bv = b[key];
+            const cmp = typeof av === 'number' ? av - bv : String(av).localeCompare(String(bv));
+            return sortAsc ? cmp : -cmp;
+          });
+          render();
+        });
+      });
+
+      fetchJson(`${dataBase}/metrics.json`).then((metrics) => {
+        rows = metrics.map((m) => ({ ...m, pair: m.pair.join(' vs ') }));
+        render();
+      });
+    }
+
+    renderLayoutDiagram();
+    renderCharts();
+    renderMetricsTable();
+  })();</script></main></body></html>

@@ -1,0 +1,79 @@
+{
+  "alignment": "default",
+  "scenario": "one_turbine",
+  "wake_model": "bastankhah2014",
+  "categories": [
+    "velocity"
+  ],
+  "rotor_diameter": 240.0,
+  "hub_height": 150.0,
+  "wind_speed": 9.8,
+  "turbine_locations_d": [
+    0
+  ],
+  "turbine_yaw_deg": [
+    0.0
+  ],
+  "software": [
+    "FOXES",
+    "PyWake"
+  ],
+  "model_configuration": {
+    "inputs": [
+      {
+        "category": "velocity",
+        "name": "bastankhah2014",
+        "parameters": {
+          "k_star": 0.03
+        }
+      }
+    ],
+    "implementations": [
+      {
+        "software": "FOXES",
+        "models": [
+          {
+            "category": "velocity",
+            "name": "Bastankhah2014",
+            "parameters": {
+              "k": 0.03,
+              "induction": "Betz"
+            }
+          }
+        ],
+        "notes": [
+          "Uses Betz induction, quadratic wind-speed superposition with a local (ws_quadratic) deficit reference, grid16, 4 x 4 cell centers rotor sampling, rotor-point partial wakes, and the rotor_wd wake frame. No separate wake-added turbulence model is configured."
+        ]
+      },
+      {
+        "software": "PyWake",
+        "models": [
+          {
+            "category": "velocity",
+            "name": "BastankhahGaussianDeficit",
+            "parameters": {
+              "k": 0.03
+            }
+          }
+        ],
+        "notes": [
+          "Uses PropagateDownwind with squared-sum superposition, GridRotorAvg, 4 points rotor averaging, local effective (use_effective_ws=true) deficit reference, and ct2a_mom1d induction. No separate wake-added turbulence model is configured.",
+          "Uses the lower-level BastankhahGaussianDeficit class rather than PyWake's Bastankhah_PorteAgel_2014 literature preset."
+        ]
+      }
+    ],
+    "notes": []
+  },
+  "xsection_labels": [
+    "1D_downstream",
+    "5D_downstream",
+    "10D_downstream"
+  ],
+  "xsection_locations_d": {
+    "1D_downstream": 1,
+    "5D_downstream": 5,
+    "10D_downstream": 10
+  },
+  "has_contour": true,
+  "xsection_contour_location_d": 5
+}
